@@ -1,0 +1,119 @@
+import React, { useEffect, useState } from 'react'
+import Button1 from '../buttons/button1/button1';
+import { FaShare } from "react-icons/fa";
+import { format } from "date-fns";
+
+const LiveTestCard = ({testData, value}) => {
+  // const targetTimestamp = 1727270640;
+  const [timeLeft, setTimeLeft] = useState(calculateTimeLeft());
+  const [isTimeUp, setIsTimeUp] = useState(false);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setTimeLeft(calculateTimeLeft());
+    }, 1000);
+
+    return () => clearInterval(timer); // Clean up the timer on component unmount
+  }, []);
+
+  useEffect(() => {
+    if(String(timeLeft.hours).padStart(2, '0') == '00' && String(timeLeft.minutes).padStart(2, '0') == '00' && String(timeLeft.seconds).padStart(2, '0') == '00') {
+      setIsTimeUp(true)
+    }
+    else {
+      setIsTimeUp(false)
+    }
+  }, [timeLeft])
+
+  function calculateTimeLeft() {
+    const currentTime = Math.floor(Date.now() / 1000); // Get current Unix time in seconds
+    const difference = testData.start_date - currentTime;
+
+    if (difference <= 0) {
+      return { hours: 0, minutes: 0, seconds: 0 };
+    }
+
+    const hours = Math.floor((difference % (60 * 60 * 24)) / (60 * 60));
+    const minutes = Math.floor((difference % (60 * 60)) / 60);
+    const seconds = difference % 60;
+
+    return { hours, minutes, seconds };
+  }
+
+// console.log('Countdown:',String(timeLeft.hours).padStart(2, '0'), ':' , String(timeLeft.minutes).padStart(2, '0'), ':', String(timeLeft.seconds).padStart(2, '0'))
+
+  const formatDate = (value) => {
+    const cr_date = new Date(value * 1000);
+    if (cr_date) {
+      // setDate(cr_date.toString().substring(0, cr_date.toString().indexOf('GMT')))
+      return (format(cr_date, "d MMM yyyy | h:mm a"));
+    }
+  }
+  return (
+    <div className="d-flex justify-content-center col-12 col-sm-6 col-md-4 col-lg-4 col-xl-3 mb-4 p-0">
+      <div className="card border-0 shadow b-radius course_card m-0">
+        {value == 'LIVE' && <p className={`m-0 course-badge ${value}`}>Live</p>}
+        {value == 'UPCOMING' && <p className={`m-0 course-badge ${value}`}>Upcoming</p>}
+        <div className="w-100 imgBorder d-flex align-items-center justify-content-center">
+            <img
+              style={{ borderRadius: "10px" }}
+              src={testData?.image ? testData.image : '/assets/images/noImage.jfif'}
+              className="card-img-top"
+              alt="..."
+            />
+        </div>
+        <div className="card-body pt-3 px-0 pb-0">
+            <h6 className='mb-0 slideTitle'>{testData.test_series_name}</h6>
+            <h6 className="m-0">{testData.course_name}</h6>
+        </div>
+        <p className="my-2 d-flex align-items-center validity">
+            <img
+                className="calendarDate2 me-1"
+                src="/assets/images/calenderLogo2.png"
+                alt=""
+            />
+            start On:
+            <span className="ms-2 valid_date">{formatDate(testData.start_date)}</span>
+        </p>
+        <p className="d-flex align-items-center validity">
+            <img
+                className="calendarDate2 me-1"
+                src="/assets/images/clockLogo.png"
+                alt=""
+            />
+            End On:
+            <span className="ms-2 valid_date">{formatDate(testData.end_date)}</span>
+        </p>
+        <hr className="dotted-divider" />
+        <div className="myCourseBtn d-flex flex-wrap flex-lg-nowrap gap-2">
+            {value == 'LIVE' &&
+              <Button1
+                value="Attempt Now"
+                // handleClick={() => handleDetail(value)}
+                data= {0}
+              />
+            }
+            {value == 'UPCOMING' &&
+              <Button1
+                value={isTimeUp ? `Start Test` : `Started In- ${String(timeLeft.hours).padStart(2, '0')}:${String(timeLeft.minutes).padStart(2, '0')}:${String(timeLeft.seconds).padStart(2, '0')}`}
+                // handleClick={() => handleDetail(value)}
+                data= {0}
+              />
+            }
+            {value == 'COMPLETED' && 
+              <Button1
+              value={`View Result`}
+              // handleClick={() => handleDetail(value)}
+            />
+            }
+            <button className="btn_detailShare">
+              <FaShare />
+            </button>
+            {/* <Button2 value="Extend Validity" handleClick={handleExplore} /> */}
+          </div>
+      </div>
+    </div>
+  )
+}
+
+export default LiveTestCard

@@ -7,6 +7,26 @@ const LiveTestCard = ({testData, value}) => {
   // const targetTimestamp = 1727270640;
   const [timeLeft, setTimeLeft] = useState(calculateTimeLeft());
   const [isTimeUp, setIsTimeUp] = useState(false);
+  const [windowSize, setWindowSize] = useState({
+    width: window.innerWidth,
+    height: window.innerHeight
+  });
+
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowSize({
+        width: window.innerWidth,
+        height: window.innerHeight
+      });
+    };
+
+    window.addEventListener('resize', handleResize);
+
+    // Cleanup event listener on component unmount
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -64,7 +84,7 @@ const LiveTestCard = ({testData, value}) => {
     const formData = {
       jwt : localStorage.getItem('jwt'),
       user_id: localStorage.getItem('user_id'),
-      course_id: CourseID,
+      course_id: val?.course_id,
       test_id: val?.id,
       lang: val?.lang_used ? val?.lang_used : 1,
       state: val?.state ? val?.state : 0,
@@ -76,7 +96,7 @@ const LiveTestCard = ({testData, value}) => {
     const encryptData = btoa(JSON.stringify(formData))
     console.log('encryptData',encryptData)
     // const encryptData = encrypt(JSON.stringify(formData));
-    router.push(`https://educryptnetlify.videocrypt.in/webstaging/web/LiveTest/learn_result_window?data=${encryptData}`)
+    window.open(`https://educryptnetlify.videocrypt.in/webstaging/web/LiveTest/learn_result_window?data=${encryptData}`,  'popupWindow', `width=${windowSize.width},height=${windowSize.height},scrollbars=yes,resizable=no`)
   }
 
   const handleTakeTest = (val) => {
@@ -96,7 +116,7 @@ const LiveTestCard = ({testData, value}) => {
     const formData = {
       jwt : localStorage.getItem('jwt'),
       user_id: localStorage.getItem('user_id'),
-      course_id: CourseID,
+      course_id: val?.course_id,
       test_id: val?.id,
       lang: val?.lang_used ? val?.lang_used : 1,
       state: val?.state ? val?.state : 0,
@@ -108,14 +128,14 @@ const LiveTestCard = ({testData, value}) => {
     const encryptData = btoa(JSON.stringify(formData))
     console.log('encryptData',encryptData)
 
-    router.push(`https://educryptnetlify.videocrypt.in/webstaging/web/LiveTest/attempt_now_window?data=${encryptData}`)
+    window.open(`https://educryptnetlify.videocrypt.in/webstaging/web/LiveTest/attempt_now_window?data=${encryptData}`,  'popupWindow', `width=${windowSize.width},height=${windowSize.height},scrollbars=yes,resizable=no`)
   }
 
   const handleRankTest = (val) => {
     const formData = {
       jwt : localStorage.getItem('jwt'),
       user_id: localStorage.getItem('user_id'),
-      course_id: CourseID,
+      course_id: val?.course_id,
       test_id: val?.id,
       lang: val?.lang_used ? val?.lang_used : 1,
       state: val?.state ? val?.state : 0,
@@ -126,7 +146,7 @@ const LiveTestCard = ({testData, value}) => {
     const encryptData = btoa(JSON.stringify(formData))
     console.log('encryptData',encryptData)
 
-    router.push(`https://educryptnetlify.videocrypt.in/webstaging/web/LiveTest/result_window?data=${encryptData}`)
+    window.open(`https://educryptnetlify.videocrypt.in/webstaging/web/LiveTest/result_window?data=${encryptData}`, 'popupWindow', `width=${windowSize.width},height=${windowSize.height},scrollbars=yes,resizable=no`)
   }
 
   return (

@@ -13,10 +13,11 @@ import toast, { Toaster } from "react-hot-toast";
 import { format } from "date-fns";
 
 const Notes = ({ propsValue, tabName, resetRef, courseDetail, CourseID, keyValue }) => {
-  console.log("keyValue",CourseID)
+  // console.log("keyValue",CourseID)
   
   const [modalShow, setModalShow] = useState(false);
   const [showError, setShowError] = useState(false);
+  const [status, setStatus] = useState('');
   const [layer1Data, setLayer1Data] = useState();
   const [showLayer, setShowLayer] = useState("layer1");
   const [data3Index, setData3Index] = useState(1);
@@ -39,7 +40,7 @@ const Notes = ({ propsValue, tabName, resetRef, courseDetail, CourseID, keyValue
   let displayTabData = useSelector((state) => state.allCategory?.tabName)
   let appDetail = useSelector((state) => state?.appDetail?.app_detail)
 
-  console.log('appDetail', appDetail)
+  // console.log('appDetail', appDetail)
 
 
   useEffect(() => {
@@ -84,17 +85,17 @@ const Notes = ({ propsValue, tabName, resetRef, courseDetail, CourseID, keyValue
       handleShowData()
     }
     else{
-      console.log("layer11111")
+      // console.log("layer11111")
       if(layer1Data?.revert_api == "1#0#0#0" || layer1Data?.revert_api == "0#0#0#0"){
         setShowLayer("layer1");
         return () => setShowLayer("layer1");
       }
       else if(layer1Data?.revert_api == "1#1#0#0" || layer1Data?.revert_api == "0#1#0#0") {
-        console.log("heyy yyy")
+        // console.log("heyy yyy")
         getLayer2Data(0);
       }
       else if(layer1Data?.revert_api == "1#2#0#0" || layer1Data?.revert_api == "0#2#0#0") {
-        console.log("here")
+        // console.log("here")
         setShowLayer("layer1")
       }
       else if(layer1Data?.revert_api == "1#3#0#0" || layer1Data?.revert_api == "0#3#0#0") {
@@ -143,7 +144,7 @@ const Notes = ({ propsValue, tabName, resetRef, courseDetail, CourseID, keyValue
     setLayer2Index(index);
 
     const subj_id = () => {
-      console.log(courseDetail)
+      // console.log(courseDetail)
       if(layer1Data?.revert_api == "1#1#0#0" || layer1Data?.revert_api == "1#3#0#0" || layer1Data?.revert_api == "0#1#0#0" || layer1Data?.revert_api == "0#3#0#0") {
         return 0;
       }
@@ -197,7 +198,7 @@ const Notes = ({ propsValue, tabName, resetRef, courseDetail, CourseID, keyValue
         parent_id: ''
         
       }
-      console.log('formData', formData)
+      // console.log('formData', formData)
       const response_getMasterData_service = await getMasterDataService(encrypt(JSON.stringify(formData), token))
       const response_getMasterData_Data = decrypt(response_getMasterData_service.data, token);
       console.log('response_getMasterData_Data', response_getMasterData_Data)
@@ -288,7 +289,7 @@ const Notes = ({ propsValue, tabName, resetRef, courseDetail, CourseID, keyValue
 // console.log('layer2List', layer2List)
 
 const filterPage = () => {
-  console.log('layer3Data', layer3Data)
+  // console.log('layer3Data', layer3Data)
   let len = layer3Data?.list?.length;
   let length = len%6 !==0 ? Math.floor(len/6) + 1 : len/6
   // for(let i = 0; i < length; i++) {
@@ -301,7 +302,7 @@ const filterPage = () => {
 
 useEffect(() => {
   if(layer3Data?.list?.length > 0 && data3Index > 0) {
-    console.log("page", data3Index, page.length)
+    // console.log("page", data3Index, page.length)
     if(data3Index == 1){
       setLayer3updateData(layer3Data?.list?.slice(0, 6))
     }
@@ -314,9 +315,11 @@ useEffect(() => {
   }
 }, [data3Index, layer3Data])
 
-console.log('layer3updateData', layer3updateData)
+
+// console.log('layer3updateData', layer3updateData)
 
 const handleTakeTest = (val, index) => {
+  console.log('val111111111', val)
   const isLoggedIn = localStorage.getItem("jwt");
     if(!isLoggedIn) {
       setModalShow(true);
@@ -349,6 +352,72 @@ const handleTakeTest = (val, index) => {
   // const encryptData = encrypt(JSON.stringify(formData));
   window.open(`https://educryptnetlify.videocrypt.in/webstaging/web/LiveTest/attempt_now_window?data=${encryptData}`, 'popupWindow', `width=${windowSize.width},height=${windowSize.height},scrollbars=yes,resizable=no`)
 }
+}
+
+const compareTime = (startTime, endTime) => {
+  // const givenTimestamp = '2024-10-17T10:30:00Z';
+  const givenStartTime = new Date(startTime * 1000);
+  const givenEndTime = new Date(endTime * 1000);
+
+    // Get current time
+    const currentTime = new Date();
+
+    // Compare times
+    if (currentTime < givenStartTime) {
+      return "pending"
+    } else if(currentTime > givenStartTime && currentTime < givenEndTime) {
+      return "attempt"
+    }
+     else if(currentTime > givenEndTime) {
+      return "result"
+     }
+}
+
+const handleRankTest = (val) => {
+  const formData = {
+    jwt : localStorage.getItem('jwt'),
+    user_id: localStorage.getItem('user_id'),
+    course_id: CourseID,
+    test_id: val?.id,
+    lang: val?.lang_used ? val?.lang_used : 1,
+    state: val?.state ? val?.state : 0,
+    test_type: val?.test_type,
+    first_attempt: 1
+  }
+  console.log("formData",formData)
+  const encryptData = btoa(JSON.stringify(formData))
+  console.log('encryptData',encryptData)
+
+  window.open(`https://educryptnetlify.videocrypt.in/webstaging/web/LiveTest/result_window?data=${encryptData}`, 'popupWindow', `width=${windowSize.width},height=${windowSize.height},scrollbars=yes,resizable=no`)
+}
+
+const handleResultTest = (val, index) => {
+  var firstAttempt = "0";
+  if (val.state == ""){
+    firstAttempt = "1";
+  }
+  // // else if (App.Server_Time.ToUnixTimeSeconds() > long.Parse(Current_Selected_Resource.end_date)){
+  // //   firstAttempt = "0";
+  // // }
+  else if (Number(val.is_reattempt) > 0){
+    firstAttempt = "0";
+  }
+  const formData = {
+    jwt : localStorage.getItem('jwt'),
+    user_id: localStorage.getItem('user_id'),
+    course_id: CourseID,
+    test_id: val?.id,
+    lang: val?.lang_used ? val?.lang_used : 1,
+    state: val?.state ? val?.state : 0,
+    test_type: val?.test_type,
+    first_attempt: firstAttempt
+  }
+
+  console.log("formData",formData)
+  const encryptData = btoa(JSON.stringify(formData))
+  console.log('encryptData',encryptData)
+  // const encryptData = encrypt(JSON.stringify(formData));
+  window.open(`https://educryptnetlify.videocrypt.in/webstaging/web/LiveTest/learn_result_window?data=${encryptData}`,  'popupWindow', `width=${windowSize.width},height=${windowSize.height},scrollbars=yes,resizable=no`)
 }
 
   return (<>
@@ -423,7 +492,6 @@ const handleTakeTest = (val, index) => {
                           src={item.thumbnail_url ? item.thumbnail_url : "/assets/images/noImage.jfif"}
                           height={"60px"}
                         />
-                        {/* <i className="fa fa-file-text" aria-hidden="true"></i> */}
                         <div className="subjectDetails">
                           <p className="m-0 sub_name">{item.title}</p>
                           {item.role == "PDF" && (
@@ -434,7 +502,6 @@ const handleTakeTest = (val, index) => {
                         </div>
                       </div>
                       <div className="pg-sb-topic pe-2">
-                        {/* {console.log('dat', layer1Data.type)} */}
                         <div className="btnsalltbba text-center d-flex">
                           {" "}
                           {
@@ -457,10 +524,24 @@ const handleTakeTest = (val, index) => {
                             </>
                           :
                           <>
-                          {/* {console.log('item', item)} */}
                           {layer1Data?.type == "pdf" && <Button1 value="Read" handleClick={() => handleRead(item)} /> }
                           {layer1Data?.type == "video" && <Button1 value="Watch Now" handleClick={() => handleWatch(item, i)} />}
-                          {layer1Data?.type == "test" && <Button1 value="Test" handleClick={() => handleTakeTest(item, i)} />}
+                          {layer1Data?.type == "test" && 
+                            (compareTime(item.start_date  , item.end_date) == "pending" &&
+                            <Button1 value="Upcoming" 
+                              // handleClick={() => handleTakeTest(item, i)} 
+                            />
+                            )}
+                            {layer1Data?.type == "test" && (compareTime(item.start_date  , item.end_date) == "attempt" &&
+                            <Button1 value="Attempt Now" 
+                              handleClick={() => handleTakeTest(item, i)} 
+                            />
+                            )}
+                            {layer1Data?.type == "test" && (compareTime(item.start_date  , item.end_date) == "result" &&
+                            <Button1 value={item?.state == 1 ? "View Result" : "LeaderBoard"}
+                              handleClick={() => item?.state == 1 ? handleResultTest(item, i) : handleRankTest(item, i)} 
+                            />
+                            )}
                           </>
                           }
                         </div>

@@ -108,10 +108,10 @@ const SideBar = () => {
                     <Nav.Item
                       key={index}
                       onClick={() =>
-                        router.push(`/private/myProfile/${value?.title?.split(" ").join("-")}`)
+                        router.push(`/private/myProfile/${value?.title?.split(" ").join("_")}`)
                       }
                       className={`m-0 ${
-                        statusTab && (statusTab == value.title ? " active" : "")
+                        statusTab && (statusTab == value?.title?.split(" ").join("_") ? " active" : "")
                       }`}
                     >
                       <Nav.Link className="m-0">
@@ -154,7 +154,7 @@ const SideBar = () => {
                         router.push(`/private/myProfile/${value?.title?.split(" ").join("_")}`)
                       }
                       className={`m-0 ${
-                        statusTab && (statusTab == value.title ? "active" : "")
+                        statusTab && (statusTab == value?.title?.split(" ").join("_") ? "active" : "")
                       }`}
                     >
                       <Nav.Link className="m-0">
@@ -213,7 +213,7 @@ const SideBar = () => {
                         router.push(`/private/myProfile/${value?.title?.split(" ").join("_")}`)
                       }
                       className={`m-0 ${
-                        statusTab && (statusTab == value.title ? "active" : "")
+                        statusTab && (statusTab == value?.title?.split(" ").join("_") ? "active" : "")
                       }`}
                     >
                       <Nav.Link className="m-0">

@@ -108,7 +108,7 @@ const SideBar = () => {
                     <Nav.Item
                       key={index}
                       onClick={() =>
-                        router.push(`/private/myProfile/${value.title}`)
+                        router.push(`/private/myProfile/${value?.title?.split(" ").join("-")}`)
                       }
                       className={`m-0 ${
                         statusTab && (statusTab == value.title ? " active" : "")
@@ -151,7 +151,7 @@ const SideBar = () => {
                     <Nav.Item
                       key={index}
                       onClick={() =>
-                        router.push(`/private/myProfile/${value.title}`)
+                        router.push(`/private/myProfile/${value?.title?.split(" ").join("_")}`)
                       }
                       className={`m-0 ${
                         statusTab && (statusTab == value.title ? "active" : "")
@@ -193,7 +193,7 @@ const SideBar = () => {
               </Nav.Link>
             </Nav.Item>
             <Nav.Item
-              onClick={() => router.push("/private/myProfile/Purchase History")}
+              onClick={() => router.push("/private/myProfile/Purchase_History")}
               className={`m-0 ${
                 statusTab && (statusTab == "Purchase History" ? "active" : "")
               }`}
@@ -210,7 +210,7 @@ const SideBar = () => {
                     <Nav.Item
                       key={index}
                       onClick={() =>
-                        router.push(`/private/myProfile/${value.title}`)
+                        router.push(`/private/myProfile/${value?.title?.split(" ").join("_")}`)
                       }
                       className={`m-0 ${
                         statusTab && (statusTab == value.title ? "active" : "")

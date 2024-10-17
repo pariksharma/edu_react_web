@@ -8,13 +8,13 @@ import toast, { Toaster } from "react-hot-toast";
 const UpdatePasswordModal = (props) => {
   const [isToasterOpen, setIsToasterOpen] = useState(false);
   const [getOTP, setGetOTP] = useState(false);
+  const [logo, setLogo] = useState('')
   const [OTP, setOTP] = useState("");
   const [countryCode, setCountryCode] = useState("+91");
   const [mobile, setMobile] = useState("");
   const [error, setError] = useState("");
 
   const token = get_token();
-  const logo = localStorage.getItem("logo");
   const versionData = useSelector((state) => state.allCategory?.versionData);
 
   useEffect(() => {
@@ -24,6 +24,12 @@ const UpdatePasswordModal = (props) => {
       }, 1000);
     }
   }, [isToasterOpen]);
+
+
+  useEffect(() => {
+      const AppLogo = localStorage.getItem("logo");
+      setLogo(AppLogo);
+  }, [])
 
   useEffect(() => {
     if (!props.show) {

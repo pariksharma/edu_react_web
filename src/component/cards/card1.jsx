@@ -82,7 +82,7 @@ const Card1 = ({ value, titleName, handleDetail, keyValue }) => {
             <span className="ms-2 valid_date">{`${value.validity}`}</span>
           </p>
           }
-              <hr className="dotted-divider" />
+              <hr className="dotted-divider mb-0" />
 
           {value.mrp != 0 ? (
             <div className="coursePrice gap-1 d-flex flex-wrap align-items-center pb-1 m-0">

@@ -49,6 +49,86 @@ const LiveTestCard = ({testData, value}) => {
       return (format(cr_date, "d MMM yyyy | h:mm a"));
     }
   }
+
+  const handleResultTest = (val, index) => {
+    var firstAttempt = "0";
+    if (val.state == ""){
+      firstAttempt = "1";
+    }
+    // // else if (App.Server_Time.ToUnixTimeSeconds() > long.Parse(Current_Selected_Resource.end_date)){
+    // //   firstAttempt = "0";
+    // // }
+    else if (Number(val.is_reattempt) > 0){
+      firstAttempt = "0";
+    }
+    const formData = {
+      jwt : localStorage.getItem('jwt'),
+      user_id: localStorage.getItem('user_id'),
+      course_id: CourseID,
+      test_id: val?.id,
+      lang: val?.lang_used ? val?.lang_used : 1,
+      state: val?.state ? val?.state : 0,
+      test_type: val?.test_type,
+      first_attempt: firstAttempt
+    }
+  
+    console.log("formData",formData)
+    const encryptData = btoa(JSON.stringify(formData))
+    console.log('encryptData',encryptData)
+    // const encryptData = encrypt(JSON.stringify(formData));
+    router.push(`https://educryptnetlify.videocrypt.in/webstaging/web/LiveTest/learn_result_window?data=${encryptData}`)
+  }
+
+  const handleTakeTest = (val) => {
+    let firstAttempt = "0";
+    if (val.state == "")
+      {
+          firstAttempt = "1";
+      }
+      // else if (App.Server_Time.ToUnixTimeSeconds() > long.Parse(Current_Selected_Resource.end_date))
+      // {
+      //     firstAttempt = "0";
+      // }
+      else if (Number(val.is_reattempt) > 0)
+      {
+          firstAttempt = "0";
+      }
+    const formData = {
+      jwt : localStorage.getItem('jwt'),
+      user_id: localStorage.getItem('user_id'),
+      course_id: CourseID,
+      test_id: val?.id,
+      lang: val?.lang_used ? val?.lang_used : 1,
+      state: val?.state ? val?.state : 0,
+      test_type: val?.test_type,
+      first_attempt: firstAttempt
+    }
+
+    console.log("formData",formData)
+    const encryptData = btoa(JSON.stringify(formData))
+    console.log('encryptData',encryptData)
+
+    router.push(`https://educryptnetlify.videocrypt.in/webstaging/web/LiveTest/attempt_now_window?data=${encryptData}`)
+  }
+
+  const handleRankTest = (val) => {
+    const formData = {
+      jwt : localStorage.getItem('jwt'),
+      user_id: localStorage.getItem('user_id'),
+      course_id: CourseID,
+      test_id: val?.id,
+      lang: val?.lang_used ? val?.lang_used : 1,
+      state: val?.state ? val?.state : 0,
+      test_type: val?.test_type,
+      first_attempt: 1
+    }
+    console.log("formData",formData)
+    const encryptData = btoa(JSON.stringify(formData))
+    console.log('encryptData',encryptData)
+
+    router.push(`https://educryptnetlify.videocrypt.in/webstaging/web/LiveTest/result_window?data=${encryptData}`)
+  }
+
   return (
     <div className="d-flex justify-content-center col-12 col-sm-6 col-md-4 col-lg-4 col-xl-3 mb-4 p-0">
       <div className="card border-0 shadow b-radius course_card m-0">
@@ -89,21 +169,22 @@ const LiveTestCard = ({testData, value}) => {
             {value == 'LIVE' &&
               <Button1
                 value="Attempt Now"
-                // handleClick={() => handleDetail(value)}
+                handleClick={() => handleTakeTest(testData)}
                 data= {0}
               />
             }
             {value == 'UPCOMING' &&
               <Button1
                 value={isTimeUp ? `Start Test` : `Started In- ${String(timeLeft.hours).padStart(2, '0')}:${String(timeLeft.minutes).padStart(2, '0')}:${String(timeLeft.seconds).padStart(2, '0')}`}
-                // handleClick={() => handleDetail(value)}
+                handleClick={() => handleTakeTest(testData)}
                 data= {0}
               />
             }
             {value == 'COMPLETED' && 
               <Button1
-              value={`View Result`}
-              // handleClick={() => handleDetail(value)}
+              value={testData?.state == 1 ? `View Result` : `Leaderboard`}
+              handleClick={() => testData?.state ? handleResultTest(testData): handleRankTest(testData)}
+              data={0}
             />
             }
             <button className="btn_detailShare">

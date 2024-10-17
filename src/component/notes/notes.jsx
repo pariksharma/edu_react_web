@@ -14,6 +14,7 @@ import { format } from "date-fns";
 
 const Notes = ({ propsValue, tabName, resetRef, courseDetail, CourseID, keyValue }) => {
   console.log("keyValue",CourseID)
+  
   const [modalShow, setModalShow] = useState(false);
   const [showError, setShowError] = useState(false);
   const [layer1Data, setLayer1Data] = useState();
@@ -28,6 +29,10 @@ const Notes = ({ propsValue, tabName, resetRef, courseDetail, CourseID, keyValue
   const [breadcrumbData, setBreadcrumbData] = useState('');
   const [breadcrumbData2, setBreadcrumbData2] = useState('');
   const [page, setPage] = useState([])
+  const [windowSize, setWindowSize] = useState({
+    width: window.innerWidth,
+    height: window.innerHeight
+  });
 
   const router = useRouter()
   const dispatch = useDispatch()
@@ -43,6 +48,22 @@ const Notes = ({ propsValue, tabName, resetRef, courseDetail, CourseID, keyValue
       setLayer1Data(courseDetail);
     }
   }, [courseDetail]);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowSize({
+        width: window.innerWidth,
+        height: window.innerHeight
+      });
+    };
+
+    window.addEventListener('resize', handleResize);
+
+    // Cleanup event listener on component unmount
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
 
 
   // console.log('tabsssss', displayTabData)
@@ -176,10 +197,10 @@ const Notes = ({ propsValue, tabName, resetRef, courseDetail, CourseID, keyValue
         parent_id: ''
         
       }
-      // console.log('formData', formData)
+      console.log('formData', formData)
       const response_getMasterData_service = await getMasterDataService(encrypt(JSON.stringify(formData), token))
       const response_getMasterData_Data = decrypt(response_getMasterData_service.data, token);
-      console.log('response_getMasterData_Data', response_getMasterData_Data.data)
+      console.log('response_getMasterData_Data', response_getMasterData_Data)
       if(response_getMasterData_Data.status) {
         return response_getMasterData_Data.data
       }
@@ -295,7 +316,12 @@ useEffect(() => {
 
 console.log('layer3updateData', layer3updateData)
 
-const handleTakeTest = (val) => {
+const handleTakeTest = (val, index) => {
+  const isLoggedIn = localStorage.getItem("jwt");
+    if(!isLoggedIn) {
+      setModalShow(true);
+    }
+    else{
   var firstAttempt = "0";
   // if (val.state == ""){
   //   firstAttempt = "1";
@@ -312,7 +338,7 @@ const handleTakeTest = (val) => {
     course_id: CourseID,
     test_id: val?.id,
     lang: val?.lang_used ? val?.lang_used : 1,
-    state: val?.state ? 0 :val?.state,
+    state: val?.state ? val?.state : 0,
     test_type: val?.test_type,
     first_attempt: firstAttempt
   }
@@ -321,7 +347,8 @@ const handleTakeTest = (val) => {
   const encryptData = btoa(JSON.stringify(formData))
   console.log('encryptData',encryptData)
   // const encryptData = encrypt(JSON.stringify(formData));
-  // router.push(`https://educryptnetlify.videocrypt.in/webstaging/web/LiveTest/learn_result_window?data=${encryptData}`)
+  window.open(`https://educryptnetlify.videocrypt.in/webstaging/web/LiveTest/attempt_now_window?data=${encryptData}`, 'popupWindow', `width=${windowSize.width},height=${windowSize.height},scrollbars=yes,resizable=no`)
+}
 }
 
   return (<>
@@ -433,7 +460,7 @@ const handleTakeTest = (val) => {
                           {/* {console.log('item', item)} */}
                           {layer1Data?.type == "pdf" && <Button1 value="Read" handleClick={() => handleRead(item)} /> }
                           {layer1Data?.type == "video" && <Button1 value="Watch Now" handleClick={() => handleWatch(item, i)} />}
-                          {layer1Data?.type == "test" && <Button1 value="Test" handleClick={() => handleTakeTest(item)} />}
+                          {layer1Data?.type == "test" && <Button1 value="Test" handleClick={() => handleTakeTest(item, i)} />}
                           </>
                           }
                         </div>

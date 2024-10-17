@@ -16,6 +16,7 @@ import { useRouter } from "next/router";
 import AWS from 'aws-sdk'
 import { useDispatch } from "react-redux";
 import { profile_data } from "@/store/sliceContainer/masterContentSlice";
+import UpdatePasswordModal from "../modal/updatePasswordModal";
 
 
 const S3_BUCKET = process.env.NEXT_PUBLIC_S3_BUCKET;
@@ -37,6 +38,7 @@ const Profile = () => {
   const [profileImage, setProfileImage] = useState('')
   const [isEditProfile, setIsEditProfile] = useState(false);
   const [isToasterOpen, setIsToasterOpen] = useState(false);
+  const [updatePasswordModalShow, setUpdatePasswordModalShow] = useState(false);
   const [profileData, setProfileData] = useState('');
   const [state, setState] = useState("");
   const [stateList, setStateList] = useState([]);
@@ -196,10 +198,10 @@ const Profile = () => {
         token
       );
       console.log("checked", editProfileData, response_updateProfile_data);
-      if(response_updateProfile_data?.status) {
-        if(response_updateProfile_data?.message){
-          console.log('popup')
-          showSuccessToast(response_updateProfile_data?.message);
+      if(response_updateProfile_data.status) {
+        if(response_updateProfile_data.message){
+          console.log("response_updateProfile_data.message",response_updateProfile_data.message)
+          toast.success(response_updateProfile_data.message);
         }
       setIsEditProfile(false)
       //   localStorage.removeItem('jwt');
@@ -362,6 +364,10 @@ const Profile = () => {
   return (
     <>
       <Toaster position="top-right" reverseOrder={false} />
+      <UpdatePasswordModal
+        show={updatePasswordModalShow}
+        onHide = {() => setUpdatePasswordModalShow(false)}
+      />
       {!isEditProfile ? (
         <section className="container-fluid">
           <div className="card accountCard mt-1">
@@ -424,8 +430,9 @@ const Profile = () => {
                         })}
                     </p>
                   </div>
-                  <div className="mt-3 col-sm-6 col-md-4">
+                  <div className="mt-3 col-sm-6 d-flex gap-2 col-md-4">
                     <Button1 value={"Edit"} handleClick={handleEdit} />
+                    <Button2 value={"Update Password"} handleClick={() => setUpdatePasswordModalShow(true)}  />
                   </div>
                   <div className="mt-3 col-sm-6 col-md-8"></div>
                 </div>

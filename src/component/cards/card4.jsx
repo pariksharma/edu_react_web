@@ -425,7 +425,7 @@ const Card4 = ({ value, titleName, handleDetail, titleId,setGetCourse }) => {
               handleClick={() => handleDetail(value)}
             />
             {value?.prices?.length > 0 &&
-            <Button2 value="Extend Validity" handleClick={() => handleExtendValidity(value)} />
+            <Button2 value="Extend Validity" data={0} handleClick={() => handleExtendValidity(value)} />
             }
           </div>
         ) : 

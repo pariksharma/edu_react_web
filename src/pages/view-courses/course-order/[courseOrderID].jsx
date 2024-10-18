@@ -987,6 +987,15 @@ const CourseOrderID = () => {
     }
   }
 
+  const handleBackdetails =()=>{
+    const back = localStorage.getItem('redirectdetails')
+    if(back){
+      router.push(back)
+    }else{
+      router.back()
+    }
+  }
+
 
   return (
     <>
@@ -1033,7 +1042,7 @@ const CourseOrderID = () => {
                   <i className="bi bi-chevron-right"></i>
                 </li>
                 }
-                <li className="breadcrumb-item" onClick={handleBack}>
+                <li className="breadcrumb-item" onClick={handleBackdetails}>
                   {/* {console.log(titleName)} */}
                   {`${titleName}`}
                   <i className="bi bi-chevron-right"></i>

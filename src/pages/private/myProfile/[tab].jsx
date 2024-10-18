@@ -32,6 +32,8 @@ const Index = ({ initialTab }) => {
   }, [router.query.tab]); // Dependency array with router.query.tab
 
   useEffect(() => {
+    const currentPath = router.asPath;
+    localStorage.setItem("redirectdetails", currentPath);
     const isLoggedIn = userLoggedIn()
     if(router.pathname.startsWith("/private") && !isLoggedIn){
       router.push('/')

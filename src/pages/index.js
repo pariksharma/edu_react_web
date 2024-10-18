@@ -23,6 +23,7 @@ export default function Home() {
           encrypt(JSON.stringify(formData), token)
         );
         const app_detail_data = decrypt(response_content_service.data, token);
+        console.log('app_detail_data', app_detail_data)
         if (app_detail_data.status) {
           const data = app_detail_data.data;
           console.log('appData', data)

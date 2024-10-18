@@ -35,6 +35,8 @@ const OnlineCourse = () => {
   // localStorage.setItem()
 
   useEffect(() => {
+    const currentPath = Router.asPath;
+    localStorage.setItem("redirectdetails", currentPath);
     setShowError(false)
     if (onlineCourseID) {
       // window.scrollTo(0, 0);

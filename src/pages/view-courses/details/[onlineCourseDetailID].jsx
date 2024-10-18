@@ -222,6 +222,15 @@ const ViewOnlineCourseDetail = () => {
   const OverView = tiles.find(item => item.type = "overview")
   console.log('key', key)
 
+  const handleBackdetails =()=>{
+    const back = localStorage.getItem('redirectdetails')
+    if(back){
+      router.push(back)
+    }else{
+      router.back()
+    }
+  }
+
   return (
     <>
       <Toaster position="top-right" reverseOrder={false} />
@@ -255,7 +264,7 @@ const ViewOnlineCourseDetail = () => {
                     titleName && 
                     <li
                       className="breadcrumb-item"
-                      onClick={() => router.back()}
+                      onClick={handleBackdetails}
                     >
                       {`${titleName}`}
                       <i className="bi bi-chevron-right"></i>

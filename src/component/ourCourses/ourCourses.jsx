@@ -24,6 +24,7 @@ const OurCourses = () => {
   const router = useRouter();
 
   const contentData = useSelector((state) => state?.allCategory?.content);
+  console.log('contentData', contentData)
   useEffect(() => {
     if (contentData?.banner_list_web?.length > 0) {
       setBanner(contentData.banner_list_web[0]?.banner_url);

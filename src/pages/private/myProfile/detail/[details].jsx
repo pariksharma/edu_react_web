@@ -125,6 +125,15 @@ const Details = ({ value }) => {
     }
   };
 
+  const handleBackdetails =()=>{
+    const back = localStorage.getItem('redirectdetails')
+    if(back){
+      router.push(back)
+    }else{
+      router.back()
+    }
+  }
+
   const handleBuyNow = () => {
     const currentPath = router.asPath;
     localStorage.setItem("redirectAfterLogin", currentPath);
@@ -157,7 +166,7 @@ const Details = ({ value }) => {
                     <ol className="m-0 breadcrumb cursor">
                       <li
                         className="breadcrumb-item"
-                        onClick={() => router.back()}
+                        onClick={handleBackdetails}
                       >
                         {titleName ? (titleName == "MyCourse" ? 'My Courses' : titleName) : 
                           `My Courses`}

@@ -45,7 +45,7 @@ export default function Home() {
     // } else {
     //   setAppIdFetched(true);  // If already exists, mark it as fetched
     // }
-  }, [dispatch]);
+  }, []);
 
   useEffect(() => {
     if (typeof document !== "undefined" && color) {

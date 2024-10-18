@@ -302,6 +302,8 @@ const Card4 = ({ value, titleName, handleDetail, titleId,setGetCourse }) => {
   };
 
   const handleBuy = () => {
+    const currentPath = router.asPath;
+    localStorage.setItem("redirectAfterLogin", currentPath);
     localStorage.setItem('previousTab', router.pathname);
     router.push(
       `/view-courses/course-order/${

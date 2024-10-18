@@ -976,6 +976,16 @@ const CourseOrderID = () => {
       country: "+91-"
     })
   }
+  
+  const handleBack =()=>{
+    const getbackpath = localStorage.getItem('redirectAfterLogin')
+    console.log("getbackpath",getbackpath)
+    if(getbackpath){
+      router.push(getbackpath)
+    }else{
+      router.back()
+    }
+  }
 
 
   return (
@@ -1023,12 +1033,12 @@ const CourseOrderID = () => {
                   <i className="bi bi-chevron-right"></i>
                 </li>
                 }
-                <li className="breadcrumb-item" onClick={() => router.back()}>
+                <li className="breadcrumb-item" onClick={handleBack}>
                   {/* {console.log(titleName)} */}
                   {`${titleName}`}
                   <i className="bi bi-chevron-right"></i>
                 </li>
-                <li className="breadcrumb-item" onClick={() => router.back()}>
+                <li className="breadcrumb-item" onClick={handleBack}>
                   {`Details`}
                   <i className="bi bi-chevron-right"></i>
                 </li>

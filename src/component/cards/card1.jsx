@@ -18,16 +18,19 @@ const Card1 = ({ value, titleName, handleDetail, keyValue }) => {
     console.log('helll')
     router.push(
       `/view-courses/details/${
-        titleName + ":" + value.id + "&" + value.combo_course_ids + 'parent:'
+        titleName?.split(" ").join("_") + ":" + value.id + "&" + value.combo_course_ids + 'parent:'
       }`
     );
   };
 
   const handleBuy = () => {
+    const currentPath = router.asPath;
+    console.log("currentPath",currentPath)
+    localStorage.setItem("redirectAfterLogin", currentPath);
     localStorage.setItem('previousTab', router.pathname);
     router.push(
       `/view-courses/course-order/${
-        titleName + ":" + value.id + "&" + value.combo_course_ids
+        titleName?.split(" ").join("_") + ":" + value.id + "&" + value.combo_course_ids
       }`
     );
   };

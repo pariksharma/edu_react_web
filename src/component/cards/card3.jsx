@@ -20,6 +20,9 @@ const Card3 = ({ value, titleName, courseCombo, handleAddToMyCourse }) => {
   };
 
   const handleBuy = () => {
+    const currentPath = router.asPath;
+    localStorage.setItem("redirectAfterLogin", currentPath);
+    
     localStorage.setItem('previousTab', router.pathname);
     router.push(
       `/view-courses/course-order/${

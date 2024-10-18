@@ -26,6 +26,7 @@ const Details = ({ value }) => {
   const [key, setKey] = useState(null);
   const [onlineCourseAry, setOnlineCourseAry] = useState('');
   const [showError, setShowError] = useState(false);
+  const [serverError, setServerError] = useState(false);
   const [relateCourseAry, setRelateCourseAry] = useState([]);
   const [pdfData, setPdfData] = useState([]);
   const [courseDetail, setCourseDetail] = useState([]);
@@ -110,7 +111,7 @@ const Details = ({ value }) => {
         setShowError(true)
       }
     } catch (error) {
-      setShowError(true)
+      setServerError(true)
       console.log("error found: ", error)
     }
   };
@@ -123,6 +124,20 @@ const Details = ({ value }) => {
       resetLayerRef.current.click();
     }
   };
+
+  const handleBuyNow = () => {
+    const currentPath = router.asPath;
+    localStorage.setItem("redirectAfterLogin", currentPath);
+    router.push(
+      `/view-courses/course-order/${
+        titleName +
+        ":" +
+        onlineCourseAry.id +
+        "&" +
+        courseCombo
+      }`
+    )
+  }
   console.log('tiles', tiles)
 
   const OverView = tiles.find(item => item.type == "overview")
@@ -216,17 +231,7 @@ const Details = ({ value }) => {
                           <p className="m-0 detailBbuyNow">
                             <Button1
                               value={"Buy Now"}
-                              handleClick={() =>
-                                router.push(
-                                  `/view-courses/course-order/${
-                                    titleName +
-                                    ":" +
-                                    onlineCourseAry.id +
-                                    "&" +
-                                    courseCombo
-                                  }`
-                                )
-                              }
+                              handleClick={handleBuyNow}
                             />
                           </p>
                         )}
@@ -404,10 +409,19 @@ const Details = ({ value }) => {
               </div>
             </>
             :
-            <>
-              {/* <div className="spinner-border" role="status" /> */}
-              <LoaderAfterLogin />
-            </>
+            serverError ? 
+              <section className="detailTopContainer">
+                <div className="mb-4 container-fluid p-0">
+                  <div className="d-flex justify-content-center align-item-center">
+                    <h1 className="text-danger">Internal Server Error ....</h1>
+                  </div>
+                </div>
+              </section>
+              :
+              <>
+                {/* <div className="spinner-border" role="status" /> */}
+                <LoaderAfterLogin />
+              </>
           }
           </main>
       </div>

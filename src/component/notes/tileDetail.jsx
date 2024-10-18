@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import Button1 from '../buttons/button1/button1'
 
-const TileDetail = ({item, layer1Data, handleRead, handleWatch, handleTakeTest, handleResultTest, handleRankTest, handleUpcomingTest, i}) => {
+const TileDetail = ({item, layer1Data, handleRead, handleWatch, handleTakeTest, handleResultTest, handleRankTest, handleUpcomingTest, i, onlineCourseAry}) => {
 
     const [timeValue, setTimeValue] = useState('')
 
+    console.log('item', onlineCourseAry)
     let startTime = 1729233585
     // item.start_date
     let endTime = item.end_date
@@ -69,42 +70,52 @@ const TileDetail = ({item, layer1Data, handleRead, handleWatch, handleTakeTest, 
                 {" "}
                 {
                 // (isLogin && 
-                item.is_purchased == 0 ?
-                // item.is_locked == "1" ? 
-                // <>
-                //   <img style={{ width: "32px" }} src="/assets/images/locked.png" alt="" />
-                // </>
-                // :
-                item.is_locked == 0 ?
-                <>
-                {layer1Data.type == "pdf" && <Button1 value="Read" handleClick={handleRead} /> }
-                {layer1Data.type == "video" && <Button1 value="Watch Now" handleClick={handleWatch(item, i)} />}
-                {layer1Data.type == "test" && <Button1 value="Test" />}
-                </>
+                onlineCourseAry.is_purchased == 0 ?
+                    item.is_locked == 0 ?
+                    <>
+                        {layer1Data.type == "pdf" && <Button1 value="Read" handleClick={handleRead} /> }
+                        {layer1Data.type == "video" && <Button1 value="Watch Now" handleClick={handleWatch(item, i)} />}
+                        {layer1Data?.type == "test" && 
+                        (timeValue == "pending" &&
+                        <Button1 value="Upcoming" 
+                            handleClick={() => handleUpcomingTest(item, i)} 
+                        />
+                        )}
+                        {layer1Data?.type == "test" && (timeValue == "attempt" &&
+                        <Button1 value="Attempt Now" 
+                            handleClick={() => handleTakeTest(item, i)} 
+                        />
+                        )}
+                        {layer1Data?.type == "test" && (timeValue == "result" &&
+                        <Button1 value={item?.state == 1 ? "View Result" : "LeaderBoard"}
+                            handleClick={() => item?.state == 1 ? handleResultTest(item, i) : handleRankTest(item, i)} 
+                        />
+                        )}
+                    </>
+                    :
+                    <>
+                        <img style={{ width: "32px" }} src="/assets/images/locked.png" alt="" />
+                    </>
                 :
                 <>
-                    <img style={{ width: "32px" }} src="/assets/images/locked.png" alt="" />
-                </>
-                :
-                <>
-                {layer1Data?.type == "pdf" && <Button1 value="Read" handleClick={() => handleRead(item)} /> }
-                {layer1Data?.type == "video" && <Button1 value="Watch Now" handleClick={() => handleWatch(item, i)} />}
-                {layer1Data?.type == "test" && 
-                (timeValue == "pending" &&
-                <Button1 value="Upcoming" 
-                    handleClick={() => handleUpcomingTest(item, i)} 
-                />
-                )}
-                {layer1Data?.type == "test" && (timeValue == "attempt" &&
-                <Button1 value="Attempt Now" 
-                    handleClick={() => handleTakeTest(item, i)} 
-                />
-                )}
-                {layer1Data?.type == "test" && (timeValue == "result" &&
-                <Button1 value={item?.state == 1 ? "View Result" : "LeaderBoard"}
-                    handleClick={() => item?.state == 1 ? handleResultTest(item, i) : handleRankTest(item, i)} 
-                />
-                )}
+                    {layer1Data?.type == "pdf" && <Button1 value="Read" handleClick={() => handleRead(item)} /> }
+                    {layer1Data?.type == "video" && <Button1 value="Watch Now" handleClick={() => handleWatch(item, i)} />}
+                    {layer1Data?.type == "test" && 
+                    (timeValue == "pending" &&
+                    <Button1 value="Upcoming" 
+                        handleClick={() => handleUpcomingTest(item, i)} 
+                    />
+                    )}
+                    {layer1Data?.type == "test" && (timeValue == "attempt" &&
+                    <Button1 value="Attempt Now" 
+                        handleClick={() => handleTakeTest(item, i)} 
+                    />
+                    )}
+                    {layer1Data?.type == "test" && (timeValue == "result" &&
+                    <Button1 value={item?.state == 1 ? "View Result" : "LeaderBoard"}
+                        handleClick={() => item?.state == 1 ? handleResultTest(item, i) : handleRankTest(item, i)} 
+                    />
+                    )}
                 </>
                 }
             </div>

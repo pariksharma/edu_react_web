@@ -14,7 +14,7 @@ import { format } from "date-fns";
 import TileDetail from "./tileDetail";
 
 const Notes = ({ propsValue, tabName, resetRef, courseDetail, CourseID, keyValue, onlineCourseAry }) => {
-  console.log("keyValue",onlineCourseAry) 
+  // console.log("keyValue",onlineCourseAry) 
   
   const [modalShow, setModalShow] = useState(false);
   const [showError, setShowError] = useState(false);
@@ -611,6 +611,7 @@ const Notes = ({ propsValue, tabName, resetRef, courseDetail, CourseID, keyValue
                   handleRankTest = {handleRankTest}
                   handleUpcomingTest = {handleUpcomingTest}
                   i = {i}
+                  onlineCourseAry = {onlineCourseAry}
                 />
               );
               })}

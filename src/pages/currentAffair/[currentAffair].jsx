@@ -10,6 +10,7 @@ import { decrypt, encrypt, get_token } from '@/utils/helpers';
 import { format } from "date-fns";
 import { FaShare } from "react-icons/fa";
 import Button1 from '@/component/buttons/button1/button1';
+import { useSelector } from 'react-redux';
 
 const CurrentAffair = () => {
 
@@ -19,6 +20,7 @@ const CurrentAffair = () => {
     const router = useRouter();
     const {currentAffair} = router.query
     const token = get_token()
+    const versionData = useSelector((state) => state.allCategory?.versionData);
 
     console.log(currentAffair)
 
@@ -95,9 +97,11 @@ const CurrentAffair = () => {
                   <div className="col-md-12 mb-2 flex-wrap flex-sm-nowrap d-flex align-items-center justify-content-between">
                     <p className="m-0 mb-2 detailblog_Date">{date}</p>
                     <div className="gap-2 d-flex align-items-center">
-                      <button className="btn_detailShare">
-                        <FaShare />
-                      </button>
+                      {versionData?.share_content == 1 &&
+                        <button className="btn_detailShare">
+                          <FaShare />
+                        </button>
+                      }
                       <div className="m-0 ">
                         <Button1 value={"View PDF"} />
                       </div>

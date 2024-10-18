@@ -29,6 +29,7 @@ const ViewOnlineCourseDetail = () => {
   const [modalShow, setModalShow] = useState(false);
   const [thankYouModalShow, setThankYouModalShow] = useState(false)
   const [showError, setShowError] = useState(false);
+  const [serverError, setServerError] = useState(false);
   const [tiles, setTiles] = useState([]);
   const [key, setKey] = useState(null);
   const [onlineCourseAry, setOnlineCourseAry] = useState("");
@@ -142,6 +143,7 @@ const ViewOnlineCourseDetail = () => {
     } catch (error) {
       console.log("error found: ", error)
       // router.push('/')
+      setServerError(true)
     }
   };
 
@@ -211,6 +213,8 @@ const ViewOnlineCourseDetail = () => {
   };
 
   const handleBuy = () => {
+    const currentPath = router.asPath;
+    localStorage.setItem("redirectAfterLogin", currentPath);
     localStorage.setItem('previousTab', router.pathname);
     router.push(`/view-courses/course-order/${titleName + ":" + onlineCourseAry.id + "&" + courseCombo}`)
   }
@@ -314,7 +318,7 @@ const ViewOnlineCourseDetail = () => {
                     {onlineCourseAry.is_purchased == 0 &&
                     <p className="m-0 detailBbuyNow">
                       <Button1
-                        value={"Buy Now"}
+                        value={"Bu  y Now"}
                         handleClick={handleBuy}
                       />
                     </p>
@@ -488,7 +492,15 @@ const ViewOnlineCourseDetail = () => {
         <h4>No Data found!</h4>
       </div>
       :
-      <Loader />
+      serverError ? 
+        <section className="detailTopContainer">
+          <div className="mb-4 container-fluid p-0">
+            <div className="d-flex justify-content-center align-item-center">
+              <h1 className="text-danger">Internal Server Error ....</h1>
+            </div>
+          </div>
+        </section> 
+        : <Loader />
     }
     </>  
     }

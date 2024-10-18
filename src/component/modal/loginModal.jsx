@@ -35,7 +35,7 @@ const LoginModal = (props) => {
   const [withEmail, setWithEmail] = useState(false);
   const [isActive, setIsActive] = useState(false);
   const [signUpWithOTP, setSignUpWithOTP] = useState(false);
-  const initialTime = 60; // 3 minutes in seconds
+  const initialTime = 60; // 1 minutes in seconds
   const [timeRemaining, setTimeRemaining] = useState(initialTime);
   const [deviceToken, setDeviceToken] = useState(0)
   const [jwt, setJwt] = useState('')

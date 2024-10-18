@@ -14,7 +14,7 @@ import {
 import { set } from "date-fns";
 import { useRouter } from "next/router";
 import AWS from 'aws-sdk'
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { profile_data } from "@/store/sliceContainer/masterContentSlice";
 import UpdatePasswordModal from "../modal/updatePasswordModal";
 
@@ -56,6 +56,9 @@ const Profile = () => {
   const token = get_token();
   const router = useRouter();
   const dispatch = useDispatch();
+  const versionData = useSelector((state) => state.allCategory?.versionData);
+
+  // console.log('versionData', versionData)
 
   useEffect(() => {
     setIsEditProfile(false);
@@ -432,7 +435,7 @@ const Profile = () => {
                   </div>
                   <div className="mt-3 col-sm-6 d-flex gap-2 col-md-4">
                     <Button1 value={"Edit"} handleClick={handleEdit} />
-                    <Button2 value={"Update Password"} handleClick={() => setUpdatePasswordModalShow(true)}  />
+                    {versionData?.otp_login != 1 &&<Button2 value={"Update Password"} handleClick={() => setUpdatePasswordModalShow(true)} />}
                   </div>
                   <div className="mt-3 col-sm-6 col-md-8"></div>
                 </div>

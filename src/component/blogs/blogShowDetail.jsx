@@ -3,12 +3,14 @@ import Button1 from "../buttons/button1/button1";
 import { FaShare } from "react-icons/fa";
 import { useRouter } from "next/router";
 import { format } from "date-fns";
+import { useSelector } from "react-redux";
 
 const BlogShowDetail = ({ value }) => {
   const [date, setDate] = useState("");
 
   const router = useRouter();
   const path = router.query?.tab;
+  const versionData = useSelector((state) => state.allCategory?.versionData);
 
   useEffect(() => {
     const cr_date = new Date(value.created_at * 1000);
@@ -27,9 +29,11 @@ const BlogShowDetail = ({ value }) => {
         <div className="col-md-12 mb-2 flex-wrap flex-sm-nowrap d-flex align-items-center justify-content-between">
           <p className="m-0 mb-2 detailblog_Date">{date}</p>
           <div className="gap-2 d-flex align-items-center">
-            <button className="btn_detailShare">
-              <FaShare />
-            </button>
+            {versionData?.share_content == 1 &&
+              <button className="btn_detailShare">
+                <FaShare />
+              </button>
+            }
             <div className="m-0 ">
               {value.file_url && <Button1 value={"View PDF"} />}
             </div>

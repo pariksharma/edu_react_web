@@ -47,6 +47,7 @@ const ViewOnlineCourseDetail = () => {
   const token = get_token();
   const reviewData = useSelector((state) => state.allCategory?.review)
   const displayTabData = useSelector((state) => state.allCategory?.tabName)
+  const versionData = useSelector((state) => state.allCategory?.versionData);
   
   // console.log("onlineCourseDetailID============", onlineCourseDetailID);
   // const id = onlineCourseDetailID?.slice(onlineCourseDetailID.indexOf(':') +1, onlineCourseDetailID.length)
@@ -305,9 +306,11 @@ const ViewOnlineCourseDetail = () => {
               {onlineCourseAry.mrp != 0 && (
                 <div className="gap-2 d-flex flex-wrap flex-sm-nowrap align-items-center button_price">
                   <div className="gap-2 share d-flex align-items-center">
-                    <button className="button1_share">
-                      <FaShare />
-                    </button>
+                    {versionData?.share_content == 1 && 
+                      <button className="button1_share">
+                        <FaShare />
+                      </button>
+                    }
                     {onlineCourseAry.is_purchased == 0 &&
                     <p className="m-0 detailBbuyNow">
                       <Button1
@@ -455,6 +458,7 @@ const ViewOnlineCourseDetail = () => {
                       CourseID={id}
                       tabName={item.tile_name}
                       keyValue={key}
+                      onlineCourseAry = {onlineCourseAry}
                       // propsValue={isValidData(pdfData) && pdfData}
                     />
                     }

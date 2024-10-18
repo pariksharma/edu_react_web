@@ -17,7 +17,7 @@ export default function Home() {
   useEffect(() => {
     const fetchAppDetail = async () => {
       const token = get_token();
-      const formData = { domain: "https://educrypt.netlify.app" };
+      const formData = { domain: "https://educryptnetlify.videocrypt.in" };
       try {
         const response_content_service = await getAppDetial(
           encrypt(JSON.stringify(formData), token)

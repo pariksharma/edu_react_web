@@ -11,12 +11,14 @@ import ErrorPageAfterLogin from "../errorPageAfterLogin";
 import LoaderAfterLogin from "../loaderAfterLogin";
 import toast, { Toaster } from "react-hot-toast";
 import { format } from "date-fns";
+import TileDetail from "./tileDetail";
 
-const Notes = ({ propsValue, tabName, resetRef, courseDetail, CourseID, keyValue }) => {
-  // console.log("keyValue",CourseID)
+const Notes = ({ propsValue, tabName, resetRef, courseDetail, CourseID, keyValue, onlineCourseAry }) => {
+  console.log("keyValue",onlineCourseAry) 
   
   const [modalShow, setModalShow] = useState(false);
   const [showError, setShowError] = useState(false);
+  const [isToasterOpen, setIsToasterOpen] = useState(false);
   const [status, setStatus] = useState('');
   const [layer1Data, setLayer1Data] = useState();
   const [showLayer, setShowLayer] = useState("layer1");
@@ -41,6 +43,14 @@ const Notes = ({ propsValue, tabName, resetRef, courseDetail, CourseID, keyValue
   let appDetail = useSelector((state) => state?.appDetail?.app_detail)
 
   // console.log('appDetail', appDetail)
+
+  useEffect(() => {
+    if(isToasterOpen) {
+      setTimeout(() => {
+        setIsToasterOpen(false)
+      }, 1500)
+    }
+  }, [isToasterOpen])
 
 
   useEffect(() => {
@@ -124,6 +134,16 @@ const Notes = ({ propsValue, tabName, resetRef, courseDetail, CourseID, keyValue
       // setDate(cr_date.toString().substring(0, cr_date.toString().indexOf('GMT')))
       return format(cr_date, "d MMM, yyyy")
     }  
+  }
+
+  const showErrorToast = (toastMsg) => {
+    if (!isToasterOpen) {
+      setIsToasterOpen(true);
+      toast.error(toastMsg, {
+        // onClose: () => setIsToasterOpen(false),  // Set isToasterOpen to false when the toaster closes
+        autoClose: 1000
+    });
+    }
   }
 
   const getLayer2Data = (index, title) => {
@@ -219,10 +239,13 @@ const Notes = ({ propsValue, tabName, resetRef, courseDetail, CourseID, keyValue
       setModalShow(true);
     }
     else {
-      // router.push(`/private/myProfile/view-pdf/${encodeURIComponent(value.file_url)}`)
-      // window.open(value)
-      if (typeof window !== "undefined") {
-        window.open(value.file_url, "_blank");
+      if(onlineCourseAry.is_purchased == 1) {
+        if (typeof window !== "undefined") {
+          window.open(value.file_url, "_blank");
+        }
+      }
+      else{
+        showErrorToast('Please, purchase the course')
       }
     }
   };
@@ -233,20 +256,25 @@ const Notes = ({ propsValue, tabName, resetRef, courseDetail, CourseID, keyValue
       setModalShow(true);
     }
     else {
-      // router.push(`/private/myProfile/view-pdf/${encodeURIComponent(value.file_url)}`)
-      dispatch(all_tabName(
-        {
-          index,
-          tab: keyValue,
-          layer: showLayer
-        }
-      ))
-      router.push({
-        pathname: `/private/myProfile/play/${data.id}`,
-        query: data,
-      });
-      // router.push(`/private/myProfile/play/${data.file_url}&type=${data.file_type}`)
-      // console.log('watch')
+      if(onlineCourseAry.is_purchased == 1) {
+        // router.push(`/private/myProfile/view-pdf/${encodeURIComponent(value.file_url)}`)
+        dispatch(all_tabName(
+          {
+            index,
+            tab: keyValue,
+            layer: showLayer
+          }
+        ))
+        router.push({
+          pathname: `/private/myProfile/play/${data.id}`,
+          query: data,
+        });
+        // router.push(`/private/myProfile/play/${data.file_url}&type=${data.file_type}`)
+        // console.log('watch')
+      }
+      else {
+        showErrorToast('Please, purchase the course')
+      }
     }
   }
 
@@ -286,139 +314,163 @@ const Notes = ({ propsValue, tabName, resetRef, courseDetail, CourseID, keyValue
   const handleLayer2Click = (i, item) => {
     getLayer3Data(i, item.title)
   }
-// console.log('layer2List', layer2List)
+  // console.log('layer2List', layer2List)
 
-const filterPage = () => {
-  // console.log('layer3Data', layer3Data)
-  let len = layer3Data?.list?.length;
-  let length = len%6 !==0 ? Math.floor(len/6) + 1 : len/6
-  // for(let i = 0; i < length; i++) {
-  //     Arr.push(i+1)
-  // }
-  // setPage(Arr)
+  const filterPage = () => {
+    // console.log('layer3Data', layer3Data)
+    let len = layer3Data?.list?.length;
+    let length = len%6 !==0 ? Math.floor(len/6) + 1 : len/6
+    // for(let i = 0; i < length; i++) {
+    //     Arr.push(i+1)
+    // }
+    // setPage(Arr)
 
-  setPage(Array.from({ length }, (_, i) => i + 1));
-}
-
-useEffect(() => {
-  if(layer3Data?.list?.length > 0 && data3Index > 0) {
-    // console.log("page", data3Index, page.length)
-    if(data3Index == 1){
-      setLayer3updateData(layer3Data?.list?.slice(0, 6))
-    }
-    else if(data3Index === page.length){
-      setLayer3updateData(layer3Data?.list?.slice((data3Index-1)*10, data3Index.length))
-    }
-    else{
-      setLayer3updateData(layer3Data?.list?.slice((data3Index-1)*6, (data3Index)*6))
-    }
+    setPage(Array.from({ length }, (_, i) => i + 1));
   }
-}, [data3Index, layer3Data])
+
+  useEffect(() => {
+    if(layer3Data?.list?.length > 0 && data3Index > 0) {
+      // console.log("page", data3Index, page.length)
+      if(data3Index == 1){
+        setLayer3updateData(layer3Data?.list?.slice(0, 6))
+      }
+      else if(data3Index === page.length){
+        setLayer3updateData(layer3Data?.list?.slice((data3Index-1)*10, data3Index.length))
+      }
+      else{
+        setLayer3updateData(layer3Data?.list?.slice((data3Index-1)*6, (data3Index)*6))
+      }
+    }
+  }, [data3Index, layer3Data])
 
 
-// console.log('layer3updateData', layer3updateData)
+  // console.log('layer3updateData', layer3updateData)
 
-const handleTakeTest = (val, index) => {
-  console.log('val111111111', val)
-  const isLoggedIn = localStorage.getItem("jwt");
+  const handleTakeTest = (val, index) => {
+    console.log('val111111111', val)
+    const isLoggedIn = localStorage.getItem("jwt");
     if(!isLoggedIn) {
       setModalShow(true);
     }
     else{
-  var firstAttempt = "0";
-  // if (val.state == ""){
-  //   firstAttempt = "1";
-  // }
-  // // else if (App.Server_Time.ToUnixTimeSeconds() > long.Parse(Current_Selected_Resource.end_date)){
-  // //   firstAttempt = "0";
-  // // }
-  // else if (Number(val.is_reattempt) > 0){
-  //   firstAttempt = "0";
-  // }
-  const formData = {
-    jwt : localStorage.getItem('jwt'),
-    user_id: localStorage.getItem('user_id'),
-    course_id: CourseID,
-    test_id: val?.id,
-    lang: val?.lang_used ? val?.lang_used : 1,
-    state: val?.state ? val?.state : 0,
-    test_type: val?.test_type,
-    first_attempt: firstAttempt
-  }
+      if(onlineCourseAry.is_purchased == 1) {
+        var firstAttempt = "0";
+        // if (val.state == ""){
+        //   firstAttempt = "1";
+        // }
+        // // else if (App.Server_Time.ToUnixTimeSeconds() > long.Parse(Current_Selected_Resource.end_date)){
+        // //   firstAttempt = "0";
+        // // }
+        // else if (Number(val.is_reattempt) > 0){
+        //   firstAttempt = "0";
+        // }
+        const formData = {
+          jwt : localStorage.getItem('jwt'),
+          user_id: localStorage.getItem('user_id'),
+          course_id: CourseID,
+          test_id: val?.id,
+          lang: val?.lang_used ? val?.lang_used : 1,
+          state: val?.state ? val?.state : 0,
+          test_type: val?.test_type,
+          first_attempt: firstAttempt
+        }
 
-  console.log("formData",formData)
-  const encryptData = btoa(JSON.stringify(formData))
-  console.log('encryptData',encryptData)
-  // const encryptData = encrypt(JSON.stringify(formData));
-  window.open(`https://educryptnetlify.videocrypt.in/webstaging/web/LiveTest/attempt_now_window?data=${encryptData}`, 'popupWindow', `width=${windowSize.width},height=${windowSize.height},scrollbars=yes,resizable=no`)
-}
-}
-
-const compareTime = (startTime, endTime) => {
-  // const givenTimestamp = '2024-10-17T10:30:00Z';
-  const givenStartTime = new Date(startTime * 1000);
-  const givenEndTime = new Date(endTime * 1000);
-
-    // Get current time
-    const currentTime = new Date();
-
-    // Compare times
-    if (currentTime < givenStartTime) {
-      return "pending"
-    } else if(currentTime > givenStartTime && currentTime < givenEndTime) {
-      return "attempt"
+        console.log("formData",formData)
+        const encryptData = btoa(JSON.stringify(formData))
+        console.log('encryptData',encryptData)
+        // const encryptData = encrypt(JSON.stringify(formData));
+        window.open(`https://educryptnetlify.videocrypt.in/webstaging/web/LiveTest/attempt_now_window?data=${encryptData}`, 'popupWindow', `width=${windowSize.width},height=${windowSize.height},scrollbars=yes,resizable=no`)
+      }
+      else{
+        showErrorToast('Please, purchase the course')
+      }
     }
-     else if(currentTime > givenEndTime) {
-      return "result"
-     }
-}
-
-const handleRankTest = (val) => {
-  const formData = {
-    jwt : localStorage.getItem('jwt'),
-    user_id: localStorage.getItem('user_id'),
-    course_id: CourseID,
-    test_id: val?.id,
-    lang: val?.lang_used ? val?.lang_used : 1,
-    state: val?.state ? val?.state : 0,
-    test_type: val?.test_type,
-    first_attempt: 1
-  }
-  console.log("formData",formData)
-  const encryptData = btoa(JSON.stringify(formData))
-  console.log('encryptData',encryptData)
-
-  window.open(`https://educryptnetlify.videocrypt.in/webstaging/web/LiveTest/result_window?data=${encryptData}`, 'popupWindow', `width=${windowSize.width},height=${windowSize.height},scrollbars=yes,resizable=no`)
-}
-
-const handleResultTest = (val, index) => {
-  var firstAttempt = "0";
-  if (val.state == ""){
-    firstAttempt = "1";
-  }
-  // // else if (App.Server_Time.ToUnixTimeSeconds() > long.Parse(Current_Selected_Resource.end_date)){
-  // //   firstAttempt = "0";
-  // // }
-  else if (Number(val.is_reattempt) > 0){
-    firstAttempt = "0";
-  }
-  const formData = {
-    jwt : localStorage.getItem('jwt'),
-    user_id: localStorage.getItem('user_id'),
-    course_id: CourseID,
-    test_id: val?.id,
-    lang: val?.lang_used ? val?.lang_used : 1,
-    state: val?.state ? val?.state : 0,
-    test_type: val?.test_type,
-    first_attempt: firstAttempt
   }
 
-  console.log("formData",formData)
-  const encryptData = btoa(JSON.stringify(formData))
-  console.log('encryptData',encryptData)
-  // const encryptData = encrypt(JSON.stringify(formData));
-  window.open(`https://educryptnetlify.videocrypt.in/webstaging/web/LiveTest/learn_result_window?data=${encryptData}`,  'popupWindow', `width=${windowSize.width},height=${windowSize.height},scrollbars=yes,resizable=no`)
-}
+  const handleRankTest = (val) => {
+    const isLoggedIn = localStorage.getItem("jwt");
+    if(!isLoggedIn) {
+      setModalShow(true);
+    }
+    else {
+      if(onlineCourseAry.is_purchased == 1) {
+        const formData = {
+          jwt : localStorage.getItem('jwt'),
+          user_id: localStorage.getItem('user_id'),
+          course_id: CourseID,
+          test_id: val?.id,
+          lang: val?.lang_used ? val?.lang_used : 1,
+          state: val?.state ? val?.state : 0,
+          test_type: val?.test_type,
+          first_attempt: 1
+        }
+        console.log("formData",formData)
+        const encryptData = btoa(JSON.stringify(formData))
+        console.log('encryptData',encryptData)
+
+        window.open(`https://educryptnetlify.videocrypt.in/webstaging/web/LiveTest/result_window?data=${encryptData}`, 'popupWindow', `width=${windowSize.width},height=${windowSize.height},scrollbars=yes,resizable=no`)
+      }
+      else {
+        showErrorToast('Please, purchase the course')
+      }
+    }
+  }
+
+  const handleResultTest = (val, index) => {
+    const isLoggedIn = localStorage.getItem("jwt");
+    if(!isLoggedIn) {
+      setModalShow(true);
+    }
+    else {
+      if(onlineCourseAry.is_purchased == 1) {
+        var firstAttempt = "0";
+        if (val.state == ""){
+          firstAttempt = "1";
+        }
+        // // else if (App.Server_Time.ToUnixTimeSeconds() > long.Parse(Current_Selected_Resource.end_date)){
+        // //   firstAttempt = "0";
+        // // }
+        else if (Number(val.is_reattempt) > 0){
+          firstAttempt = "0";
+        }
+        const formData = {
+          jwt : localStorage.getItem('jwt'),
+          user_id: localStorage.getItem('user_id'),
+          course_id: CourseID,
+          test_id: val?.id,
+          lang: val?.lang_used ? val?.lang_used : 1,
+          state: val?.state ? val?.state : 0,
+          test_type: val?.test_type,
+          first_attempt: firstAttempt
+        }
+
+        console.log("formData",formData)
+        const encryptData = btoa(JSON.stringify(formData))
+        console.log('encryptData',encryptData)
+        // const encryptData = encrypt(JSON.stringify(formData));
+        window.open(`https://educryptnetlify.videocrypt.in/webstaging/web/LiveTest/learn_result_window?data=${encryptData}`,  'popupWindow', `width=${windowSize.width},height=${windowSize.height},scrollbars=yes,resizable=no`)
+      }
+      else {
+        showErrorToast('Please, purchase the course')
+      }
+    }
+  }
+
+  const handleUpcomingTest = (item, i) => {
+    const isLoggedIn = localStorage.getItem("jwt");
+    if(!isLoggedIn) {
+      setModalShow(true);
+    }
+    else {
+      if(onlineCourseAry.is_purchased == 1) {
+        const givenStartTime = new Date(1729233285 * 1000);
+        showErrorToast(`Test will start at ${givenStartTime.toLocaleTimeString}`)
+      }
+      else {
+        showErrorToast('Please, purchase the course')
+      }
+    }
+  }
 
   return (<>
     <LoginModal
@@ -480,75 +532,86 @@ const handleResultTest = (val, index) => {
               <div>
               {layer3updateData?.map((item, i) => {
               return (
-                <div
-                  className=" pg-tabs-description mt-3"
-                  key={i}
-                //   onClick={() => handleOpenVideo(item)}
-                >
-                  <div className="tabs-deschovr d-flex align-items-center rounded">
-                    <div className="w-100 pg-sb-topic d-flex align-items-center justify-content-between">
-                      <div className="d-flex justify-content-between">
-                        <img
-                          src={item.thumbnail_url ? item.thumbnail_url : "/assets/images/noImage.jfif"}
-                          height={"60px"}
-                        />
-                        <div className="subjectDetails">
-                          <p className="m-0 sub_name">{item.title}</p>
-                          {item.role == "PDF" && (
-                            <p className="m-0 sub_topics">
-                              {item.release_date}
-                            </p>
-                          )}
-                        </div>
-                      </div>
-                      <div className="pg-sb-topic pe-2">
-                        <div className="btnsalltbba text-center d-flex">
-                          {" "}
-                          {
-                          // (isLogin && 
-                          item.is_purchased == 0 ?
-                          // item.is_locked == "1" ? 
-                          // <>
-                          //   <img style={{ width: "32px" }} src="/assets/images/locked.png" alt="" />
-                          // </>
-                          // :
-                            item.is_locked == 0 ?
-                            <>
-                            {layer1Data.type == "pdf" && <Button1 value="Read" handleClick={handleRead} /> }
-                            {layer1Data.type == "video" && <Button1 value="Watch Now" handleClick={handleWatch(item, i)} />}
-                            {layer1Data.type == "test" && <Button1 value="Test" />}
-                            </>
-                            :
-                            <>
-                              <img style={{ width: "32px" }} src="/assets/images/locked.png" alt="" />
-                            </>
-                          :
-                          <>
-                          {layer1Data?.type == "pdf" && <Button1 value="Read" handleClick={() => handleRead(item)} /> }
-                          {layer1Data?.type == "video" && <Button1 value="Watch Now" handleClick={() => handleWatch(item, i)} />}
-                          {layer1Data?.type == "test" && 
-                            (compareTime(item.start_date  , item.end_date) == "pending" &&
-                            <Button1 value="Upcoming" 
-                              // handleClick={() => handleTakeTest(item, i)} 
-                            />
-                            )}
-                            {layer1Data?.type == "test" && (compareTime(item.start_date  , item.end_date) == "attempt" &&
-                            <Button1 value="Attempt Now" 
-                              handleClick={() => handleTakeTest(item, i)} 
-                            />
-                            )}
-                            {layer1Data?.type == "test" && (compareTime(item.start_date  , item.end_date) == "result" &&
-                            <Button1 value={item?.state == 1 ? "View Result" : "LeaderBoard"}
-                              handleClick={() => item?.state == 1 ? handleResultTest(item, i) : handleRankTest(item, i)} 
-                            />
-                            )}
-                          </>
-                          }
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+                // <div
+                //   className=" pg-tabs-description mt-3"
+                //   key={i}
+                // //   onClick={() => handleOpenVideo(item)}
+                // >
+                //   <div className="tabs-deschovr d-flex align-items-center rounded">
+                //     <div className="w-100 pg-sb-topic d-flex align-items-center justify-content-between">
+                //       <div className="d-flex justify-content-between">
+                //         <img
+                //           src={item.thumbnail_url ? item.thumbnail_url : "/assets/images/noImage.jfif"}
+                //           height={"60px"}
+                //         />
+                //         <div className="subjectDetails">
+                //           <p className="m-0 sub_name">{item.title}</p>
+                //           {item.role == "PDF" && (
+                //             <p className="m-0 sub_topics">
+                //               {item.release_date}
+                //             </p>
+                //           )}
+                //         </div>
+                //       </div>
+                //       <div className="pg-sb-topic pe-2">
+                //         <div className="btnsalltbba text-center d-flex">
+                //           {" "}
+                //           {
+                //           // (isLogin && 
+                //           item.is_purchased == 0 ?
+                //           // item.is_locked == "1" ? 
+                //           // <>
+                //           //   <img style={{ width: "32px" }} src="/assets/images/locked.png" alt="" />
+                //           // </>
+                //           // :
+                //             item.is_locked == 0 ?
+                //             <>
+                //             {layer1Data.type == "pdf" && <Button1 value="Read" handleClick={handleRead} /> }
+                //             {layer1Data.type == "video" && <Button1 value="Watch Now" handleClick={handleWatch(item, i)} />}
+                //             {layer1Data.type == "test" && <Button1 value="Test" />}
+                //             </>
+                //             :
+                //             <>
+                //               <img style={{ width: "32px" }} src="/assets/images/locked.png" alt="" />
+                //             </>
+                //           :
+                //           <>
+                //           {layer1Data?.type == "pdf" && <Button1 value="Read" handleClick={() => handleRead(item)} /> }
+                //           {layer1Data?.type == "video" && <Button1 value="Watch Now" handleClick={() => handleWatch(item, i)} />}
+                //           {layer1Data?.type == "test" && 
+                //             (compareTime(item.start_date  , item.end_date) == "pending" &&
+                //             <Button1 value="Upcoming" 
+                //               // handleClick={() => handleTakeTest(item, i)} 
+                //             />
+                //             )}
+                //             {layer1Data?.type == "test" && (compareTime(item.start_date  , item.end_date) == "attempt" &&
+                //             <Button1 value="Attempt Now" 
+                //               handleClick={() => handleTakeTest(item, i)} 
+                //             />
+                //             )}
+                //             {layer1Data?.type == "test" && (compareTime(item.start_date  , item.end_date) == "result" &&
+                //             <Button1 value={item?.state == 1 ? "View Result" : "LeaderBoard"}
+                //               handleClick={() => item?.state == 1 ? handleResultTest(item, i) : handleRankTest(item, i)} 
+                //             />
+                //             )}
+                //           </>
+                //           }
+                //         </div>
+                //       </div>
+                //     </div>
+                //   </div>
+                // </div>
+                <TileDetail 
+                  item={item}
+                  layer1Data = {layer1Data}
+                  handleRead = {handleRead}
+                  handleWatch = {handleWatch}
+                  handleTakeTest = {handleTakeTest}
+                  handleResultTest = {handleResultTest}
+                  handleRankTest = {handleRankTest}
+                  handleUpcomingTest = {handleUpcomingTest}
+                  i = {i}
+                />
               );
               })}
               

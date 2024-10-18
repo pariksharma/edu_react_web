@@ -2,6 +2,9 @@ import React, { useEffect, useState } from 'react'
 import Button1 from '../buttons/button1/button1';
 import { FaShare } from "react-icons/fa";
 import { format } from "date-fns";
+import { useSelector } from 'react-redux';
+import { Router } from 'react-router-dom';
+import { useRouter } from 'next/router';
 
 const LiveTestCard = ({testData, value}) => {
   // const targetTimestamp = 1727270640;
@@ -12,6 +15,9 @@ const LiveTestCard = ({testData, value}) => {
     height: window.innerHeight
   });
 
+  const versionData = useSelector((state) => state.allCategory?.versionData);
+
+  const router = useRouter()
   useEffect(() => {
     const handleResize = () => {
       setWindowSize({
@@ -96,6 +102,7 @@ const LiveTestCard = ({testData, value}) => {
     const encryptData = btoa(JSON.stringify(formData))
     console.log('encryptData',encryptData)
     // const encryptData = encrypt(JSON.stringify(formData));
+    // Router.push(`https://educryptnetlify.videocrypt.in/webstaging/web/LiveTest/learn_result_window?data=${encryptData}`)
     window.open(`https://educryptnetlify.videocrypt.in/webstaging/web/LiveTest/learn_result_window?data=${encryptData}`,  'popupWindow', `width=${windowSize.width},height=${windowSize.height},scrollbars=yes,resizable=no`)
   }
 
@@ -114,6 +121,7 @@ const LiveTestCard = ({testData, value}) => {
           firstAttempt = "0";
       }
     const formData = {
+      appid:150,
       jwt : localStorage.getItem('jwt'),
       user_id: localStorage.getItem('user_id'),
       course_id: val?.course_id,
@@ -127,7 +135,9 @@ const LiveTestCard = ({testData, value}) => {
     console.log("formData",formData)
     const encryptData = btoa(JSON.stringify(formData))
     console.log('encryptData',encryptData)
-
+    console.log("https:}",`https://educryptnetlify.videocrypt.in/webstaging/web/LiveTest/attempt_now_window?data=${encryptData}`)
+    
+    // router.push(`https://educryptnetlify.videocrypt.in/webstaging/web/LiveTest/attempt_now_window?data=${encryptData}`)
     window.open(`https://educryptnetlify.videocrypt.in/webstaging/web/LiveTest/attempt_now_window?data=${encryptData}`,  'popupWindow', `width=${windowSize.width},height=${windowSize.height},scrollbars=yes,resizable=no`)
   }
 
@@ -207,9 +217,11 @@ const LiveTestCard = ({testData, value}) => {
               data={0}
             />
             }
-            <button className="btn_detailShare">
-              <FaShare />
-            </button>
+            {versionData?.share_content == 1 &&
+              <button className="btn_detailShare">
+                <FaShare />
+              </button>
+            }
             {/* <Button2 value="Extend Validity" handleClick={handleExplore} /> */}
           </div>
       </div>

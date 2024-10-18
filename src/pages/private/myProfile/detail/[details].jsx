@@ -40,6 +40,7 @@ const Details = ({ value }) => {
   const router = useRouter();
   const { details } = router.query;
   const reviewData = useSelector((state) => state.allCategory?.review)
+  const versionData = useSelector((state) => state.allCategory?.versionData);
 
   let courseCombo = details?.slice(details?.indexOf("&") + 1, details?.indexOf("parent:"))
   let parentId = details?.slice(details?.indexOf("parent:") + 7, details?.length)
@@ -205,9 +206,11 @@ const Details = ({ value }) => {
                   {onlineCourseAry.mrp != 0 && (
                     <div className="gap-2 flex-wrap flex-sm-nowrap d-flex align-items-center button_price">
                       <div className="gap-2 share d-flex align-items-center">
+                        {versionData?.share_content == 1 &&
                         <button className="button1_share">
                           <FaShare />
                         </button>
+                        }
                         {/* {console.log(onlineCourseAry)} */}
                         {onlineCourseAry.is_purchased == 0 && (
                           <p className="m-0 detailBbuyNow">
@@ -367,6 +370,7 @@ const Details = ({ value }) => {
                               CourseID={id}
                               tabName={item.tile_name}
                               keyValue={key}
+                              onlineCourseAry = {onlineCourseAry}
                               // propsValue={isValidData(pdfData) && pdfData}
                             />
                           }

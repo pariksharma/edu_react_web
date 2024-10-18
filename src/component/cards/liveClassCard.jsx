@@ -4,6 +4,7 @@ import Button1 from '../buttons/button1/button1'
 import { FaShare } from "react-icons/fa";
 import { format } from "date-fns";
 import { useRouter } from 'next/router';
+import { useSelector } from 'react-redux';
 
 const LiveClassCard = ({courseData, value}) => {
 
@@ -11,6 +12,7 @@ const LiveClassCard = ({courseData, value}) => {
   const [isTimeUp, setIsTimeUp] = useState(false);
 
   const router = useRouter()
+  const versionData = useSelector((state) => state.allCategory?.versionData);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -132,9 +134,11 @@ const LiveClassCard = ({courseData, value}) => {
               data= {0}
             />
             }
-            <button className="btn_detailShare">
-              <FaShare />
-            </button>
+             {versionData?.share_content == 1 &&
+              <button className="btn_detailShare">
+                <FaShare />
+              </button>
+            }
             {/* <Button2 value="Extend Validity" handleClick={handleExplore} /> */}
           </div>
       </div>

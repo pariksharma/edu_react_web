@@ -17,7 +17,8 @@ export default function Home() {
   useEffect(() => {
     const fetchAppDetail = async () => {
       const token = get_token();
-      const formData = { domain: "https://educryptnetlify.videocrypt.in" };
+      // const formData = { domain: "https://educryptnetlify.videocrypt.in" };    //dev data
+      const formData = { domain: "http://educryptlab.educrypt.ai" };   // lab data
       try {
         const response_content_service = await getAppDetial(
           encrypt(JSON.stringify(formData), token)
@@ -39,11 +40,11 @@ export default function Home() {
     };
 
     // Check if appId is already in localStorage
-    if (!localStorage.getItem('appId')) {
+    // if (!localStorage.getItem('appId')) {
       fetchAppDetail();
-    } else {
-      setAppIdFetched(true);  // If already exists, mark it as fetched
-    }
+    // } else {
+    //   setAppIdFetched(true);  // If already exists, mark it as fetched
+    // }
   }, [dispatch]);
 
   useEffect(() => {

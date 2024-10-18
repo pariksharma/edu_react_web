@@ -37,6 +37,7 @@ const CurrentAffair = () => {
         }}
       />
     {/* {isLoading &&  */}
+    {currentAffairData?.length && 
     <div className="container my-5">
         <div className="row">
             <div className="col-12 d-flex align-items-center justify-content-center">
@@ -67,7 +68,7 @@ const CurrentAffair = () => {
             </div>
         </div>
     </div>
-    {/* } */}
+    } 
     </>
   )
 }

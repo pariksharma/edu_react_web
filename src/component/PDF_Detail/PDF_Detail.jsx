@@ -40,7 +40,7 @@ const PDF_Detail = ({ propsValue, tabName, resetRef, courseDetail, CourseID }) =
     setLayer1Index(index);
     setShowLayer("layer2");
     setLayer2List(layer1Data.meta?.list[index]);
-    console.log(layer1Data.meta?.list[index]);
+    // console.log(layer1Data.meta?.list[index]);
   };
 
   const getLayer3Data = async (index) => {
@@ -77,14 +77,14 @@ const PDF_Detail = ({ propsValue, tabName, resetRef, courseDetail, CourseID }) =
     }
     const response_getMasterData_service = await getMasterDataService(encrypt(JSON.stringify(formData), token))
     const response_getMasterData_Data = decrypt(response_getMasterData_service.data, token);
-    console.log('response_getMasterData_Data', response_getMasterData_Data.data)
+    // console.log('response_getMasterData_Data', response_getMasterData_Data.data)
     if(response_getMasterData_Data.status) {
       return response_getMasterData_Data.data
     }
   };
 
   const handleRead = () => {
-    console.log("Read Now");
+    // console.log("Read Now");
   };
 
   return (

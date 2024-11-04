@@ -66,7 +66,7 @@ const index = () => {
                     return <div className="accordion-item" key = {index}>
                     <h2
                       className="accordion-header"
-                      onClick={() => setActive(index)}
+                      onClick={() => index != active ? setActive(index) : setActive(-1)}
                     >
                       <button
                         className={`accordion-button ${

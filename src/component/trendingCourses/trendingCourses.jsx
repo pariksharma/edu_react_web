@@ -18,6 +18,7 @@ const TrendingCourses = () => {
     const trendCourseAry = isValidData(CourseData) && CourseData.filter((item) => item.extra_json.is_trending == 1)
     const titleName = "Trending Courses"
 
+    // console.log('CourseData4444', trendCourseAry)
     useEffect(() => {
       if (typeof window !== "undefined") {
         const changeWidth = () => {
@@ -113,9 +114,9 @@ const TrendingCourses = () => {
             </>
           : (
             <>
-              <div className="row align-items-center justify-content-center sldr_container">
+              {/* <div className="row align-items-center justify-content-center sldr_container">
                 <div className="spinner-border" role="status" /> 
-              </div>
+              </div> */}
             </>
           )}
         </div>

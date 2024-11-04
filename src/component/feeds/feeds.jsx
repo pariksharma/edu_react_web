@@ -80,6 +80,12 @@ const Feeds = () => {
   }, [])
 
   useEffect(() => {
+    return () => {
+      toast.dismiss();
+    };
+  }, []);
+
+  useEffect(() => {
     if(isToasterOpen) {
       setTimeout(() => {
         setIsToasterOpen(false)
@@ -124,7 +130,7 @@ const Feeds = () => {
       };
       const response_getPostList_service = await getPostListService(encrypt(JSON.stringify(formData), token));
       const response_getPostList_data = decrypt(response_getPostList_service.data, token);
-      console.log('response_getPostList_data', response_getPostList_data)
+      // console.log('response_getPostList_data', response_getPostList_data)
       if(response_getPostList_data?.status) {
         if(response_getPostList_data?.data?.posts?.length == 0) {
           setShowError(true)
@@ -195,7 +201,7 @@ const Feeds = () => {
         fetchPostList()
       }
     } catch (error) {
-      console.log("error found: ", error)
+      // console.log("error found: ", error)
     }
   }
 
@@ -216,7 +222,7 @@ const Feeds = () => {
           setReplyComment('');
           parentId ? handleShowReplyComment(postId, index, parentId) : handleShowComment(postId, index)
         }
-        console.log('response_addComment_data', response_addComment_data)
+        // console.log('response_addComment_data', response_addComment_data)
       }
       else{
         showErrorToast("Please enter your comment")
@@ -291,7 +297,7 @@ const Feeds = () => {
           })
         }
       }
-      console.log('response_commentList_data', response_commentList_data)
+      // console.log('response_commentList_data', response_commentList_data)
     } catch (error) {
       console.log("error found: ", error)
       router.push('/')
@@ -300,7 +306,22 @@ const Feeds = () => {
 
   return (
     <>
-    <Toaster position="top-right" reverseOrder={false} />
+    {/* <Toaster position="top-right" reverseOrder={false} /> */}
+    <Toaster
+        position="top-right"
+        toastOptions={{
+          success: {
+            style: {
+              opacity:'1'
+            },
+          },
+          error: {
+            style: {
+             opacity:'1'
+            },
+          },
+        }}
+      />
       {
       postList.length > 0 ?
       postList.map((item, index) => {

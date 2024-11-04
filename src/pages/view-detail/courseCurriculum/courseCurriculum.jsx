@@ -18,7 +18,6 @@ const CourseCurriculum = ({ propsValue, tabName, resetRef, courseDetail }) => {
   const [layer3Data, setLayer3Data] = useState();
   const [id, setId] = useState();
 
-
   // console.log("courseDetail", courseDetail)
 
   useEffect(() => {
@@ -69,7 +68,7 @@ const CourseCurriculum = ({ propsValue, tabName, resetRef, courseDetail }) => {
   };
 
   const getDetail = async (data) => {
-    try{
+    try {
       const formData = new FormData();
       formData.append("course_id", id);
       formData.append("tile_id", data.tile_id);
@@ -89,14 +88,14 @@ const CourseCurriculum = ({ propsValue, tabName, resetRef, courseDetail }) => {
           }
         })
         .catch((err) => console.log(err));
-      } catch (error) {
-        console.log("error found: ", error)
-        // router.push('/')
-      }
+    } catch (error) {
+      console.log("error found: ", error);
+      // router.push('/')
+    }
   };
 
   const handleWatch = () => {
-    console.log("watch Now");
+    // console.log("watch Now");
   };
 
   // console.log('val2222', value)
@@ -143,7 +142,9 @@ const CourseCurriculum = ({ propsValue, tabName, resetRef, courseDetail }) => {
           >
             {showLayer == "layer3"
               ? // ? ` > ${layer2List.list[layer2Index].title}`
-                tabName == "Full Length Test" ? `Test's` : `Video's >`
+                tabName == "Full Length Test"
+                ? `Test's`
+                : `Video's >`
               : ""}
           </span>
         </div>
@@ -173,12 +174,10 @@ const CourseCurriculum = ({ propsValue, tabName, resetRef, courseDetail }) => {
                           <p className="m-0 sub_name">{item.title}</p>
                           {item.role == "video" && (
                             <p className="m-0 sub_topics">
-                              {tabName == "Full Length Test" ? 
-                                `Starts: 15 May 2024 Ends: 31 Dec 2027`
-                                :
-                                `class 10th`
-                              }
-                              </p>
+                              {tabName == "Full Length Test"
+                                ? `Starts: 15 May 2024 Ends: 31 Dec 2027`
+                                : `class 10th`}
+                            </p>
                           )}
                         </div>
                       </div>
@@ -186,13 +185,12 @@ const CourseCurriculum = ({ propsValue, tabName, resetRef, courseDetail }) => {
                         <div className="btnsalltbba text-center">
                           {" "}
                           {/* {(isLogin && item.is_locked == "0") || */}
-                          {tabName == "Full Length Test" ? 
-                            <Button2 
+                          {tabName == "Full Length Test" ? (
+                            <Button2
                               value="Start Test"
-                              handleWatch = {handleWatch}
+                              handleWatch={handleWatch}
                             />
-                          :
-                          (propsValue?.mrp == 0 ) || (propsValue?.mrp != 0 ) ? (
+                          ) : propsValue?.mrp == 0 || propsValue?.mrp != 0 ? (
                             <>
                               <Button1
                                 value="Watch Now"
@@ -203,8 +201,7 @@ const CourseCurriculum = ({ propsValue, tabName, resetRef, courseDetail }) => {
                             <span className="videoimage text-center">
                               <IoLockClosed />
                             </span>
-                          )
-                        }
+                          )}
                         </div>
                       </div>
                     </div>
@@ -270,8 +267,8 @@ const CourseCurriculum = ({ propsValue, tabName, resetRef, courseDetail }) => {
           })
         ) : (
           showLayer == "layer1" &&
-            layer1Data &&
-            layer1Data?.meta?.list?.map((item, i) => {
+          layer1Data &&
+          layer1Data?.meta?.list?.map((item, i) => {
             // subject_Ary &&
             // subject_Ary.map((item, i) => {
             return (

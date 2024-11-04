@@ -28,7 +28,7 @@ const index = () => {
   return (
     <>
         <Header />
-        <div className="container-fluid p-0 mt-5 privacyPolicy">
+        <div className="container-fluid privacyPolicy">
           <div
             className=""
             dangerouslySetInnerHTML={{ __html: policyData && policyData }}

@@ -3,12 +3,14 @@ import { FaLocationArrow } from "react-icons/fa";
 import { useRouter } from 'next/navigation'
 import Button2 from '@/component/buttons/button2/button2';
 import { userLoggedIn } from '@/utils/helpers';
+import LoginModal from '@/component/modal/loginModal';
 
 
 const SliderTrend = ({value, titleName}) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false)
   const [showBtn, setShowBtn] = useState(false);
   const [isClient, setIsClient] = useState(false);
+  const [modalShow, setModalShow] = useState(false)
   const router = useRouter()
   // console.log('props11111', value)
 
@@ -24,17 +26,39 @@ const SliderTrend = ({value, titleName}) => {
   });
 
   const handleBuy = () => {
-    localStorage.setItem('previousTab', router.pathname);
-    router.push(`/view-courses/course-order/${titleName+':'+value.id + "&" + value.combo_course_ids}`)
+    const isLoggedIn = userLoggedIn();
+    if(isLoggedIn) {
+      localStorage.setItem('previousTab', router.pathname);
+      
+      // router.push(`/view-courses/course-order/${titleName+':'+value.id + "&" + value.combo_course_ids}`)
+      router.push({
+        pathname: `/view-courses/course-order/${titleName+':'+value.id + "&" + value.combo_course_ids}`,
+        query: {IsBuy:"IsBuy"}
+      });
+    }
+    else{
+      setModalShow(true);
+    }
   }
 
   const handleExplore = () => {
-    router.push(`/view-courses/details/${titleName+':'+value.id + "&" + value.combo_course_ids+'parent:'}`)
+    // router.push(`/view-courses/details/${titleName+':'+value.id + "&" + value.combo_course_ids+'parent:'}`)
+    router.push({
+      pathname: `/view-courses/details/${titleName+':'+value.id + "&" + value.combo_course_ids+'parent:'}`,
+      query: {IsTranding:"IsTranding"}
+    });
+    
   }
 
 
 
-  return (
+  return (<>
+    <LoginModal
+        show={modalShow}
+        onHide={() => {
+          setModalShow(false);
+        }}
+      />
     <div className="d-flex justify-content-center">
       <div 
         className="card trendCard border-0 b-radius mb-3 p-0 tredingSliderSection" 
@@ -44,10 +68,10 @@ const SliderTrend = ({value, titleName}) => {
           {/* <div className='explorebtn'>
             <Button2 value={"Buy"} handleClick={handleBuy} />
           </div> */}
-        {value.cover_image && (
+        {value?.cover_image && (
           <img 
             style={{borderRadius: "10px"}} 
-            src={value.cover_image} 
+            src={value?.cover_image} 
             className="card-img-top" 
             alt="..." 
           />
@@ -71,15 +95,15 @@ const SliderTrend = ({value, titleName}) => {
             </> 
           } */}
           {value.mrp == 0 ? 
-            <button className="btn buyBtn" onClick={() => handleExplore()}>Explore</button>
+            <button className="btn buyBtn" onClick={() => handleExplore()}>{value?.is_purchased == 1 ? "View Content" : "Explore"}</button>
             :
             (isLoggedIn ? <>
-                <button className={`btn ${value.is_purchased == 0 ? 'exploreBtn' : 'buyBtn'} `} onClick={() => handleExplore()}>Explore</button>
+                <button className={`btn ${value.is_purchased == 0 ? 'exploreBtn' : 'buyBtn'} `} onClick={() => handleExplore()}>{value?.is_purchased == 1 ? "View Content" : "Explore"}</button>
                 {value.is_purchased == 0 && <button className="btn buyBtn" onClick={() => handleBuy()}>Buy Now</button>}
               </>
               :
               <>
-                <button className="btn exploreBtn" onClick={() => handleExplore()}>Explore</button>
+                <button className="btn exploreBtn" onClick={() => handleExplore()}>{value?.is_purchased == 1 ? "View Content" : "Explore"}</button>
                 <button className="btn buyBtn" onClick={() => handleBuy()}>Buy Now</button>
               </>
             )
@@ -88,6 +112,7 @@ const SliderTrend = ({value, titleName}) => {
         </div>
       </div>
     </div>
+    </>
   );
 };
 

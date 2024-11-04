@@ -46,7 +46,7 @@ const CouponModal = (props) => {
       <div className="modal-body py-2">
         <div className="mt-2 coupon_content">
           <ul className="mt-2 list-unstyled coupon_List">
-            {console.log('couponList', couponList)}
+            {/* {console.log('couponList', couponList)} */}
             {couponList &&
               couponList.map((item, index) => {
                 return (

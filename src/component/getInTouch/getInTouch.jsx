@@ -35,6 +35,12 @@ const GetInTouch = () => {
     }, [])
 
     useEffect(() => {
+        return () => {
+          toast.dismiss();
+        };
+      }, []);
+
+    useEffect(() => {
         if(isToasterOpen) {
           setTimeout(() => {
             setIsToasterOpen(false)
@@ -120,7 +126,7 @@ const GetInTouch = () => {
     }
 
     const handleSubmit = () => {
-        console.log('hell')
+        // console.log('hell')
         if(!gitForm.name) {
             showErrorToast("Please enter your name")
         }
@@ -153,7 +159,7 @@ const GetInTouch = () => {
                 message: gitForm.message,
                 type: 0,
             };
-            console.log('formData', formData)
+            // console.log('formData', formData)
             const response_getInTouch_service = await InquiryService(encrypt(JSON.stringify(formData), token));
             const response_getInTouch_data = decrypt(response_getInTouch_service.data, token);
             if(response_getInTouch_data.status) {
@@ -168,7 +174,7 @@ const GetInTouch = () => {
             else{
                 showErrorToast(response_getInTouch_data.data)
             }
-            console.log('response_getInTouch_data', response_getInTouch_data);
+            // console.log('response_getInTouch_data', response_getInTouch_data);
         } catch (error) {
             console.log("error found: ", error)
             // router.push('/')
@@ -177,7 +183,22 @@ const GetInTouch = () => {
 
   return (
     <>
-    <Toaster position="top-right" reverseOrder={false} />
+    {/* <Toaster position="top-right" reverseOrder={false} /> */}
+    <Toaster
+        position="top-right"
+        toastOptions={{
+          success: {
+            style: {
+              opacity:'1'
+            },
+          },
+          error: {
+            style: {
+             opacity:'1'
+            },
+          },
+        }}
+      />
     <div className='container px-0 px-md-0 px-lg-5 mb-3 git_container'>
         <div className='row px-5 px-sm-0'>
             <div className='col-md-12 col-lg-6 col-sm-12 mb-5 mb-lg-0'>
@@ -187,8 +208,7 @@ const GetInTouch = () => {
                     </div>
                     <div className="get_desc">
                     <p className="mb-2">
-                        Lorem ipsum dolor sit at, consectetur adipielit. Facilisi <br />{" "}
-                        fermentum, dignissim pharetra.
+                    Feel free to share any queries, feedback, complaints, or concerns you have about our courses and programs. We're here to help and improve your experience!
                     </p>
                     </div>
                     <div className="getInTouchForm">

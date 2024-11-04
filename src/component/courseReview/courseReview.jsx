@@ -26,6 +26,12 @@ const CourseReview = ({courseDetail}) => {
   const courseID = router.asPath.substring(router.asPath.indexOf(':') + 1, router.asPath.indexOf('&'))
   // console.log('courseDetail', courseDetail)
 
+  useEffect(() => {
+    return () => {
+      toast.dismiss();
+    };
+  }, []);
+
   useEffect(()=>{
     setRating(avgRating)
   },[avgRating,courseDetail,Rating])
@@ -40,6 +46,12 @@ const CourseReview = ({courseDetail}) => {
       }, 1500)
     }
   }, [isToasterOpen])
+
+  useEffect(() => {
+    return () => {
+      toast.dismiss();
+    };
+  }, []);
 
   // useEffect(() => {
   //   const details = router.asPath
@@ -68,12 +80,11 @@ const CourseReview = ({courseDetail}) => {
   }, [reviewModalShow, reviewList])
 
   const showErrorToast = (toastMsg) => {
+    toast.error(toastMsg, {
+      autoClose: 1500
+  });
     if (!isToasterOpen) {
       setIsToasterOpen(true);
-      toast.error(toastMsg, {
-        // onClose: () => setIsToasterOpen(false),  // Set isToasterOpen to false when the toaster closes
-        autoClose: 1500
-    });
     }
   }
 
@@ -82,7 +93,7 @@ const CourseReview = ({courseDetail}) => {
       setIsToasterOpen(true);
       toast.success(toastMsg, {
         // onClose: () => setIsToasterOpen(false),  // Set isToasterOpen to false when the toaster closes
-        autoClose: 1500
+        // autoClose: 1500
     });
     }
   }
@@ -95,8 +106,9 @@ const CourseReview = ({courseDetail}) => {
         // course_id: 107
       }
       const repsonse_CourseReview_service = await getCourseReviewService(encrypt(JSON.stringify(formData), token));
+      // console.log('repsonse_CourseReview_service', repsonse_CourseReview_service)
       const response_CourseReview_data = decrypt(repsonse_CourseReview_service.data, token);
-      console.log('response_CourseReview_data', response_CourseReview_data);
+      // console.log('response_CourseReview_data', response_CourseReview_data);
       if(response_CourseReview_data.status) {
         setReviewList(response_CourseReview_data.data)
         fetchCourseDetail()
@@ -128,7 +140,8 @@ const CourseReview = ({courseDetail}) => {
   };
 
   const handleAddReview = () => {
-    const isLoggedIn = userLoggedIn;
+    // console.log("courseDetail",courseDetail)
+    const isLoggedIn = userLoggedIn();
     if(isLoggedIn) {
       if(courseDetail.is_purchased == 1) {
         setReviewModalShow(true);
@@ -172,7 +185,7 @@ const CourseReview = ({courseDetail}) => {
         response_getCourseDetail_service.data,
         token
       );
-      console.log("response_getCourseDetail_data", response_getCourseDetail_data);
+      // console.log("response_getCourseDetail_data", response_getCourseDetail_data);
       if (response_getCourseDetail_data.status) {
         // setOnlineCourseAry(response_getCourseDetail_data?.data?.course_detail);
         setAvgRating(response_getCourseDetail_data?.data?.course_detail?.avg_rating)
@@ -226,10 +239,25 @@ const CourseReview = ({courseDetail}) => {
     const count = groupedRatings[rating] || 0; // Default to 0 if there are no ratings for that value
     return (count / reviewList.length) * 100;
   };
-
       
   return (
     <>
+    <Toaster position="top-right" reverseOrder={false} toastOptions={{duration: 1500}}/>
+       {/* <Toaster
+       position="top-right"
+        toastOptions={{
+          success: {
+            style: {
+              opacity:'1'
+            },
+          },
+          error: {
+            style: {
+             opacity:'1'
+            },
+          },
+        }}
+      /> */}
     <AddReviewModal
       show={reviewModalShow}
       onHide={() => {
@@ -244,7 +272,6 @@ const CourseReview = ({courseDetail}) => {
           setModalShow(false);
         }}
       />
-    <Toaster position="top-right" reverseOrder={false} />
     <div className="row All_ratings p-0 m-0 mt-5">
       <div className="p-0 m-0 col-md-12 d-flex justify-content-between align-items-center">
         <h1 className="head p-0 mb-3">All Reviews</h1>
@@ -300,7 +327,7 @@ const CourseReview = ({courseDetail}) => {
             reviewList.length > 0 && reviewList.map((item, index) => {
               return <li className='row py-3 m-0' key={index}>
               <div className="p-0 mb-2 d-flex gap-2 align-items-center">
-                <img className='UserRateImg' src={item?.profile_picture ? item?.profile_picture : '/assets/images/UserRateImg.svg'} alt='' />
+                <img className='UserRateImg' src={item?.profile_picture ? item?.profile_picture : '/assets/images/profile.png'} alt='' />
                 <div>
                 <h4 className="mb-1 userRateTitle">{item.name}</h4>
                   <div className="d-flex m-0 freeCourserate">

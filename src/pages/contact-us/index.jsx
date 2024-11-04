@@ -27,13 +27,33 @@ const index = () => {
   }
   return (
     <>
-      <Header />
-      <div className='container-fluid p-0 mt-5' >
-        <div className='' dangerouslySetInnerHTML={{ __html: contactUsData && contactUsData }}>
+    <Header />
+    <div className="container-fluid contactCont">
+      <div className="row mb-5">
+        <div className="col-md-4">
+          <img
+            className="contact_Img"
+            src="/assets/images/contact_Img.svg"
+            alt=""
+          />
+        </div>
+        <div className="col-md-4">
+          <h4 className="mt-5 c_title">Contact us</h4>
+          <h5 className="mt-4 v_title">Visit us</h5>
+          <p className="c_text">
+            H 65 Sector 63 Noida Uttar Pradesh India - 201301
+          </p>
+        </div>
+        <div className="col-md-4">
+          <h5 className="vv_title">Contact</h5>
+          <p className="c_text">
+            H 65 Sector 63 Noida Uttar Pradesh India - 201301
+          </p>
         </div>
       </div>
-      <Footer />
-    </>
+    </div>
+    <Footer />
+  </>
   )
 }
 

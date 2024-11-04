@@ -40,13 +40,13 @@ export const get_token = () => {
         let string = user_id ? user_id + "0161086410274515" : "00161086410274515";
         return string.substring(0, 16);
     } else {
-        console.warn("localStorage is not available.");
+        // console.warn("localStorage is not available.");
         return "00161086410274515".substring(0, 16); // default value
     }
 }
 
   export const encrypt = (string, key) => {
-    console.log("string",string)
+    // console.log("string",string)
     const cbcKey = key ? get_keys(AEC_CBC_KEY, key) : AEC_CBC_KEY;
     const iniVector = key ? get_keys(ini_vector, key) : ini_vector;
     const cipher = crypto.createCipheriv(OPENSSL_CIPHER_NAME, Buffer.from(fixKey(cbcKey)), Buffer.from(iniVector));

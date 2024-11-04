@@ -1,5 +1,5 @@
 import React, { useState, useCallback, lazy, Suspense } from 'react';
-import Carousel from "react-bootstrap/Carousel"
+import Carousel from "react-bootstrap/Carousel";
 import { bannerAry } from '../../../public/assets/sampleArry';
 import CarouselItem from './carouselItem';
 import { isValidData } from '@/utils/helpers';
@@ -20,7 +20,7 @@ const Banner = () => {
     }, []);
 
     const handleBannerLinks = (value) => {
-        console.log(value)
+        // console.log(value)
         if(value.link_type == 2) {
             window.open(value.link, '_blank')
         }

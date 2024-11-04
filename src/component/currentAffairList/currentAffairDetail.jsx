@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import * as Icon from "react-bootstrap-icons";
 import "bootstrap-icons/font/bootstrap-icons.css";
-import { Toaster } from "react-hot-toast";
+import toast, { Toaster } from "react-hot-toast";
 import Tab from "react-bootstrap/Tab";
 import Tabs from "react-bootstrap/Tabs";
 import { decrypt, encrypt, get_token } from "@/utils/helpers";
@@ -25,6 +25,12 @@ const CurrentAffairDetail = ({ id, handleShow }) => {
     }, [])
 
     useEffect(() => {
+      return () => {
+        toast.dismiss();
+      };
+    }, []);
+
+    useEffect(() => {
         if(currentAffairData) {
             setKey(currentAffairData[0]?.category_name)
         }
@@ -37,7 +43,7 @@ const CurrentAffairDetail = ({ id, handleShow }) => {
         }
         const response_currentAffairDetail_service = await getCurrentAffairDetails(encrypt(JSON.stringify(formData), token));
         const response_currentAffairDetail_data = decrypt(response_currentAffairDetail_service.data, token);
-        console.log('response_currentAffairDetail_data', response_currentAffairDetail_data)
+        // console.log('response_currentAffairDetail_data', response_currentAffairDetail_data)
         if(response_currentAffairDetail_data.status){
           if(response_currentAffairDetail_data?.data?.length == 0) {
             setShowError(true)
@@ -50,7 +56,22 @@ const CurrentAffairDetail = ({ id, handleShow }) => {
     }
   return (
     <div>
-      <Toaster position="top-right" reverseOrder={false} />
+      {/* <Toaster position="top-right" reverseOrder={false} /> */}
+      <Toaster
+        position="top-right"
+        toastOptions={{
+          success: {
+            style: {
+              opacity:'1'
+            },
+          },
+          error: {
+            style: {
+             opacity:'1'
+            },
+          },
+        }}
+      />
       <section>
       <nav aria-label="breadcrumb ">
         <ol className="breadcrumb mb-4 cursor">

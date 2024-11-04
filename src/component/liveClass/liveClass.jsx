@@ -39,6 +39,12 @@ const LiveClass = () => {
     }
   }, [key])
 
+  useEffect(() => {
+    return () => {
+      toast.dismiss();
+    };
+  }, []);
+
 
   const fetchLiveCourse = async (value) => {
     try{
@@ -48,7 +54,7 @@ const LiveClass = () => {
       }
       const response_getLiveCourse_service = await getLiveCourseService(encrypt(JSON.stringify(formData), token));
       const response_getLiveCourse_data = decrypt(response_getLiveCourse_service.data, token);
-      console.log('response_getLiveCourse_data', response_getLiveCourse_data);
+      // console.log('response_getLiveCourse_data', response_getLiveCourse_data);
       if(response_getLiveCourse_data.status) {
         if(response_getLiveCourse_data?.data?.length == 0) {
           setShowError(true)
@@ -77,7 +83,22 @@ const LiveClass = () => {
 
   return (
     <>
-    <Toaster position="top-right" reverseOrder={false} />
+    {/* <Toaster position="top-right" reverseOrder={false} /> */}
+    {/* <Toaster
+        position="top-right"
+        toastOptions={{
+          success: {
+            style: {
+              opacity:'1'
+            },
+          },
+          error: {
+            style: {
+             opacity:'1'
+            },
+          },
+        }}
+      /> */}
       {/* <SearchCourses /> */}
       <section className="container-fluid">
         <div className="row">

@@ -14,8 +14,9 @@ import {
 import { set } from "date-fns";
 import { useRouter } from "next/router";
 import AWS from 'aws-sdk'
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { profile_data } from "@/store/sliceContainer/masterContentSlice";
+import UpdatePasswordModal from "../modal/updatePasswordModal";
 
 
 const S3_BUCKET = process.env.NEXT_PUBLIC_S3_BUCKET;
@@ -36,6 +37,8 @@ const Profile = () => {
   const [progress, setProgress] = useState(0);
   const [profileImage, setProfileImage] = useState('')
   const [isEditProfile, setIsEditProfile] = useState(false);
+  const [isToasterOpen, setIsToasterOpen] = useState(false);
+  const [updatePasswordModalShow, setUpdatePasswordModalShow] = useState(false);
   const [profileData, setProfileData] = useState('');
   const [state, setState] = useState("");
   const [stateList, setStateList] = useState([]);
@@ -53,6 +56,14 @@ const Profile = () => {
   const token = get_token();
   const router = useRouter();
   const dispatch = useDispatch();
+  const versionData = useSelector((state) => state.allCategory?.versionData);
+
+  useEffect(() => {
+    toast.dismiss();
+    return () => {
+      toast.dismiss();
+    };
+  }, []);
 
   useEffect(() => {
     setIsEditProfile(false);
@@ -83,6 +94,30 @@ const Profile = () => {
       fetchCityList(editProfileData);
     }
   }, [editProfileData.state]);
+
+  useEffect(() => {
+    if(isToasterOpen) {
+      setTimeout(() => {
+        setIsToasterOpen(false)
+      }, 1500)
+    }
+  }, [isToasterOpen])
+
+  useEffect(() => {
+    return () => {
+      toast.dismiss();
+    };
+  }, []);
+
+  const showSuccessToast = (toastMsg) => {
+    if (!isToasterOpen) {
+      setIsToasterOpen(true);
+      toast.success(toastMsg, {
+        // onClose: () => setIsToasterOpen(false),  // Set isToasterOpen to false when the toaster closes
+        autoClose: 1000
+    });
+    }
+  }
 
   const handleEdit = () => {
     setIsEditProfile(true);
@@ -123,7 +158,7 @@ const Profile = () => {
 
   const handleEditForm = (e) => {
     const { name, value } = e.target;
-    console.log("e", e.target.value);
+    // console.log("e", e.target.value);
     setEditProfileData({
       ...editProfileData,
       [name]: value,
@@ -167,7 +202,7 @@ const Profile = () => {
           : editProfileData.city,
         profile_picture: profileImage,
       };
-      console.log(formData)
+      // console.log(formData)
 
       const response_updateProfile_service = await userUpdateProfileService(
         encrypt(JSON.stringify(formData), token)
@@ -176,9 +211,12 @@ const Profile = () => {
         response_updateProfile_service.data,
         token
       );
-      console.log("checked", editProfileData, response_updateProfile_data);
+      // console.log("checked", editProfileData, response_updateProfile_data);
       if(response_updateProfile_data.status) {
-      toast.success(response_updateProfile_data.message);
+        if(response_updateProfile_data.message){
+          // console.log("response_updateProfile_data.message",response_updateProfile_data.message)
+          toast.success(response_updateProfile_data.message);
+        }
       setIsEditProfile(false)
       //   localStorage.removeItem('jwt');
       //   localStorage.removeItem('user_id');
@@ -186,7 +224,9 @@ const Profile = () => {
       }
       else{
         if (response_updateProfile_data.message == msg) {
-          toast.error(response_updateProfile_data.message);
+          if(response_updateProfile_data.message){
+            toast.error(response_updateProfile_data.message);
+          }
           setTimeout(() => {
             localStorage.removeItem("jwt");
             localStorage.removeItem("user_id");
@@ -215,7 +255,7 @@ const Profile = () => {
         response_getMyProfile_service.data,
         token
       );
-      console.log('response_getMyProfile_data', response_getMyProfile_data)
+      // console.log('response_getMyProfile_data', response_getMyProfile_data)
       if (response_getMyProfile_data.status) {
         setProfileData(response_getMyProfile_data.data);
         setEditProfileData({
@@ -223,13 +263,14 @@ const Profile = () => {
           name: response_getMyProfile_data.data.name,
           email: response_getMyProfile_data.data.email,
           mobile: response_getMyProfile_data.data.mobile,
+          // state: response_getMyProfile_data?.data?.state
         });
         setProfileImage(response_getMyProfile_data.data.profile_picture)
         dispatch(profile_data(response_getMyProfile_data.data))
         // localStorage.setItem('username', response_getMyProfile_data?.data?.name)
       }
     } catch (error) {
-      console.log("error found: ", error)
+      // console.log("error found: ", error)
     }
   };
   const fetchStateList = async () => {
@@ -298,6 +339,7 @@ const Profile = () => {
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
+    // console.log("file",file)
     if (file) {
       setSelectedFile(file);
       uploadFile(file)
@@ -330,11 +372,31 @@ const Profile = () => {
             console.log('File uploaded successfully. URL:', uploadedImageUrl);
         }
     });
-};
+  };
+
+  // console.log('isToasterOpen', isToasterOpen)
 
   return (
     <>
       <Toaster position="top-right" reverseOrder={false} />
+      {/* <Toaster
+        toastOptions={{
+          success: {
+            style: {
+              opacity:'1'
+            },
+          },
+          error: {
+            style: {
+             opacity:'1'
+            },
+          },
+        }}
+      /> */}
+      <UpdatePasswordModal
+        show={updatePasswordModalShow}
+        onHide = {() => setUpdatePasswordModalShow(false)}
+      />
       {!isEditProfile ? (
         <section className="container-fluid">
           <div className="card accountCard mt-1">
@@ -382,8 +444,8 @@ const Profile = () => {
                   </div>
                   <div className="col-sm-6 col-md-8 mb-4">
                     <p className="m-0 user_Detail">
-                      {/* {console.log('stateList', city)} */}
-                      {state &&
+                      {/* {console.log('stateList', state)} */}
+                      {state?.length > 0 ?
                         state.map((item, index) => {
                           return (
                             <td key={index}>
@@ -394,11 +456,15 @@ const Profile = () => {
                                 })}
                             </td>
                           );
-                        })}
+                        })
+                      :
+                      <td>{profileData?.state}/{profileData.city}</td>
+                      }
                     </p>
                   </div>
-                  <div className="mt-3 col-sm-6 col-md-4">
+                  <div className="mt-3 col-sm-6 d-flex gap-2 col-md-4">
                     <Button1 value={"Edit"} handleClick={handleEdit} />
+                    {versionData?.otp_login != 1 &&<Button2 value={"Update Password"} handleClick={() => setUpdatePasswordModalShow(true)} />}
                   </div>
                   <div className="mt-3 col-sm-6 col-md-8"></div>
                 </div>
@@ -487,6 +553,7 @@ const Profile = () => {
                         onChange={handleInputMobile}
                       />
                     </div>
+                    
                     <div className="col-md-12 mb-3">
                       <label>State</label>
                       <select

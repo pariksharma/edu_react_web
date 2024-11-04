@@ -30,6 +30,10 @@ const SearchCourses = ({catId, handleFilterCourses}) => {
     );
   };
 
+  useEffect(() => {
+    setSearchInputValue('')
+  }, [catId])
+
   useEffect(() =>{
     // console.log('hell', searchCourseList)
     if(searchCourseList?.length > 0 && searchInputValue !== "") {
@@ -71,7 +75,7 @@ const SearchCourses = ({catId, handleFilterCourses}) => {
         } else {
           setSearchCourseList([]);
         }
-        console.log("response_getCourses_data", response_getCourses_data);
+        // console.log("response_getCourses_data", response_getCourses_data);
       }
     } catch (error) {
       console.log("error found: ", error)
@@ -99,11 +103,10 @@ const SearchCourses = ({catId, handleFilterCourses}) => {
             </span>
             <input
               type="text"
-              className="pb-1 d-md-block searchBar"
+              className="d-md-block searchBar"
               placeholder="Search..."
               aria-label="Username"
               aria-describedby="basic-addon1"
-              fdprocessedid="b89v2o"
               onChange={(e) => setSearchInputValue(e.target.value)}
               value={searchInputValue}
               ref={inputRef}

@@ -4,7 +4,7 @@ import axios from "axios";
 import { decrypt, encrypt, get_token } from "@/utils/helpers";
 import Loader from "../loader";
 
-export default function VideoPlayerDRM({ vdc_id, media_id, NonDRMVideourl, item, title, videoMetaData }) {
+export default function VideoPlayerDRM({ vdc_id, media_id, NonDRMVideourl, item, title, videoMetaData,end_date,start_date,video_type }) {
   const [source, setSource] = useState(null);
   const [loading, setLoading] = useState(true);
   const [dType, setDType] = useState();
@@ -130,6 +130,9 @@ export default function VideoPlayerDRM({ vdc_id, media_id, NonDRMVideourl, item,
               title={title}
               NonDRMVideourl={NonDRMVideourl}
               videoMetaData={videoMetaData}
+              start_date={start_date}
+              end_date={end_date}
+              video_type={video_type}
             />
           </div>
         )

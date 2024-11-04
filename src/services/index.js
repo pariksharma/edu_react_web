@@ -84,6 +84,7 @@ export const freeTransactionService = async (params) => await axiosClient.post(P
 export const pendingInstallmentService = async (params) => await axiosClient.post(PaymentUrl + 'pending_installment', params);
 export const saveAddressService = async (params) => await axiosClient.post(PaymentUrl + 'save_user_address', params);
 export const getUserAddressService = async (params) => await axiosClient.post(PaymentUrl + 'get_user_address', params)
+export const deleteAddressService = async (params) => await axiosClient.post(PaymentUrl + 'delete_user_address', params);
 
 
 // Posts

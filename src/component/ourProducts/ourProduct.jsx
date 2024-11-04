@@ -11,6 +11,7 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { getFaculty_Service } from "@/services";
 import { useRouter } from "next/router";
+import { classNames } from "@react-pdf-viewer/core";
 
 const OurProduct = ({ value, data }) => {
   const [showSlide, setShowSlide] = useState(5);
@@ -50,7 +51,8 @@ const OurProduct = ({ value, data }) => {
   const settings = {
     dots: false,
     autoplay: true,
-    infinite: true,
+    infinite: value === "faculties" ? false : true,
+    className:'left',
     speed: 500,
     slidesToScroll: 1,
     slidesToShow: showSlide,
@@ -100,6 +102,7 @@ const OurProduct = ({ value, data }) => {
       const token = get_token()
       const formData = new FormData();
       const response_faculty_service = await getFaculty_Service(formData);
+      console.log('response_faculty_service', response_faculty_service)
       const faculty_service_Data = decrypt(response_faculty_service.data, token)
       // console.log('faculty', faculty_service_Data)
       if(faculty_service_Data.status) {

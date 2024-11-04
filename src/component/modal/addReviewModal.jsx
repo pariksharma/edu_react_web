@@ -26,6 +26,12 @@ const AddReviewModal = (props) => {
   }, [isToasterOpen]);
 
   useEffect(() => {
+    return () => {
+      toast.dismiss();
+    };
+  }, []);
+
+  useEffect(() => {
     if (props.editReviewData) {
       setReview(props?.editReviewData?.message);
     }
@@ -81,7 +87,7 @@ const AddReviewModal = (props) => {
         props.onHide();
         dispatch(all_review(review));
       } else if (response_postReview_data.message == msg) {
-        toast.error(response_postReview_data.message);
+        showErrorToast(response_postReview_data.message);
         localStorage.removeItem("jwt");
         localStorage.removeItem("user_id");
         // location.href("/")
@@ -104,10 +110,25 @@ const AddReviewModal = (props) => {
       centered
       className="reviewModal"
     >
-      <Toaster
+      {/* <Toaster
         position="top-right"
         reverseOrder={false}
         toastOptions={{ duration: 1500 }}
+      /> */}
+      <Toaster
+        position="top-right"
+        toastOptions={{
+          success: {
+            style: {
+              opacity:'1'
+            },
+          },
+          error: {
+            style: {
+             opacity:'1'
+            },
+          },
+        }}
       />
       <div className="modal-body rateAndreviewModal">
         <h4 className="m-0 r_title">Review</h4>

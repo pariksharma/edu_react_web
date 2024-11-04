@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import * as Icon from "react-bootstrap-icons";
 import "bootstrap-icons/font/bootstrap-icons.css";
-import { Toaster } from "react-hot-toast";
+import toast, { Toaster } from "react-hot-toast";
 import Tab from "react-bootstrap/Tab";
 import Tabs from "react-bootstrap/Tabs";
 import { decrypt, encrypt, get_token } from "@/utils/helpers";
@@ -25,6 +25,12 @@ const BlogDetail = ({ id, handleShow }) => {
   }, []);
 
   useEffect(() => {
+    return () => {
+      toast.dismiss();
+    };
+  }, []);
+
+  useEffect(() => {
     if(blogDetailData) {
         setKey(blogDetailData[0]?.category_name)
     }
@@ -44,7 +50,7 @@ const BlogDetail = ({ id, handleShow }) => {
       if (response_blogDetail_data.status) {
         if(response_blogDetail_data?.data?.length == 0){
           setShowError(true)
-          console.log("response_blogDetail_data", response_blogDetail_data.data);
+          // console.log("response_blogDetail_data", response_blogDetail_data.data);
         }
         else setBlogDetailData(response_blogDetail_data.data);
       }
@@ -55,7 +61,22 @@ const BlogDetail = ({ id, handleShow }) => {
   };
   return (
     <div>
-      <Toaster position="top-right" reverseOrder={false} />
+      {/* <Toaster position="top-right" reverseOrder={false} /> */}
+      <Toaster
+        position="top-right"
+        toastOptions={{
+          success: {
+            style: {
+              opacity:'1'
+            },
+          },
+          error: {
+            style: {
+             opacity:'1'
+            },
+          },
+        }}
+      />
       <section className="container-fluid">
         <div className="row">
           <div className="col-md-12 p-0">

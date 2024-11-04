@@ -33,9 +33,7 @@ const Achievement = () => {
               <div className="achieve-width text-center text-md-center text-lg-start">
                 <h1 className="main-title">Our Achievements</h1>
                 <p className="m-0 achieve-text">
-                  Contrary to popular belief, Lorem Ipsum is not simply random
-                  text. It has roots in a piece of classical Latin literature
-                  from 45 BC.
+                  We are proud of the success we’ve achieved through innovative courses and student accomplishments. Each milestone reflects our dedication to providing top-quality education and fostering growth.
                 </p>
                 <div className="card_group mt-4">
                   <div className="m-0 text-center card instruct-card">

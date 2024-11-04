@@ -19,7 +19,7 @@ const ExtendValiditymodal = (props) => {
 
   const handleOptionChange = (val) => {
     setSelectedOption(val.id)
-     console.log('target',val)
+    //  console.log('target',val)
     setIsChecked(val)
   }
 
@@ -31,23 +31,24 @@ const ExtendValiditymodal = (props) => {
       size={"md"}
       aria-labelledby="contained-modal-title-vcenter"
       centered
-      className="reviewModal"
+      className="extendCouponModal"
     >
       <Modal.Header closeButton>
-        <h4 className="m-0 extTitle">Extend Course Validity</h4>
+        <h6 className="m-0 extTitle">Extend Course Validity</h6>
       </Modal.Header>
       <div className="mt-2 coupon_content">
-        <ul className="mt-2 list-unstyled coupon_List px-4">
+        <ul className="mt-2 list-unstyled extendCouponModal px-4">
           {priceList?.length > 0 && priceList.map((item, index) => {
           return <>
           <li
-            className={`mb-3 p-3 rounded card coupon_listCard ${
+             key={index}
+            className={`mb-3 p-3 rounded card extCoupon_listCard ${
               isChecked.id == item.id ? "active" : ""
             }`}
-            onClick={() => handleOptionChange(item)} style={{cursor: 'pointer'}} key={index}>
+            onClick={() => handleOptionChange(item)} style={{cursor: 'pointer'}}>
             <p className="m-0 d-flex justify-content-between align-items-center">{`${item.price}/- For ${item.validity} days`} 
             <input
-              className="couponRadio form-check-input"
+              className="extcouponRadio form-check-input"
               type="radio"
               value={0}
               style={{ 
@@ -98,9 +99,10 @@ const ExtendValiditymodal = (props) => {
           
           })}
         </ul>
-        <div className="w-100 text-center my-4">
+        <div className="w-100 text-center my-4 px-4">
           <Button1 
             value = "Continue"
+            classCustom=""
             handleClick={() => props.handleSelectedValidity(isChecked, props.courseDetail)} 
           />
         </div>

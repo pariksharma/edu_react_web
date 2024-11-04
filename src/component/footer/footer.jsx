@@ -7,7 +7,7 @@ import LoginModal from '../modal/loginModal';
 import { footerService } from '@/services';
 import { userLoggedIn } from '@/utils/helpers';
 
-const eduLogo1  = '/assets/images/eduLogo1.png'
+const eduLogo1 = '/assets/images/eduLogo1.png'
 const playStoreLogo = '/assets/images/googleStore.png';
 const appleStoreLogo = '/assets/images/appleStore.png';
 const windowsLogo = '/assets/images/windows.png';
@@ -15,41 +15,45 @@ const windowsLogo = '/assets/images/windows.png';
 
 const Footer = () => {
 
-    const [isLoading, setIsLoading] = useState(false)
-    const [modalShow, setModalShow] = useState(false)
-    const [footerLinks, setFooterLinks] = useState('')
-    const router = useRouter();
-    const footerData = useSelector((state) => state.allCategory?.allCategory?.course_type_master)
+  const [isLoading, setIsLoading] = useState(false)
+  const [modalShow, setModalShow] = useState(false)
+  const [footerLinks, setFooterLinks] = useState('')
+  const [appLogo, setAppLogo] = useState('');
+  const [appName, setAppName] = useState('')
+  const router = useRouter();
+  const footerData = useSelector((state) => state.allCategory?.allCategory?.course_type_master)
 
-    useEffect(() =>{
-        setIsLoading(true);
-        fetchFooterService();
-    }, [])
+  useEffect(() => {
+    setIsLoading(true);
+    fetchFooterService();
+    setAppLogo(localStorage.getItem('logo'))
+    setAppName(localStorage.getItem('title'))
+  }, [])
 
-    const handleBlog = () => {
-      const isLoggedIn = userLoggedIn();
-      if(isLoggedIn) {
-        router.push('/private/myProfile/Blog');
-      }
-      else{
-        setModalShow(true) 
-      }
+  const handleBlog = () => {
+    const isLoggedIn = userLoggedIn();
+    if (isLoggedIn) {
+      router.push('/private/myProfile/Blog');
     }
-
-    const fetchFooterService = async () => {
-      try{
-        const formData = {}
-        const response_footer_service = await footerService()
-        if(response_footer_service.status == 200) {
-          setFooterLinks(response_footer_service.data)
-        }
-        console.log(response_footer_service)
-      } catch (error) {
-        console.log("error found: ", error)
-        // router.push('/')
-      }
+    else {
+      setModalShow(true)
     }
-    
+  }
+
+  const fetchFooterService = async () => {
+    try {
+      const formData = {}
+      const response_footer_service = await footerService()
+      if (response_footer_service.status == 200) {
+        setFooterLinks(response_footer_service.data)
+      }
+      // console.log(response_footer_service)
+    } catch (error) {
+      console.log("error found: ", error)
+      // router.push('/')
+    }
+  }
+
   return (
     <>
       {/* {isLoading &&  */}
@@ -64,10 +68,10 @@ const Footer = () => {
           <div className="row gap-3 gap-md-0 gap-lg-5 px-5 mx-auto justify-content-start">
             <div className="col-12 col-sm-6 col-md-4 col-lg-2">
               <div className="footerLogo">
-                {eduLogo1 && <img src={eduLogo1} alt="" className="" />}
+                {eduLogo1 && <img src={appLogo ? appLogo : eduLogo1} alt="" className="" />}
               </div>
               <div className="m-0 mb-2 orgName">
-                Educrypt Edu Solutions Pvt. Ltd.
+                {appName ? appName : 'Educrypt Edu Solutions Pvt. Ltd.'}
               </div>
               <div className="m-0 mb-2 orgAddress">
                 <span className="text-white fw-semibold">Address:</span> <br />
@@ -100,16 +104,16 @@ const Footer = () => {
                     Media
                   </Link>
                 </li> */}
-                <li className="mb-2">
+                {/* <li className="mb-2">
                   <Link href="/career" className="text-decoration-none">
                     Career
                   </Link>
                 </li>
                 <li className="mb-2">
-                  <a className="text-decoration-none" style={{cursor: 'pointer'}} onClick={handleBlog}>
+                  <a className="text-decoration-none" style={{ cursor: 'pointer' }} onClick={handleBlog}>
                     Blog
                   </a>
-                </li>
+                </li> */}
               </ul>
             </div>
             <div className="col-12 col-sm-6 col-md-4 col-lg-2">
@@ -117,7 +121,7 @@ const Footer = () => {
               <ul className="list-unstyled">
                 {footerData && footerData.map((item, index) => {
                   return <li className="mb-2" key={index}>
-                    <Link className="text-decoration-none" href={`/view-courses/${item.name + ':' +item.id}`}>
+                    <Link className="text-decoration-none" href={`/view-courses/${item.name + ':' + item.id}`}>
                       {item.name}
                     </Link>
                   </li>
@@ -184,25 +188,65 @@ const Footer = () => {
           className="footerBottom gap-2 gap-sm-4 d-flex flex-wrap align-items-center               justify-content-between justify-content-sm-between justify-content-md-between"
         >
           <p className="mb-2 copyrighttitle">
-            Educrypt All Right Reserved, 2022
+            {appName ? appName : 'EduCrypt'} All Right Reserved, 2022
           </p>
           <div className="mb-2 flex-wrap foot-social">
-            <a href={`${footerLinks?.twitter_detail}`} className="m-0 text-decoration-none social-icon">
-              <i className="bi bi-twitter"></i>
-            </a>
-            <a href={`${footerLinks?.facebook_detail}`} className="m-0 text-decoration-none social-icon">
-              <i className="fab fa-facebook-f"></i>
-            </a>
-            <a href={`${footerLinks?.instagram_detail}`} className="m-0 text-decoration-none social-icon">
-              <i className="bi bi-instagram"></i>
-            </a>
-            <a href={`${footerLinks?.telegram_detail}`} className="m-0 text-decoration-none social-icon">
-              <i className="bi bi-send-fill"></i>
-            </a>
-            <a href={`${footerLinks?.linkedIn_detail}`} className="m-0 text-decoration-none social-icon">
-              <i className="fab fa-linkedin-in"></i>
-            </a>
+            {footerLinks?.twitter_detail && (
+              <a
+                href={footerLinks.twitter_detail}
+                className="m-0 text-decoration-none social-icon"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <i className="bi bi-twitter"></i>
+              </a>
+            )}
+
+            {footerLinks?.facebook_detail && (
+              <a
+                href={footerLinks.facebook_detail}
+                className="m-0 text-decoration-none social-icon"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <i className="fab fa-facebook-f"></i>
+              </a>
+            )}
+
+            {footerLinks?.instagram_detail && (
+              <a
+                href={footerLinks.instagram_detail}
+                className="m-0 text-decoration-none social-icon"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <i className="bi bi-instagram"></i>
+              </a>
+            )}
+
+            {footerLinks?.telegram_detail && (
+              <a
+                href={footerLinks.telegram_detail}
+                className="m-0 text-decoration-none social-icon"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <i className="bi bi-send-fill"></i>
+              </a>
+            )}
+
+            {footerLinks?.linkedIn_detail && (
+              <a
+                href={footerLinks.linkedIn_detail}
+                className="m-0 text-decoration-none social-icon"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <i className="fab fa-linkedin-in"></i>
+              </a>
+            )}
           </div>
+
         </div>
       </footer>
       {/* } */}

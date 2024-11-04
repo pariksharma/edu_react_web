@@ -13,7 +13,7 @@ const ViewPdf = () => {
   const { viewPdf } = router.query;
   const newPlugin = defaultLayoutPlugin();
 
-  console.log(decodeURIComponent(viewPdf))
+  // console.log(decodeURIComponent(viewPdf))
   return (
     <>
       <Header />

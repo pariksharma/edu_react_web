@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import toast, { Toaster } from 'react-hot-toast'
 import { Modal } from 'react-bootstrap'
 import { decrypt, encrypt, get_token } from '@/utils/helpers'
@@ -9,12 +9,18 @@ const LogoutModal = (props) => {
   
   const router = useRouter();
 
+    useEffect(() => {
+    return () => {
+      toast.dismiss();
+    };
+  }, []);
+
   const fetchLogoutService = async () => {
     try{
       const token = get_token()
       const formData = {}
       const response_userLogout_service = await userLogoutService(encrypt(JSON.stringify(formData), token));
-      console.log('response_userLogout_data', response_userLogout_service)
+      // console.log('response_userLogout_data', response_userLogout_service)
       const response_userLogout_data = decrypt(response_userLogout_service.data, token);
       if(response_userLogout_data.status) {
         localStorage.removeItem('jwt');
@@ -62,6 +68,20 @@ const LogoutModal = (props) => {
             className="logOutModal"
         >
         <Toaster position="top-right" reverseOrder={false} />
+        {/* <Toaster
+        toastOptions={{
+          success: {
+            style: {
+              opacity:'1'
+            },
+          },
+          error: {
+            style: {
+             opacity:'1'
+            },
+          },
+        }}
+      /> */}
             <h4 className='LogOutTitle'>Log Out</h4>
             <p className='logout_text'>Are you sure you want to Log out <br/> from this account?</p>
             <div className="gap-2 d-flex align-items-center">

@@ -42,44 +42,6 @@ const PurchaseHistory = () => {
     }
   }, [thankYouModalShow])
 
-  // useEffect(() => {
-  //   // Fetch installments for orders with payment_mode == 1
-  //   myOrder.forEach((item) => {
-  //     if (item.payment_mode === 1) {
-  //       handleInstallments(item.subscription_code);
-  //     }
-  //   });
-  // }, [myOrder]);
-
-  // const fetchMyOrders = async () => {
-  //   const formData = {
-  //     page: 1,
-  //     type: 1,
-  //   };
-  //   const response_getMyOrder_service = await getMyOrderService(
-  //     encrypt(JSON.stringify(formData), token)
-  //   );
-  //   const response_getMyOrder_data = decrypt(
-  //     response_getMyOrder_service.data,
-  //     token
-  //   );
-  //   if(response_getMyOrder_data.status){
-  //     setMyOrder(response_getMyOrder_data.data)
-  //   }
-  //   else {
-  //     if(response_getMyOrder_data.message == msg) {
-  //       toast.error(response_getMyOrder_data.message);
-  //           localStorage.removeItem('jwt');
-  //           localStorage.removeItem('user_id');
-  //           if(router.pathname.startsWith('/private')){
-  //             router.push('/')
-  //           }
-  //           else location.reload();
-  //     }
-  //   }
-  //   console.log("response_getMyOrder_data", response_getMyOrder_data);
-  // };
-
   const fetchMyOrders = async () => {
     const formData = {
       page: 1,
@@ -129,7 +91,7 @@ const PurchaseHistory = () => {
               encrypt(JSON.stringify(formData), token)
             );
             const data = decrypt(response.data, token);
-            console.log("data", data);
+            // console.log("data", data);
             if (data.status) {
               return {
                 subscription_code: order.subscription_code,
@@ -145,8 +107,6 @@ const PurchaseHistory = () => {
 
         // Wait for all installment fetches to complete
         const installmentsResults = await Promise.all(installmentsPromises);
-
-        // Convert the results into a dictionary for easy access
         const installmentsMap = installmentsResults.reduce((acc, curr) => {
           acc[curr.subscription_code] = curr.data;
           return acc;
@@ -167,7 +127,7 @@ const PurchaseHistory = () => {
           }
         }
       }
-      console.log("response_getMyOrder_data", response_getMyOrder_data);
+      // console.log("response_getMyOrder_data", response_getMyOrder_data);
     } catch (error) {
       console.error("Error fetching orders or installments:", error);
       toast.error("An error occurred while fetching data.");
@@ -177,7 +137,6 @@ const PurchaseHistory = () => {
   const formatDate = (value) => {
     const cr_date = new Date(value * 1000);
     if (cr_date) {
-      // setDate(cr_date.toString().substring(0, cr_date.toString().indexOf('GMT')))
       return format(cr_date, "MMM d, yyyy");
     }
   };
@@ -193,10 +152,10 @@ const PurchaseHistory = () => {
         response_pendingInstallment_service.data,
         token
       );
-      console.log(
-        "response_pendingInstallment_data",
-        response_pendingInstallment_data
-      );
+      // console.log(
+      //   "response_pendingInstallment_data",
+      //   response_pendingInstallment_data
+      // );
       if (response_pendingInstallment_data.status) {
         return response_pendingInstallment_data.data;
       }
@@ -207,8 +166,6 @@ const PurchaseHistory = () => {
 
   const handlePayNow = async (item, installment) => {
     try{
-      console.log("EMi installments", item);
-      console.log("pay now", installment);
       const isLoggedIn = localStorage.getItem("jwt");
       if (isLoggedIn) {
         const formData = {};
@@ -249,16 +206,16 @@ const PurchaseHistory = () => {
           const response_getFPayment_service = await getFPaymentService(
             encrypt(JSON.stringify(formDataPayment), token)
           );
-          console.log(
-            "response_getFPayment_service",
-            response_getFPayment_service
-          );
+          // console.log(
+          //   "response_getFPayment_service",
+          //   response_getFPayment_service
+          // );
           const response_getFPayment_data = decrypt(
             response_getFPayment_service.data,
             token
           );
           let key = response_getPayGateway_data?.data?.easebuzz?.mid;
-          console.log("response_getFPayment_data", response_getFPayment_data);
+          // console.log("response_getFPayment_data", response_getFPayment_data);
           if (response_getFPayment_data.status) {
             // console.log(response.razorpay_payment_id)
             if(response_getPayGateway_data?.data?.rzp?.status == 1) {
@@ -278,14 +235,14 @@ const PurchaseHistory = () => {
                     payid: response.razorpay_payment_id,
                     pay_via: 3,
                   };
-                  console.log("Payment ID:", response.razorpay_payment_id);
-                  console.log("Order ID:", response.razorpay_order_id);
-                  console.log("Signature:", response.razorpay_signature);
+                  // console.log("Payment ID:", response.razorpay_payment_id);
+                  // console.log("Order ID:", response.razorpay_order_id);
+                  // console.log("Signature:", response.razorpay_signature);
                   let status = 1;
                   paymentConfirmation(status, orderDetails, item.id);
                 },
               };
-              console.log("option", options);
+              // console.log("option", options);
               const instance = new Razorpay(options);
               instance.on("payment.failed", function (response) {
                 toast.error("Payment failed!");
@@ -333,7 +290,7 @@ const PurchaseHistory = () => {
       var options = {
         access_key: acc_key, // access key received via Initiate Payment
         onResponse: (response) => {
-          console.log(response);
+          // console.log(response);
           // post_transaction_id
           const order_details = {
             txnid: response.txnid,
@@ -341,28 +298,9 @@ const PurchaseHistory = () => {
             pay_via: 9,
           };
           let status = response.status == "success" ? 1 : 0;
-          console.log('responsey8778', response)
+          // console.log('responsey8778', response)
           // loading(true);
           paymentConfirmation(status, order_details, id);
-          //   const formData = new FormData();
-          //   formData.append('type', 2);
-          //   formData.append('course_id', courseId);
-          //   formData.append('course_price', stringToFloat(detail.mrp));
-          //   formData.append('tax',stringToFloat(detail.tax));
-          //   formData.append('pay_via', 9);
-          //   formData.append('coupon_applied', 0);
-          //   formData.append('pre_transaction_id',response.txnid);
-          //   formData.append('transaction_status', status);
-          //   formData.append('post_transaction_id', response.easepayid);
-          //    getFPaymentService(formData).then(res =>{
-          //     let {data, status, message} = resHandler(res);
-          //   //  status && console.log(data)
-          //    status && sendDataToParent(order_details);
-          //    loading(false)
-
-          // }).catch(err =>{
-          //   console.log(err)
-          // })
         },
         theme: "#123456", // color hex
       };
@@ -386,7 +324,7 @@ const PurchaseHistory = () => {
         transaction_status: status,
         post_transaction_id: data.payid,
       };
-      console.log("formDataConfirm", formDataConfirm);
+      // console.log("formDataConfirm", formDataConfirm);
       const response_ConfirmPayment_service = await getFPaymentService(
         encrypt(JSON.stringify(formDataConfirm), token)
       );
@@ -394,18 +332,10 @@ const PurchaseHistory = () => {
         response_ConfirmPayment_service.data,
         token
       );
-      console.log("response_ConfirmPayment_data", response_ConfirmPayment_data);
+      // console.log("response_ConfirmPayment_data", response_ConfirmPayment_data);
       if (response_ConfirmPayment_data.status) {
-        // toast.success(response_ConfirmPayment_data.message);
         setThankYouModalShow(true)
         fetchMyOrders();
-        //   if (titleName == "Bookstore" || titleName == "e-Book") {
-        //     router.push("/private/myProfile/ourCourse");
-        //   } else {
-        //     router.push("/private/myProfile/MyCourse");
-        //   }
-        // } else {
-        //   toast.error(response_ConfirmPayment_data.message);
       }
       else {
         if(response_ConfirmPayment_data.message != "The transaction_status field must be one of: 1,2."){
@@ -436,37 +366,37 @@ const PurchaseHistory = () => {
 
     // Compare the two timestamps
     if (currentTimestamp >= givenTimestamp) {
-      console.log("Current date is greater than the given date.");
+      // console.log("Current date is greater than the given date.");
       return "Upcoming"
     } else if (currentTimestamp < givenTimestamp) {
-      console.log("Given date is greater than the current date.");
+      // console.log("Given date is greater than the current date.");
       return "Overdue"
     } 
     else {
-      console.log("Both dates are equal.");
+      // console.log("Both dates are equal.");
       return "due"
     }
   }
 
   const handleExtendValidity = (value) => {
-    console.log('item2222', value)
+    // console.log('item2222', value)
     setValidityShow(true)
     setValidityDetail(value)
     // console.log('extend', value)
   }
 
   const handleSelectedValidity = (selectedPack, courseData) => {
-    console.log("Clicked ==========12345", selectedPack);
+    // console.log("Clicked ==========12345", selectedPack);
     setValidityShow(false)
     handleValidityPayNow(selectedPack, courseData)
   };
 
 
   const handleValidityPayNow = async (item, courseData) => {
-    console.log('courseData', courseData)
+    // console.log('courseData', courseData)
     try{
       // console.log("EMi installments", item);
-      console.log("pay now", item);
+      // console.log("pay now", item);
       const isLoggedIn = localStorage.getItem("jwt");
       if (isLoggedIn) {
         const formData = {};
@@ -495,16 +425,16 @@ const PurchaseHistory = () => {
           const response_getFPayment_service = await getFPaymentService(
             encrypt(JSON.stringify(formDataPayment), token)
           );
-          console.log(
-            "response_getFPayment_service",
-            response_getFPayment_service
-          );
+          // console.log(
+          //   "response_getFPayment_service",
+          //   response_getFPayment_service
+          // );
           const response_getFPayment_data = decrypt(
             response_getFPayment_service.data,
             token
           );
           let key = response_getPayGateway_data?.data?.easebuzz?.mid;
-          console.log("response_getFPayment_data", response_getFPayment_data);
+          // console.log("response_getFPayment_data", response_getFPayment_data);
           if (response_getFPayment_data.status) {
             // console.log('price', item.price)
             if(response_getPayGateway_data?.data?.rzp?.status == 1) {
@@ -525,15 +455,15 @@ const PurchaseHistory = () => {
                     payid: response.razorpay_payment_id,
                     pay_via: 3,
                   };
-                  console.log("Payment ID:", response.razorpay_payment_id);
-                  console.log("Order ID:", response.razorpay_order_id);
-                  console.log("Signature:", response.razorpay_signature);
+                  // console.log("Payment ID:", response.razorpay_payment_id);
+                  // console.log("Order ID:", response.razorpay_order_id);
+                  // console.log("Signature:", response.razorpay_signature);
                   let status = 1;
                   paymentValidityConfirmation(status, orderDetails, item.course_id, courseData);
                 },
               };
               const instance = new Razorpay(options);
-              console.log("option", options);
+              // console.log("option", options);
               instance.on("payment.failed", function (response) {
                 toast.error("Payment failed!");
               });
@@ -580,7 +510,7 @@ const PurchaseHistory = () => {
 
         disable_payment_mode: 'emi',
         onResponse: (response) => {
-          console.log(response);
+          // console.log(response);
           // post_transaction_id
           const order_details = {
             txnid: response.txnid,
@@ -588,28 +518,9 @@ const PurchaseHistory = () => {
             pay_via: 9,
           };
           let status = response.status == "success" ? 1 : 0;
-          console.log('responsey8778', response)
+          // console.log('responsey8778', response)
           // loading(true);
           paymentValidityConfirmation(status, order_details, id, courseData);
-          //   const formData = new FormData();
-          //   formData.append('type', 2);
-          //   formData.append('course_id', courseId);
-          //   formData.append('course_price', stringToFloat(detail.mrp));
-          //   formData.append('tax',stringToFloat(detail.tax));
-          //   formData.append('pay_via', 9);
-          //   formData.append('coupon_applied', 0);
-          //   formData.append('pre_transaction_id',response.txnid);
-          //   formData.append('transaction_status', status);
-          //   formData.append('post_transaction_id', response.easepayid);
-          //    getFPaymentService(formData).then(res =>{
-          //     let {data, status, message} = resHandler(res);
-          //   //  status && console.log(data)
-          //    status && sendDataToParent(order_details);
-          //    loading(false)
-
-          // }).catch(err =>{
-          //   console.log(err)
-          // })
         },
         theme: "#123456", // color hex
       };
@@ -626,7 +537,7 @@ const PurchaseHistory = () => {
 
   const paymentValidityConfirmation = async (status, data, id, courseData) => {
     try{
-      console.log('confirm', courseData)
+      // console.log('confirm', courseData)
       const formDataConfirm = {
         type: 4,
         course_id: id,
@@ -635,7 +546,7 @@ const PurchaseHistory = () => {
         post_transaction_id: data.payid,
         txn_id: courseData.txn_id,
       };
-      console.log("formDataConfirm", formDataConfirm);
+      // console.log("formDataConfirm", formDataConfirm);
       const response_ConfirmPayment_service = await getFPaymentService(
         encrypt(JSON.stringify(formDataConfirm), token)
       );
@@ -643,13 +554,13 @@ const PurchaseHistory = () => {
         response_ConfirmPayment_service.data,
         token
       );
-      console.log("response_ConfirmPayment_data", response_ConfirmPayment_data);
+      // console.log("response_ConfirmPayment_data", response_ConfirmPayment_data);
       if (response_ConfirmPayment_data.status) {
         // toast.success(response_ConfirmPayment_data.message);
         setThankYouModalShow(true);
         // setGetCourse(data.payid)
         fetchMyOrders();
-        //   if (titleName == "Bookstore" || titleName == "e-Book") {
+        //   if (value?.cat_type == 1) {
         //     router.push("/private/myProfile/ourCourse");
         //   } else {
         //     router.push("/private/myProfile/MyCourse");
@@ -672,7 +583,22 @@ const PurchaseHistory = () => {
   };
   return (
     <>
-      <Toaster position="top-right" reverseOrder={false} />
+      {/* <Toaster position="top-right" reverseOrder={false} /> */}
+      <Toaster
+        position="top-right"
+        toastOptions={{
+          success: {
+            style: {
+              opacity:'1'
+            },
+          },
+          error: {
+            style: {
+             opacity:'1'
+            },
+          },
+        }}
+      />
       <Script
         id="razorpay-checkout-js"
         src="https://checkout.razorpay.com/v1/checkout.js"
@@ -703,57 +629,33 @@ const PurchaseHistory = () => {
                     <div className="card historyCard px-2 py-2 mb-2" key={index}>
                       <div class="row align-items-center">
                         {/* <tr className=""> */}
-                        <div class="col-12 col-md-2 mb-2 mb-md-0 purchaseThumbnail">
-                           <div> <img
+                        <div class="mx-3 col-12 col-md-2 mb-2 mb-md-0 purchaseThumbnail">
+                           <div className="d-flex align-items-center">
+                            <img
+                              loading="lazy"
                               className="img-fluid"
                               src={item?.desc_header_image ? item.desc_header_image : '/assets/images/noImage.jfif'}
                             />
                             </div>
                             {/* <IoCloseCircleOutline /> */}
                           </div>
-                          {/* <td style={{ width: "224px" }}>
-                            <div className="w-100 m-0">
-                              <h4 className="mb-1 H_title">{item.title}</h4>
-                              <p className="m-0 historyDate">
-                                <span>Added: </span>{" "}
-                                {formatDate(JSON.parse(item.purchase_date))}
-                              </p>
-                            </div>
-                          </td> */}
+                  
                           {/* <!-- Course Details Section --> */}
                           <div class="col-12 col-md-3 mb-2 mb-md-0">
                             <h6 class="mb-1 H_title">{item.title}</h6>
-                            <p class="m-0 text-muted"><span>Added:</span> {formatDate(JSON.parse(item.purchase_date))}</p>
+                            <p class="m-0 text-muted historyDate"><span>Added:</span> {formatDate(JSON.parse(item.purchase_date))}</p>
                           </div>
-                          {/* <td style={{ width: "180px" }}>
-                            <p className="m-0 historyDate">
-                              <span>Expired On:</span>{" "}
-                              {formatDate(JSON.parse(item.expiry_date))}
-                            </p>
-                          </td> */}
+                   
                           <div class="col-6 col-md-2 mb-2 mb-md-0">
-                            <p class="m-0 text-muted"><span>Expired On:</span> {formatDate(JSON.parse(item.expiry_date))}</p>
+                            <p class="m-0 text-muted historyDate"><span>Expired On:</span> {formatDate(JSON.parse(item.expiry_date))}</p>
                           </div>
-                          {/* <td style={{ width: "150px" }}>
-                            <p className="m-0 historyDate">
-                              <span className="p-1">Order ID: </span>
-                              {item.txn_id}
-                            </p>
-                          </td> */}
+                  
                           <div class="col-6 col-md-2 mb-2 mb-md-0">
-                            <p class="m-0 text-muted"><span>Order ID: </span>{item.txn_id}</p>
+                            <p class="m-0 text-muted historyDate"><span>Order ID: </span>{item.txn_id}</p>
                           </div>
-                          {/* <td style={{ width: "122px" }}>
-                            <p className="m-0 historyDate">
-                              <span className="p-1">Amount: </span>
-                              <FaRupeeSign className="rupeeSign" />
-                              {item.payment_mode == 1
-                                ? item.emi_payment
-                                : item.mrp}
-                            </p>
-                          </td> */}
+              
                           <div class="col-6 col-md-2 mb-2 mb-md-0">
-                            <p class="m-0">
+                            <p class="m-0 historyDate">
                               <span>Amount: </span>
                               <FaRupeeSign className="rupeeSign" />{item.payment_mode == 1
                                 ? item.emi_payment
@@ -762,25 +664,27 @@ const PurchaseHistory = () => {
                               {item.payment_mode && item.payment_mode == 0 && (
                               <>
                                 {item.mrp != 0 &&
-                                  <p class="m-0 text-success">Paid</p>
+                                  <p class="m-0 text-success historyDate">Paid</p>
                                 
                                 }
                                 <>
                                   {item.invoice_url && (
                                     <div class="col-6 col-md-1 text-end d-flex">
+
+                                      {item?.prices?.length > 0 &&
+                                        <Button2 value="Extend Validity" handleClick={() => handleExtendValidity(item)} />
+                                      }
+                                      <>
+                                        &nbsp;
+                                      </>
                                       <Button1
                                         value={"Download"}
                                         handleClick={() =>
                                           handleInvoice(item.invoice_url)
                                         }
                                       />
-                                      <>
-                                      &nbsp;
-                                      </>
                                       {/* {console.log('item', item)} */}
-                                      {item?.prices?.length > 0 &&
-                                        <Button2 value="Extend Validity" handleClick={() => handleExtendValidity(item)} />
-                                      }
+                                      
                                       {/* <button class="btn btn-warning">Download <i class="bi bi-download"></i></button> */}
                                    </div>
                                   )}
@@ -789,30 +693,7 @@ const PurchaseHistory = () => {
                               )
                               }
                           </div>
-                      {/* {
-                      item.payment_mode == 1 && 
-                      handleInstallments(item.subscription_code).map((item, index) => { */}
-                      {/* {item.payment_mode === 1 && installments[item.subscription_code] && (
-                      installments[item.subscription_code].map((installment, idx) => (
-                      <>
-                      
-                        <div className="py-2 d-flex align-items-center">
-                          <p className="">
-                            Transaction Date: Jul 1st, 2024
-                          </p>
-                          <p className="">
-                            Amount: <FaRupeeSign className="rupeeSign" />300.0
-                          </p>
-                          <p className="">
-                            Paid
-                          </p>
-                          <p className="">
-                            <Button1 value={"Download Invoice"} />
-                          </p>
-                          </div>
-                          </>
-                      )))
-                      } */}
+            
                       {item.payment_mode == 1 &&
                         installments[item.subscription_code] &&
                         installments[item.subscription_code].map(
@@ -821,7 +702,7 @@ const PurchaseHistory = () => {
                               className="col-md-12 my-3 "
                               key={idx}
                             >
-                              {console.log('installment', installment)}
+                              {/* {console.log('installment', installment)} */}
                               <div className="card child_historyCard"><p className="m-0 purchaseStripe">Installment {idx+1}</p>
                               <table>
                                 <tr className="" key={idx}>
@@ -906,10 +787,10 @@ const PurchaseHistory = () => {
         </div>
       ) : (<>
       {showError ? 
-        <div className=" pt-0 flex-grow-1">
-          <img src="/assets/images/BuyErrorImg.svg" alt="" />
-          <h4>No Data found!</h4>
-          <p>Unable to locate data, seeking alternative methods for retrieval.</p>
+        <div className="text-center pt-0 flex-grow-1">
+          <img loading="lazy" src="/assets/images/BuyErrorImg.svg" alt="" />
+          <h4 className="m-0">No Data found!</h4>
+          <p className="m-0">Unable to locate data, seeking alternative methods for retrieval.</p>
         </div>
         :
         <LoaderAfterLogin />

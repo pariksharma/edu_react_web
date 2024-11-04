@@ -27,7 +27,7 @@ const BlogCard = ({ value, handleBlogDetail }) => {
     <>
       {/* {!isShowBlogDetail ? ( */}
             <div className="card border-0 shadow b-radius course_card m-0">
-              <img src={value.image_url} style={{ borderRadius: "10px" }} />
+              <img src={value.image_url? value.image_url : '/assets/images/noImage.jfif'} style={{ borderRadius: "10px" }} />
               <div className="card-body pt-2 px-0 pb-0">
                 <h4 className="m-0 blogTitle">{value.title}</h4>
                 <p className="m-0 blog_Date">{date}</p>

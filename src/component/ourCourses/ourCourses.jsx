@@ -24,41 +24,48 @@ const OurCourses = () => {
   const router = useRouter();
 
   const contentData = useSelector((state) => state?.allCategory?.content);
+  // console.log('contentData', contentData)
   useEffect(() => {
     if (contentData?.banner_list_web?.length > 0) {
       setBanner(contentData.banner_list_web[0]?.banner_url);
     }
+  }, [contentData]);
+
+  useEffect(() => {
     if (contentData?.course_type_master) {
       // localStorage.setItem('tab_id', contentData?.course_type_master[0].name)
       setTabData(contentData?.course_type_master);
-      setCatId(contentData?.course_type_master[0].id)
-      console.log('localStorage', localStorage.getItem('mainTab'))
-      if(localStorage.getItem('mainTab')){
-        setKey(localStorage.getItem('mainTab'))
+      // console.log('localStorage', localStorage.getItem('mainTab'))
+      const getTabName = localStorage.getItem('mainTab');
+      // console.log('getTabName',getTabName)
+      if(getTabName){
+        setKey(getTabName)
+        setCatId(contentData?.course_type_master?.filter(item => item.name == getTabName)[0]?.id)
         setTimeout(() => {
           localStorage.setItem('mainTab', "")
         }, [2000])  
       }
       else{
-        setKey(contentData?.course_type_master[0].name);
+        setCatId(contentData?.course_type_master[0]?.id)
+        setKey(contentData?.course_type_master[0]?.name);
       }
     }
-  }, [contentData]);
-  // console.log('banner', tabData)
+  }, [contentData])
 
   useEffect(() => {
     setShowError(false)
     if(key != '') {
       fetchCategoryData();
     }
-  }, [key])
+  }, [key, catId])
 
   const handleTabChange = (k) => {
     // console.log(key)
     setKey(k);
     setCatId(tabData.filter(item => item.name == k)[0]?.id)
-    setFilterCoursesList([])
-    // localStorage.setItem(k)
+    if(key != k) {
+      setFilterCoursesList([])
+    }
   };
 
   const handleShowDetail = () => {
@@ -94,7 +101,7 @@ const OurCourses = () => {
         main_cat: 0,
         // 'course_ids': id
       };
-      
+      // console.log('formDAta', formData)
       const response_getCourse_service = await getCourse_service(
         encrypt(JSON.stringify(formData), token)
       );
@@ -102,7 +109,7 @@ const OurCourses = () => {
         response_getCourse_service.data,
         token
       );
-      console.log("response_getCourse_data", response_getCourse_data);
+      // console.log("response_getCourse_data", response_getCourse_data);
       if (response_getCourse_data.status) {
         if(response_getCourse_data?.data?.length == 0) {
           setShowError(true)
@@ -143,7 +150,6 @@ const OurCourses = () => {
 
   return (
     <>
-      <SearchCourses catId = {catId} handleFilterCourses = {handleFilterCourses} />
       <section className="container-fluid">
         {banner &&
         <div className="row">
@@ -153,6 +159,7 @@ const OurCourses = () => {
         </div>
         }
       </section>
+      <SearchCourses catId = {catId} handleFilterCourses = {handleFilterCourses} />
       <section className="container-fluid">
         {tabData?.length > 0 ?
         <div className="row">

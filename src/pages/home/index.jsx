@@ -72,7 +72,7 @@ const index = () => {
       }
       const response_getCourse_service = await getCourse_service(encrypt(JSON.stringify(formData),token));
       const response_getCourse_data = decrypt(response_getCourse_service.data, token)
-      console.log('course', response_getCourse_data)
+      // console.log('course', response_getCourse_data)
       if(response_getCourse_data.status){
         dispatch(all_CourseAction(response_getCourse_data.data))
       }
@@ -86,8 +86,8 @@ const index = () => {
     try{
       const formData = {}
       const response_getCurrentAffairs_service = await getCurrentAffair_service(encrypt(JSON.stringify(formData), token))
+      // console.log('response_getCurrentAffairs_data', response_getCurrentAffairs_service)
       const response_getCurrentAffairs_data = decrypt(response_getCurrentAffairs_service.data, token);
-      console.log('response_getCurrentAffairs_data', response_getCurrentAffairs_data)
       if(response_getCurrentAffairs_data.status){
         dispatch(all_CurrentAffair(response_getCurrentAffairs_data.data))
       }

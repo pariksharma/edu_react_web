@@ -11,10 +11,19 @@ import ErrorPageAfterLogin from "../errorPageAfterLogin";
 const Notification = () => {
   const [notificationData, setNotificationData] = useState([]);
   const [showError, setShowError] = useState(false)
+  const [appLogo, setAppLogo] = useState('')
   const router = useRouter();
+
   useEffect(() => {
     setShowError(false)
     fetchNotification();
+    setAppLogo(localStorage.getItem('logo'))
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      toast.dismiss();
+    };
   }, []);
 
   const fetchNotification = async () => {
@@ -30,7 +39,7 @@ const Notification = () => {
         response_getNotification_service.data,
         token
       );
-      console.log("response_getNotification_data", response_getNotification_data);
+      // console.log("response_getNotification_data", response_getNotification_data);
       if (response_getNotification_data?.status) {
         if(response_getNotification_data?.data?.length < 0){
           setShowError(true)
@@ -65,6 +74,21 @@ const Notification = () => {
   return (
     <>
       <Toaster position="top-right" reverseOrder={false} />
+      {/* <Toaster
+        position="top-right"
+        toastOptions={{
+          success: {
+            style: {
+              opacity:'1'
+            },
+          },
+          error: {
+            style: {
+             opacity:'1'
+            },
+          },
+        }}
+      /> */}
       {/* <div>Notification</div> */}
       <section className="container-fluid mt-3">
         <div className="row">
@@ -78,7 +102,7 @@ const Notification = () => {
                           <p className="m-0 activeNotification"></p>
                           <img
                             className="notifyImg"
-                            src="/assets/images/notifyImg.svg"
+                            src={appLogo ? appLogo : "/assets/images/notifyImg.svg"}
                             alt=""
                           />
                         </div>

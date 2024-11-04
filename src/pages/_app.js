@@ -5,7 +5,9 @@ import { store } from '@/store/store';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { userLoggedIn } from '@/utils/helpers';
+import { QueryClient, QueryClientProvider } from 'react-query';
 
+const queryClient = new QueryClient();
 
 export default function App({ Component, pageProps }) {
 
@@ -14,15 +16,17 @@ export default function App({ Component, pageProps }) {
   useEffect(() => {
     const isLoggedIn = userLoggedIn();
     const currentPath = router.pathname;
-    if(!isLoggedIn) {
+    if (!isLoggedIn) {
       // console.log("hey")
-      if(currentPath.startsWith('/private')){
+      if (currentPath.startsWith('/private')) {
         router.push('/')
       }
     }
   }, [router])
 
   return <Provider store={store} >
+    <QueryClientProvider client={queryClient}>
       <Component {...pageProps} />
-    </Provider>
+    </QueryClientProvider>
+  </Provider>
 }

@@ -12,9 +12,9 @@ const axiosClient = axios.create({
 // };
 
 axiosClient.interceptors.request.use((req) => {
-    const jwt = localStorage.getItem('jwt')
-    const user_id = localStorage.getItem('user_id')
-    const app_id = localStorage.getItem('appId')
+    const jwt = typeof window !== "undefined" ? localStorage.getItem('jwt') : ""
+    const user_id = typeof window !== "undefined" ? localStorage.getItem('user_id') : ""
+    const app_id = typeof window !== "undefined" ? localStorage.getItem('appId') : ""
 
 
     const headers = {
@@ -26,7 +26,9 @@ axiosClient.interceptors.request.use((req) => {
             // 'Centerid:'.$Centerid,
             'Content-Type': 'application/json',
             "Authorization": "Bearer 01*#NerglnwwebOI)30@I*Dm'@@",
-            "Appid": app_id ? app_id : '' 
+            "Appid": app_id ? app_id : '' ,
+            // "User-Agent":'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36'
+            // "User-Agent": navigator.userAgent
     }
 
     req.headers = headers

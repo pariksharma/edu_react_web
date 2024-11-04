@@ -4,7 +4,13 @@ import { getMasterDataService } from "@/services";
 import { IoIosArrowForward } from "react-icons/io";
 import { decrypt, encrypt, get_token } from "@/utils/helpers";
 
-const ExamCalender = ({ propsValue, tabName, resetRef, courseDetail, CourseID }) => {
+const ExamCalender = ({
+  propsValue,
+  tabName,
+  resetRef,
+  courseDetail,
+  CourseID,
+}) => {
   const [layer1Data, setLayer1Data] = useState();
   const [showLayer, setShowLayer] = useState("layer1");
   const [layer2List, setLayer2List] = useState();
@@ -12,7 +18,6 @@ const ExamCalender = ({ propsValue, tabName, resetRef, courseDetail, CourseID })
   const [layer2Index, setLayer2Index] = useState();
   const [layer3Data, setLayer3Data] = useState();
   const [id, setId] = useState();
-
 
   useEffect(() => {
     if (courseDetail) {
@@ -29,7 +34,7 @@ const ExamCalender = ({ propsValue, tabName, resetRef, courseDetail, CourseID })
     setLayer1Index(index);
     setShowLayer("layer2");
     setLayer2List(layer1Data.meta?.list[index]);
-    console.log(layer1Data.meta?.list[index]);
+    // console.log(layer1Data.meta?.list[index]);
   };
 
   const getLayer3Data = async (index) => {
@@ -46,7 +51,7 @@ const ExamCalender = ({ propsValue, tabName, resetRef, courseDetail, CourseID })
       layer: 3,
       page: 1,
     };
-    const result = await getDetail(data);   /// Api Call
+    const result = await getDetail(data); /// Api Call
     // const result = "";
     // console.log('result', result);
     setLayer3Data(result);
@@ -63,17 +68,25 @@ const ExamCalender = ({ propsValue, tabName, resetRef, courseDetail, CourseID })
       subject_id: data.subject_id,
       layer: data.layer,
       page: data.page,
-    }
-    const response_getMasterData_service = await getMasterDataService(encrypt(JSON.stringify(formData), token))
-    const response_getMasterData_Data = decrypt(response_getMasterData_service.data, token);
-    console.log('response_getMasterData_Data', response_getMasterData_Data.data)
-    if(response_getMasterData_Data.status) {
-      return response_getMasterData_Data.data
+    };
+    const response_getMasterData_service = await getMasterDataService(
+      encrypt(JSON.stringify(formData), token)
+    );
+    const response_getMasterData_Data = decrypt(
+      response_getMasterData_service.data,
+      token
+    );
+    // console.log(
+    //   "response_getMasterData_Data",
+    //   response_getMasterData_Data.data
+    // );
+    if (response_getMasterData_Data.status) {
+      return response_getMasterData_Data.data;
     }
   };
 
   const handleRead = () => {
-    console.log("Read Now");
+    // console.log("Read Now");
   };
 
   return (
@@ -123,15 +136,15 @@ const ExamCalender = ({ propsValue, tabName, resetRef, courseDetail, CourseID })
           </span>
         </div>
         {showLayer == "layer3" ? (
-            layer3Data ? (
-              layer3Data.list.map((item, i) => {
-          // PDF_Ary ? (
-          //   PDF_Ary.map((item, i) => {
+          layer3Data ? (
+            layer3Data.list.map((item, i) => {
+              // PDF_Ary ? (
+              //   PDF_Ary.map((item, i) => {
               return (
                 <div
                   className=" pg-tabs-description mt-3"
                   key={i}
-                //   onClick={() => handleOpenVideo(item)}
+                  //   onClick={() => handleOpenVideo(item)}
                 >
                   <div className="tabs-deschovr d-flex align-items-center rounded">
                     <div className="w-100 pg-sb-topic d-flex align-items-center justify-content-between">
@@ -154,11 +167,14 @@ const ExamCalender = ({ propsValue, tabName, resetRef, courseDetail, CourseID })
                         <div className="btnsalltbba text-center d-flex">
                           {" "}
                           {/* {(isLogin && item.is_locked == "0") || */}
-                          {layer1Data.type == "pdf" ?
+                          {layer1Data.type == "pdf" ? (
                             <Button1 value="Read" handleClick={handleRead} />
-                            :
-                            <Button1 value="Watch Now" handleClick={handleRead} />
-                          }
+                          ) : (
+                            <Button1
+                              value="Watch Now"
+                              handleClick={handleRead}
+                            />
+                          )}
                         </div>
                       </div>
                     </div>
@@ -170,10 +186,10 @@ const ExamCalender = ({ propsValue, tabName, resetRef, courseDetail, CourseID })
             <div className="text-center">{/* <NoDataFound /> */}</div>
           )
         ) : showLayer == "layer2" ? (
-            layer2List &&
-            layer2List.list.map((item, i) => {
-          // topic_PDF_Ary &&
-          // topic_PDF_Ary.map((item, i) => {
+          layer2List &&
+          layer2List.list.map((item, i) => {
+            // topic_PDF_Ary &&
+            // topic_PDF_Ary.map((item, i) => {
             return (
               <div
                 className=" pg-tabs-description mt-3"
@@ -222,10 +238,10 @@ const ExamCalender = ({ propsValue, tabName, resetRef, courseDetail, CourseID })
           })
         ) : (
           showLayer == "layer1" &&
-            layer1Data &&
-            layer1Data?.meta?.list?.map((item, i) => {
-          // subject_PDF_Ary &&
-          // subject_PDF_Ary.map((item, i) => {
+          layer1Data &&
+          layer1Data?.meta?.list?.map((item, i) => {
+            // subject_PDF_Ary &&
+            // subject_PDF_Ary.map((item, i) => {
             return (
               <div
                 className=" pg-tabs-description mt-3"

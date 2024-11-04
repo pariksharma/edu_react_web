@@ -4,7 +4,10 @@ import { useRouter } from "next/router";
 import dynamic from 'next/dynamic';
 import 'shaka-player/dist/controls.css';
 
-const VideoJsPlayer = ({ source, dType, poster, keySystem, NonDRMVideourl, videoMetaData, title }) => {
+const VideoJsPlayer = ({ source, dType, poster, keySystem, NonDRMVideourl, videoMetaData, title, start_date, video_type }) => {
+  // console.log("NonDRMVideourl", NonDRMVideourl)
+  // console.log("start_date", start_date)
+  // console.log("video_type", video_type)
   const videoRef = useRef(null);
   const containerRef = useRef(null);
   const playerRef = useRef(null);
@@ -22,9 +25,16 @@ const VideoJsPlayer = ({ source, dType, poster, keySystem, NonDRMVideourl, video
   const [showIntro, setshowIntro] = useState(false);
   const [showSkipRecap, setshowSkipRecap] = useState(false);
   const [cursorStyle, setCursorStyle] = useState('');
+  const [Live, setLive] = useState(false);
   const currentTimeRef = useRef(currentTime); // Ref to keep track of currentTime
-  
+
   const router = useRouter()
+
+  const formatTime = (time) => {
+    const minutes = Math.floor(time / 60);
+    const seconds = Math.floor(time % 60);
+    return `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
+  };
 
   useEffect(() => {
     currentTimeRef.current = currentTime; // Update the ref with the latest currentTime
@@ -32,31 +42,31 @@ const VideoJsPlayer = ({ source, dType, poster, keySystem, NonDRMVideourl, video
 
   useEffect(() => {
     const videoElement = videoRef.current;
-  
+
     // Retrieve and apply the stored mute state from localStorage when the video player loads
     const storedMuteState = localStorage.getItem('isMuted');
     if (storedMuteState !== null) {
       videoElement.muted = storedMuteState === 'true';
     }
-  
+
     // Save the mute state to localStorage whenever the user mutes/unmutes the video
     const handleVolumeChange = () => {
       const isMuted = videoElement.muted;
       localStorage.setItem('isMuted', isMuted ? 'true' : 'false');
     };
-  
+
     if (videoElement) {
       videoElement.addEventListener("volumechange", handleVolumeChange);
     }
-  
+
     return () => {
       if (videoElement) {
         videoElement.removeEventListener("volumechange", handleVolumeChange);
       }
     };
   }, []);
-  
-  
+
+
 
 
   useEffect(() => {
@@ -119,6 +129,12 @@ const VideoJsPlayer = ({ source, dType, poster, keySystem, NonDRMVideourl, video
       const adManager = player.getAdManager();
       adManager.initMediaTailor(container, netEngine, videoElement);
       setPlayer(player);
+      const config = {
+        'enableTooltips': true,
+        'overflowMenuButtons': ['quality', 'caption', 'language'],
+        // 'controlPanelElements': ['backward', 'play_pause', 'forward', 'spacer', 'mute', 'overflow_menu', 'fullscreen']
+      }
+      ui.configure(config);
       videoRef.current.addEventListener("loadeddata", handleLoaded);
       videoRef.current.addEventListener("error", handleError);
       videoRef.current.addEventListener("play", () => {
@@ -152,31 +168,133 @@ const VideoJsPlayer = ({ source, dType, poster, keySystem, NonDRMVideourl, video
         if (NonDRMVideourl) {
           player.getNetworkingEngine().registerRequestFilter((type, request) => {
             if (type === shaka.net.NetworkingEngine.RequestType.MANIFEST ||
-                type === shaka.net.NetworkingEngine.RequestType.SEGMENT) {
+              type === shaka.net.NetworkingEngine.RequestType.SEGMENT) {
               request.method = 'GET';
             }
           });
-          // await player.load(NonDRMVideourl);
-          player.load(NonDRMVideourl).then(function() {
-          }).catch((err)=>{
-          })
-          
+          // await player.load("https://livesim.dashif.org/livesim/chunkdur_1/ato_7/testpic4_8s/Manifest.mpd");
+          if (start_date) {
+            player.load(`${source?.file_url}?start=${start_date}`).then(function () {
+              if (player.isLive()) {
+                setLive(false)
+              }
+              else {
+                var seekBar = controls.getControlsContainer().querySelector('.shaka-seek-bar-container');
+                var seekBar2 = controls.getControlsContainer().querySelector('.shaka-current-time');
+                if (seekBar) {
+                  // seekBar.remove();
+                  seekBar2.remove();
+                }
+                setLive(true)
+              }
+            }).catch((err) => {
+            })
+          } else {
+            player.load(NonDRMVideourl).then(function () {
+              if (player.isLive()) {
+                setLive(false)
+              }
+              else {
+                var seekBar = controls.getControlsContainer().querySelector('.shaka-seek-bar-container');
+                var seekBar2 = controls.getControlsContainer().querySelector('.shaka-current-time');
+                if (seekBar) {
+                  // seekBar.remove();
+                  seekBar2.remove();
+                }
+                setLive(true)
+              }
+            }).catch((err) => {
+            })
+          }
+
+          // player.load(`${source?.file_url}?start=${start_date}`).then(function() {
+          // }).catch((err)=>{
+          // })
+
         } else {
-          const mediaTailorUrl = source?.file_url;
-          await player.load(mediaTailorUrl);
-          videoRef.current.play();
+          if (start_date) {
+            const mediaTailorUrl = `${source?.file_url}?start=${start_date}`;
+            // const mediaTailorUrl = source?.file_url;
+            await player.load(mediaTailorUrl).then(() => {
+              if (player.isLive()) {
+                setLive(false)
+              }
+              else {
+                var seekBar = controls.getControlsContainer().querySelector('.shaka-seek-bar-container');
+                var seekBar2 = controls.getControlsContainer().querySelector('.shaka-current-time');
+                if (seekBar) {
+                  // seekBar.remove();
+                  seekBar2.remove();
+                }
+                setLive(true)
+              }
+            }).catch((error) => {
+              console.log('Error Loading video', error)
+            });
+            videoRef.current.play();
+
+          } else {
+            const mediaTailorUrl = source?.file_url;
+            await player.load(mediaTailorUrl).then(() => {
+              if (player.isLive()) {
+                setLive(false)
+              }
+              else {
+                var seekBar = controls.getControlsContainer().querySelector('.shaka-seek-bar-container');
+                var seekBar2 = controls.getControlsContainer().querySelector('.shaka-current-time');
+                if (seekBar) {
+                  // seekBar.remove();
+                  seekBar2.remove();
+                }
+                setLive(true)
+              }
+            }).catch((error) => {
+              console.log('Error Loading video', error)
+            });
+            videoRef.current.play();
+          }
+          // const mediaTailorUrl = source?.file_url;
+          // const mediaTailorUrl = url;
+
         }
       } catch (error) {
       }
 
     };
+    if (video_type == 8) {
+      const updateCurrentTimeButtonText = () => {
+        const currentTimeButton = document.querySelector('.shaka-current-time');
+        if (currentTimeButton) {
+          // Check if the button's current text is "Live"
+          if (currentTimeButton.textContent !== 'Live') {
+            currentTimeButton.textContent = 'Go Live';
+            currentTimeButton.setAttribute('aria-label', 'Go Live'); // Update aria-label for accessibility
+          }
+        }
+      };
+      updateCurrentTimeButtonText();
+      const observer = new MutationObserver(() => {
+        const currentTimeButton = document.querySelector('.shaka-current-time');
+        if (currentTimeButton && currentTimeButton.textContent !== 'Live') {
+          updateCurrentTimeButtonText();
+        }
+      });
+      observer.observe(containerRef.current, {
+        childList: true,
+        subtree: true,
+      });
+    }
 
     initPlayer();
     const handleKeyPress = (event) => {
       if (event.key === 'ArrowRight') {
-        skipForward();
+        if (Live) {
+          skipForward();
+        }
       } else if (event.key === 'ArrowLeft') {
-        skipBackward();
+        if (Live) {
+          skipBackward();
+        }
       } else if (event.key === ' ') { // Space key for play/pause
         event.preventDefault(); // Prevent scrolling the page
         togglePlayPause();
@@ -194,7 +312,6 @@ const VideoJsPlayer = ({ source, dType, poster, keySystem, NonDRMVideourl, video
         });
       }
     };
-
     window.addEventListener('keydown', handleKeyPress);
     return () => {
       if (videoRef.current) {
@@ -249,6 +366,11 @@ const VideoJsPlayer = ({ source, dType, poster, keySystem, NonDRMVideourl, video
             style={{ width: "100%" }}
           />
         </div>
+        {/* {!Live &&
+          <div className="time_video-custome">
+            <span>{formatTime(currentTime)}</span> / <span>{formatTime(duration)}</span>
+          </div>
+        } */}
         {showSkipIcon && (
           <div className="skip-icon __skip_icon____">
             <p>▶▶▶</p>
@@ -272,28 +394,42 @@ const VideoJsPlayer = ({ source, dType, poster, keySystem, NonDRMVideourl, video
             Skip Recap</button>}
         </div>
         {cursorStyle == "auto" &&
-          <div className="_controls_video_">
-            <div className="__video-deu__">
-            </div>
-            <div className="__video_icon___">
-              <div className="video_icon_left">
-                {!isAdPlaying &&
-                  <div onClick={skipBackward} className="__video_icon__common__"><img src="/assets/images/skip_02.svg" alt="Rewind 10s" /></div>
-                }
-                <div onClick={togglePlayPause}
-                  className={`${isAdPlaying ? "__ads__" : "__adds__"} __play_pause__`}>
-                  {isPlaying ? (
-                    <img src="/assets/images/pause.svg" alt="Pause" />
-                  ) : (
-                    <img src="/assets/images/play.svg" alt="Play" />
-                  )}
+          <>
+            {/* {Live ?  <span className="liveIndicator">Live</span> : ""} */}
+            <div className="_controls_video_">
+              {Live &&
+                <div className={`time_video-custome`}>
+                  <span>{formatTime(currentTime)}</span> / <span>{formatTime(duration)}</span>
                 </div>
-                {!isAdPlaying &&
-                  <div onClick={skipForward} className="__video_icon__common__"><img src="/assets/images/skip_01.svg" alt="Skip 10s" /></div>}
+              }
+              <div className="__video-deu__">
+              </div>
+
+              <div className="__video_icon___">
+                <div className="video_icon_left shaka-tooltips-on">
+                  {!isAdPlaying && Live &&
+                    <div onClick={skipBackward} className="__video_icon__common__ shaka-tooltip" aria-label="Rewind 10 seconds"><img src="/assets/images/skip_02.svg" alt="Rewind 10 seconds" /></div>
+                  }
+                  <div onClick={togglePlayPause}
+                    className={`${isAdPlaying ? "__ads__" : "__adds__"} __play_pause__ shaka-tooltips-on`}>
+                    {isPlaying ? (
+                      <span className="shaka-tooltip" aria-label="Pause">
+                        <img src="/assets/images/pause.svg" />
+                      </span>
+                    ) : (
+                      <span className="shaka-tooltip" aria-label="Play">
+                        <img src="/assets/images/play.svg" />
+                      </span>
+                    )}
+                  </div>
+                  {!isAdPlaying && Live &&
+                    <div onClick={skipForward} className="__video_icon__common__ shaka-tooltip" aria-label="Forward 10 seconds"><img src="/assets/images/skip_01.svg" alt="Forward 10 seconds" /></div>}
+                </div>
               </div>
             </div>
-          </div>
+          </>
         }
+
       </div>
     </div>
   );

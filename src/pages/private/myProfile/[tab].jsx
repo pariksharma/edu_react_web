@@ -1,9 +1,7 @@
 import Blogs from "@/component/blogs/blogs";
 import Bookstore from "@/component/bookstore/bookstore";
 import CurrentAffairList from "@/component/currentAffairList/currentAffairList";
-import ErrorPage from "@/component/errorPage";
 import Feeds from "@/component/feeds/feeds";
-import Footer from "@/component/footer/footer";
 import Header from "@/component/header/header";
 import Inquiry from "@/component/inquiry/inquiry";
 import LiveClass from "@/component/liveClass/liveClass";
@@ -16,68 +14,69 @@ import Profile from "@/component/profile/profile";
 import PurchaseHistory from "@/component/purchaseHistory/purchaseHistory";
 import SideBar from "@/component/sideBar/sideBar";
 import Testimonial from "@/component/testimonial/testimonial";
-import { getCourse_Catergory_Service } from "@/services";
-import { all_content } from "@/store/sliceContainer/masterContentSlice";
-import { decrypt, get_token, userLoggedIn } from "@/utils/helpers";
 import { useRouter } from "next/router";
+import { decrypt, get_token, userLoggedIn } from "@/utils/helpers";
+
 import React, { useEffect, useState } from "react";
-import { Nav } from "react-bootstrap";
-import { useDispatch } from "react-redux";
 
-const Index = (props) => {
+const Index = ({ initialTab }) => {
   const router = useRouter();
-  const { tab } = router.query;
-  // console.log("router", router.pathname.startsWith("/private"));
-  // console.log('tab', tab)
-
-  const [statusTab, setStatusTab] = useState("");
+  const [statusTab, setStatusTab] = useState(initialTab);
 
   useEffect(() => {
+    // Update statusTab whenever the router.query.tab changes
+    const { tab } = router.query;
+    // console.log('tab', tab)
+    if (tab) {
+      setStatusTab(tab);
+    }
+  }, [router.query]); // Dependency array with router.query.tab
+
+  useEffect(() => {
+    const currentPath = router.asPath;
+    localStorage.setItem("redirectdetails", currentPath);
     const isLoggedIn = userLoggedIn()
     if(router.pathname.startsWith("/private") && !isLoggedIn){
       router.push('/')
     }
   }, [router])
 
-  useEffect(() => {
-    setStatusTab(tab)
-  }, [tab])
-
   const renderContent = () => {
     switch (statusTab) {
-      case "Feeds":
+      case "feeds":
         return <Feeds />;
       case "ourCourse":
         return <OurCourses />;
-      case "Live Test":
+      case "live_Test":
         return <LiveTest />;
-      case "Live Classes":
+      case "live_Classes":
+      case "8":
+        return <LiveTest />;
+      case "9":
         return <LiveClass />;
-      case "Blog":
+      case "29":
         return <Blogs />;
-      case "Current affairs":
+      case "current_affairs":
+      case "17":
         return <CurrentAffairList />;
-      case "Testimonial":
+      case "testimonial":
         return <Testimonial />;
-      case "Bookstore":
+      case "bookstore":
+      case "14":
         return <Bookstore />;
-      case "Notification":
+      case "notification":
         return <Notification />;
-      case "MyCourse":
+      case "myCourse":
         return <MyCourse />;
-      case "Purchase History":
+      case "purchase-history":
         return <PurchaseHistory />;
-      case "Inquiry":
+      case "inquiry":
+      case "12":
         return <Inquiry />;
       case "profile":
         return <Profile />;
       default:
-        // return <div className=" pt-0 flex-grow-1">
-        //   <img src="/assets/images/detailErrorImg.svg" alt="" />
-        //   <h4>No Data found!</h4>
-        //   <p>Unable to locate data, seeking alternative methods for retrieval.</p>
-        // </div>;  // Fallback to error page if no match
-        return <LoaderAfterLogin/>
+        return <LoaderAfterLogin />;
     }
   };
 
@@ -87,24 +86,56 @@ const Index = (props) => {
       <div className="d-flex" style={{ marginTop: "55px" }}>
         <SideBar />
         <main className="main_content flex-grow-1">
-          {/* {statusTab == "Feeds" && <Feeds />}
-          {statusTab == "ourCourse" && <OurCourses />}
-          {statusTab == "Live Test" && <LiveTest />}
-          {statusTab == "Live Classes" && <LiveClass />}
-          {statusTab == "Blog" && <Blogs />}
-          {statusTab == "Current affairs" && <CurrentAffairList />}
-          {statusTab == "Testimonial" && <Testimonial />}
-          {statusTab == "Bookstore" && <Bookstore />}
-          {statusTab == "Notification" && <Notification />}
-          {statusTab == "MyCourse" && <MyCourse />}
-          {statusTab == "Purchase History" && <PurchaseHistory />}
-          {statusTab == "Inquiry" && <Inquiry />}
-          {statusTab == "profile" && <Profile />} */}
           {renderContent()}
         </main>
       </div>
     </>
   );
 };
+
+// // Use `getStaticPaths` to define available dynamic routes
+// Use `getStaticPaths` to define available dynamic routes
+// export const getStaticPaths = async () => {
+//   const paths = [
+//     { params: { tab: "feeds" } },
+//     { params: { tab: "ourCourse" } },
+//     { params: { tab: "live_Test" } },
+//     { params: { tab: "live_Classes" } },
+//     { params: { tab: "blog" } },
+//     { params: { tab: "28" } },
+//     { params: { tab: "current_affairs" } },
+//     { params: { tab: "testimonial" } },
+//     { params: { tab: "bookstore" } },
+//     { params: { tab: "notification" } },
+//     { params: { tab: "myCourse" } },
+//     { params: { tab: "purchase-history" } },
+//     { params: { tab: "inquiry" } },
+//     { params: { tab: "8" } },
+//     { params: { tab: "9" } },
+//     { params: { tab: "Blog" } },
+//     { params: { tab: "29" } },
+//     { params: { tab: "17" } },
+//     { params: { tab: "Testimonial" } },
+//     { params: { tab: "14" } },
+//     { params: { tab: "notification" } },
+//     { params: { tab: "myCourse" } },
+//     { params: { tab: "purchase-history" } },
+//     { params: { tab: "12" } },
+//     { params: { tab: "profile" } },
+//   ];
+
+//   return { paths, fallback: false };
+// };
+
+// // Use `getStaticProps` to provide data at build time
+// export const getStaticProps = async ({ params }) => {
+//   const { tab } = params;
+
+//   return {
+//     props: {
+//       initialTab: tab || null, // Provide initialTab as a prop
+//     },
+//   };
+// };
 
 export default Index;

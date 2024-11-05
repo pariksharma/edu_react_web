@@ -145,7 +145,7 @@ export function isValidData(response) {
   }
 
   export function comboDetail(path) {
-    console.log('path', path)
+    // console.log('path', path)
     if(path.startsWith("/private/myProfile/detail/combo_course")) {
         return true;
     }

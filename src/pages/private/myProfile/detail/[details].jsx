@@ -101,28 +101,6 @@ const Details = ({ value }) => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [tiles, key]);
 
-  // const handleScroll = () => {
-  //   const currentScrollY = window.scrollY;
-  //   setScrollY(currentScrollY);
-  //   // console.log("key=========================", key);
-
-  //   if (
-  //     currentScrollY >= 300 &&
-  //     key == tiles?.find((item) => (item.type = "overview"))?.tile_name
-  //   ) {
-  //     setClass(true);
-  //   } else {
-  //     setClass(false);
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   window.addEventListener("scroll", handleScroll);
-  //   return () => {
-  //     window.removeEventListener("scroll", handleScroll);
-  //   };
-  // }, [key]);
-
   useEffect(() => {
     if (details) {
       // window.scrollTo(0, 0);
@@ -270,7 +248,7 @@ const Details = ({ value }) => {
                     <div className="col-md-12">
                       <nav aria-label="breadcrumb ">
                         <ol className="m-0 breadcrumb cursor">
-                          {console.log('titleName', titleName)}
+                          {/* {console.log('titleName', titleName)} */}
                           <li
                             className="breadcrumb-item"
                             onClick={handleBackdetails}

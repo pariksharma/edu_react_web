@@ -9,6 +9,7 @@ import { getCourse_service } from "@/services";
 import { decrypt, encrypt, get_token } from "@/utils/helpers";
 import ErrorPageAfterLogin from "../errorPageAfterLogin";
 import LoaderAfterLogin from "../loaderAfterLogin";
+import Banner from "../banner/banner";
 
 const OurCourses = () => {
   const [showDetail, setShowDetail] = useState(false);
@@ -24,7 +25,7 @@ const OurCourses = () => {
   const router = useRouter();
 
   const contentData = useSelector((state) => state?.allCategory?.content);
-  // console.log('contentData', contentData)
+  console.log('contentData', contentData)
   useEffect(() => {
     if (contentData?.banner_list_web?.length > 0) {
       setBanner(contentData.banner_list_web[0]?.banner_url);
@@ -151,13 +152,14 @@ const OurCourses = () => {
   return (
     <>
       <section className="container-fluid">
-        {banner &&
+        {/* {banner &&
         <div className="row">
           <div className="col-md-12 mb-5">
             <img className="profileBanImg" src={banner ? banner : ""} alt="" />
           </div>
         </div>
-        }
+        } */}
+        <Banner />
       </section>
       <SearchCourses catId = {catId} handleFilterCourses = {handleFilterCourses} />
       <section className="container-fluid">

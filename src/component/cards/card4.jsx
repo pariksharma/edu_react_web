@@ -8,7 +8,7 @@ import { MdOutlineCalendarMonth } from "react-icons/md";
 import { format } from "date-fns";
 import ExtendValiditymodal from "../modal/extendValiditymodal";
 import { getFPaymentService, getPayGatewayService } from "@/services";
-import { decrypt, encrypt, get_token, userLoggedIn } from "@/utils/helpers";
+import { comboDetail, decrypt, encrypt, get_token, userLoggedIn } from "@/utils/helpers";
 import Script from "next/script";
 import ThankyouModal from "../modal/thankyouModal";
 import LoginModal from "../modal/loginModal";
@@ -480,7 +480,7 @@ const Card4 = ({ value, titleName, handleDetail, titleId, setGetCourse }) => {
               <hr className="dotted-divider" />
             </>
           )}
-
+        {!comboDetail(router.asPath) && <>
         {value.is_purchased == 0 && value?.mrp != 0 && (
           <>
             {/* <div className="coursePriceContainer"> */}
@@ -547,6 +547,8 @@ const Card4 = ({ value, titleName, handleDetail, titleId, setGetCourse }) => {
               <Button1 widthFull={true} value={"Buy Now"} handleClick={handleBuy} />
             </div>
           )}
+        </>
+        }
         </div>
       </div>
     </>

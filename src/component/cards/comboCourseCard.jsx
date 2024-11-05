@@ -22,8 +22,8 @@ const ComboCourseCard = ({
   const handleDetail = () => {
     if (onlineCourseAry.is_purchased != 0) {
       router.push(
-        `/view-courses/details/${
-          titleName + ":" + value.id + "&" + "" + "parent:" + onlineCourseAry.id
+        `/private/myProfile/detail/${
+          'combo_course' + ":" + value.id + "&" + "" + "parent:" + onlineCourseAry.id
         }`
       );
     } else {

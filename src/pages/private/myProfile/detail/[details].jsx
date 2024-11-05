@@ -1,8 +1,10 @@
 import { getCourseDetail_Service } from "@/services";
 import {
+  comboDetail,
   decrypt,
   encrypt,
   get_token,
+  isOurCourse,
   isValidData,
   userLoggedIn,
 } from "@/utils/helpers";
@@ -218,10 +220,15 @@ const Details = ({ value }) => {
 
   const handleBackdetails = () => {
     const back = localStorage.getItem("redirectdetails");
-    if (back) {
-      router.push(back);
-    } else {
+    if(comboDetail(router.asPath)) {
       router.back();
+    }
+    else{
+      if (back) {
+        router.push(back);
+      } else {
+        router.back();
+      }
     }
   };
 
@@ -263,6 +270,7 @@ const Details = ({ value }) => {
                     <div className="col-md-12">
                       <nav aria-label="breadcrumb ">
                         <ol className="m-0 breadcrumb cursor">
+                          {console.log('titleName', titleName)}
                           <li
                             className="breadcrumb-item"
                             onClick={handleBackdetails}
@@ -270,7 +278,7 @@ const Details = ({ value }) => {
                             {titleName
                               ? titleName == "MyCourse"
                                 ? "My Courses"
-                                : titleName
+                                : comboDetail(router.asPath) ? titleName : isOurCourse() ? "Our Course" : titleName 
                               : `My Courses`}
                             <i className="bi bi-chevron-right"></i>
                           </li>
@@ -300,84 +308,87 @@ const Details = ({ value }) => {
                             </p>
                           )}
                       </div>
-                      <div className="d-flex mb-3 freeCourserate">
-                        <p className="m-0">
-                          <span className="freeRating">
-                            <IoStar />{" "}
-                            {onlineCourseAry.avg_rating
-                              ? parseFloat(onlineCourseAry.avg_rating).toFixed(
-                                  1
-                                )
-                              : "0.0"}
-                          </span>
-                        </p>
+                      {!comboDetail(router.asPath) && <>
+                        <div className="d-flex mb-3 freeCourserate">
+                          <p className="m-0">
+                            <span className="freeRating">
+                              <IoStar />{" "}
+                              {onlineCourseAry.avg_rating
+                                ? parseFloat(onlineCourseAry.avg_rating).toFixed(
+                                    1
+                                  )
+                                : "0.0"}
+                            </span>
+                          </p>
 
-                        <p className="m-0 freeCourseReview d-flex align-items-center">
-                          {onlineCourseAry.user_rated} Reviews &nbsp;{" "}
-                          {/* {console.log('title', titleName)} */}
-                          {/* {onlineCourseAry?.cat_type == 1 && <>
-                        <span className="text-muted">|</span> &nbsp; Quantity
-                        :&emsp;{" "}
-                        <span className="quantityPrice ml-2">
-                          <input type="button" value={"-"} />
-                          <input type="text" readOnly min={1} />
-                          <input type="button" value={"+"} />
-                        </span>
-                        &nbsp; <span className="text-muted">|</span> &nbsp; In
-                        Stock:&nbsp;<span className="text-success"> Available</span>
-                        </>} */}
-                        </p>
-                      </div>
-                      {onlineCourseAry.mrp != 0 && (
-                        <div className="gap-2 flex-wrap flex-sm-nowrap d-flex align-items-center button_price">
-                          <div className="gap-2 share d-flex align-items-center">
-                            {versionData?.share_content == 1 && (
-                              <button className="button1_share">
-                                <FaShare />
-                              </button>
-                            )}
-                            {/* {console.log(onlineCourseAry)} */}
+                          <p className="m-0 freeCourseReview d-flex align-items-center">
+                            {onlineCourseAry.user_rated} Reviews &nbsp;{" "}
+                            {/* {console.log('title', titleName)} */}
+                            {/* {onlineCourseAry?.cat_type == 1 && <>
+                          <span className="text-muted">|</span> &nbsp; Quantity
+                          :&emsp;{" "}
+                          <span className="quantityPrice ml-2">
+                            <input type="button" value={"-"} />
+                            <input type="text" readOnly min={1} />
+                            <input type="button" value={"+"} />
+                          </span>
+                          &nbsp; <span className="text-muted">|</span> &nbsp; In
+                          Stock:&nbsp;<span className="text-success"> Available</span>
+                          </>} */}
+                          </p>
+                        </div>
+                        {onlineCourseAry.mrp != 0 && (
+                          <div className="gap-2 flex-wrap flex-sm-nowrap d-flex align-items-center button_price">
+                            <div className="gap-2 share d-flex align-items-center">
+                              {versionData?.share_content == 1 && (
+                                <button className="button1_share">
+                                  <FaShare />
+                                </button>
+                              )}
+                              {/* {console.log(onlineCourseAry)} */}
+                              {onlineCourseAry.is_purchased == 0 && (
+                                <p className="m-0 detailBbuyNow">
+                                  <Button1
+                                    value={"Buy Now"}
+                                    handleClick={handleBuyNow}
+                                  />
+                                </p>
+                              )}
+                            </div>
                             {onlineCourseAry.is_purchased == 0 && (
-                              <p className="m-0 detailBbuyNow">
-                                <Button1
-                                  value={"Buy Now"}
-                                  handleClick={handleBuyNow}
-                                />
-                              </p>
+                              <div className="m-0">
+                                <div className="m-0 gap-2 d-flex align-items-center">
+                                  <span className="costPrice">
+                                    {/* <FaRupeeSign className="rupeeSign" /> */}
+                                    ₹
+                                    {onlineCourseAry.is_gst == 0
+                                      ? Number(onlineCourseAry.mrp) +
+                                        Number(onlineCourseAry.tax)
+                                      : onlineCourseAry.mrp}
+                                  </span>
+                                  {Number(onlineCourseAry.mrp) +
+                                    Number(onlineCourseAry.tax) !=
+                                    onlineCourseAry.course_sp && (
+                                    <span className="discountPrice">
+                                      <del>
+                                        {/* <FaRupeeSign className="rupeeSign2" /> */}
+                                        ₹
+                                        {onlineCourseAry.course_sp}
+                                      </del>
+                                    </span>
+                                  )}
+                                </div>
+                                <p className="m-0 ms-1 ex_gst">
+                                  {onlineCourseAry.is_gst == 0
+                                    ? "Inclusive of GST"
+                                    : "Exclusive of GST"}{" "}
+                                </p>
+                              </div>
                             )}
                           </div>
-                          {onlineCourseAry.is_purchased == 0 && (
-                            <div className="m-0">
-                              <div className="m-0 gap-2 d-flex align-items-center">
-                                <span className="costPrice">
-                                  {/* <FaRupeeSign className="rupeeSign" /> */}
-                                  ₹
-                                  {onlineCourseAry.is_gst == 0
-                                    ? Number(onlineCourseAry.mrp) +
-                                      Number(onlineCourseAry.tax)
-                                    : onlineCourseAry.mrp}
-                                </span>
-                                {Number(onlineCourseAry.mrp) +
-                                  Number(onlineCourseAry.tax) !=
-                                  onlineCourseAry.course_sp && (
-                                  <span className="discountPrice">
-                                    <del>
-                                      {/* <FaRupeeSign className="rupeeSign2" /> */}
-                                      ₹
-                                      {onlineCourseAry.course_sp}
-                                    </del>
-                                  </span>
-                                )}
-                              </div>
-                              <p className="m-0 ms-1 ex_gst">
-                                {onlineCourseAry.is_gst == 0
-                                  ? "Inclusive of GST"
-                                  : "Exclusive of GST"}{" "}
-                              </p>
-                            </div>
-                          )}
-                        </div>
-                      )}
+                        )}
+                      </>
+                      }
                       <div
                         className={`d-none d-md-none d-lg-block MainCourseCard ${
                           classSet ? "MainCourseCardAB" : "MainCourseCardFX"

@@ -25,7 +25,7 @@ const Notes = ({
   keyValue,
   onlineCourseAry,
 }) => {
-  // console.log("keyValue",onlineCourseAry)
+  // console.log("keyValue",keyValue)
 
   const [modalShow, setModalShow] = useState(false);
   const [showError, setShowError] = useState(false);
@@ -124,33 +124,34 @@ const Notes = ({
   // console.log('tabsssss', displayTabData)
 
   const handleShowData = async () => {
-    // if(courseDetail?.revert_api == "1#2#0#0" || courseDetail?.revert_api == "0#2#0#0"){
-    //   await getLayer3Data(displayTabData?.index)
-    // }
-    // // await setLayer1()
-    // // console.log('uuuuuuuu', showLayer)
     dispatch(reset_tab());
   };
 
   useEffect(() => {
     // console.log('hhhhh')
     if(tabShow && layer2List && layer2List?.length > 0) {
-      // setShowLayer("layer3")
+      setShowLayer("layer3")
       setBreadcrumbData(displayTabData?.tabLayer1Item)
       getLayer3Data(displayTabData?.tabLayer2index, displayTabData?.tabLayer2Item)
       setTabShow(false)
     }
   }, [layer2List])
 
-  // console.log(layer2List)
+  // useEffect(() => {
+  //   console.log('change', displayTabData, keyValue)
+  //   if(displayTabData?.tab != keyValue) {
+  //     handleShowData()
+  //   }
+  // }, [keyValue, displayTabData])
+
+  // console.log(layer2List, showLayer, displayTabData)
   useEffect(() => {
     setData3Index(1);
-    setLayer3updateData([]);
+    // setLayer3updateData([]);
     let r_api = courseDetail?.revert_api.split("#");
     if (displayTabData?.layer) {
       // if(displayTabData?.tabLayer2Item) {
-        console.log('displayTabData', r_api[1])
-        // setLayer2List(courseDetail?.meta?.list[displayTabData?.tabLayer1index]?.list)
+        // console.log('displayTabData', r_api[1])
         if(r_api[1] == 0) {
           setLayer2List(layer1Data?.meta?.list[displayTabData?.tabLayer1index]?.list);
           setTabShow(true);
@@ -158,7 +159,6 @@ const Notes = ({
         else if(r_api[1] == 1) {
           setLayer2List(courseDetail?.meta?.list?.flatMap(item => item?.list))
           setTabShow(true)
-          // getLayer3Data(displayTabData?.tabLayer2index, displayTabData?.tabLayer2Item)
         }
         else if(r_api[1] == 2) {
           getLayer3Data(displayTabData?.tabLayer1index, displayTabData?.tabLayer1Item)
@@ -169,9 +169,9 @@ const Notes = ({
           getLayer3Data(0);
         }
       // }
-      setTimeout(() => {
-        handleShowData();
-      }, 2500)
+      // setTimeout(() => {
+      //   handleShowData();
+      // }, 2500)
 
     } else {
       if (
@@ -281,7 +281,7 @@ const Notes = ({
 
     const topi_id = () => {
       let r_api = courseDetail?.revert_api.split("#");
-      console.log("index", index, layer2List);
+      console.log("index", index, layer2List, displayTabData);
       if (
         // layer1Data?.revert_api == "1#2#0#0" ||
         // layer1Data?.revert_api == "1#3#0#0" ||
@@ -382,12 +382,12 @@ const Notes = ({
           dispatch(
             all_tabName({
               index,
-              tab: keyValue,
-              layer: showLayer,
-              tabLayer1index: tabLayer1index,
-              tabLayer1Item: tabLayer1Item,
-              tabLayer2index: tabLayer2index,
-              tabLayer2Item: tabLayer2Item,
+              tab: displayTabData?.tab ? displayTabData?.tab : keyValue,
+              layer: displayTabData?.layer ? displayTabData?.layer: showLayer,
+              tabLayer1index: displayTabData?.tabLayer1index ?? tabLayer1index,
+              tabLayer1Item: displayTabData?.tabLayer1Item ? displayTabData?.tabLayer1Item : tabLayer1Item,
+              tabLayer2index: displayTabData?.tabLayer2index ?? tabLayer2index,
+              tabLayer2Item: displayTabData?.tabLayer2Item ? displayTabData?.tabLayer2Item : tabLayer2Item,
               tabLayer3index: '',
               tabLayer3Item: ''
             })
@@ -400,13 +400,13 @@ const Notes = ({
           // console.log('watch')
         }
         else if (onlineCourseAry?.is_purchased == 0) {
-          dispatch(
-            all_tabName({
-              index,
-              tab: keyValue,
-              layer: showLayer,
-            })
-          );
+          // dispatch(
+          //   all_tabName({
+          //     index,
+          //     tab: keyValue,
+          //     layer: showLayer,
+          //   })
+          // );
           router.push({
             pathname: `/private/myProfile/play/${data.id}`,
             query: playData,
@@ -768,6 +768,7 @@ const Notes = ({
                 </span>
               </div>
               <div className="py-2 contentHeight">
+                {/* {console.log('layer3updateData', layer3updateData)} */}
                 {showLayer == "layer3" ? (
                   layer3Data?.list?.length > 0 &&
                   layer3updateData?.length > 0 ? (

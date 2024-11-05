@@ -24,12 +24,13 @@ import Card4 from "@/component/cards/card4";
 import { useRouter } from "next/router";
 import Header from "@/component/header/header";
 import SideBar from "@/component/sideBar/sideBar";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import ComboCourse from "@/component/comboCourse/comboCourse";
 import Loader from "@/component/loader";
 import LoaderAfterLogin from "@/component/loaderAfterLogin";
 import ErrorPageAfterLogin from "@/component/errorPageAfterLogin";
 import LoginModal from "@/component/modal/loginModal";
+import { reset_tab } from "@/store/sliceContainer/masterContentSlice";
 
 const Details = ({ value }) => {
   const [key, setKey] = useState(null);
@@ -50,6 +51,7 @@ const Details = ({ value }) => {
   const displayTabData = useSelector((state) => state.allCategory?.tabName);
 
   const router = useRouter();
+  const dispatch = useDispatch();
   const { details } = router.query;
   const reviewData = useSelector((state) => state.allCategory?.review);
   const versionData = useSelector((state) => state.allCategory?.versionData);
@@ -130,8 +132,8 @@ const Details = ({ value }) => {
       const formData = {
         course_id: id,
         page: 1,
-        // parent_id: courseCombo ? "" : parentId ? parentId : id,
-        parent_id : ''
+        parent_id: courseCombo ? "" : parentId ? parentId : id,
+        // parent_id : ''
       };
       // console.log("formData", formData);
       const response_getCourseDetail_service = await getCourseDetail_Service(
@@ -190,6 +192,7 @@ const Details = ({ value }) => {
   const handleTabChange = (k) => {
     // console.log("k 83", k);
     setKey(k);
+    dispatch(reset_tab())
     // console.log('k', k)
     if (resetLayerRef.current) {
       resetLayerRef.current.click();
@@ -424,14 +427,14 @@ const Details = ({ value }) => {
                           />
                         </Tab>
                       )}
-                      {/* {console.log("key 214", key)} */}
+                      {/* {console.log("key 214",tiles,  versionData.same_content_view)} */}
                       {tiles?.map(
                         (item, index) =>
                           // console.log('item', item)
-                          item.type !== "content" &&
+                          (item.type !== "content" &&
                           item.type !== "faq" &&
                           item.type !== "overview" &&
-                          item.type !== "concept" &&
+                          item.type !== "concept") &&
                           !(
                             item.type == "content" &&
                             versionData.same_content_view == 1
@@ -493,7 +496,7 @@ const Details = ({ value }) => {
                                     // propsValue={isValidData(pdfData) && pdfData}
                                   />
                                 )}
-                              {item.type == "course_combo" && (
+                              {item.type == "course_combo"  && (
                                 <ComboCourse
                                   courseDetail={item}
                                   CourseID={id}

@@ -131,6 +131,7 @@ const Notes = ({
     // console.log('hhhhh')
     if(tabShow && layer2List && layer2List?.length > 0) {
       setShowLayer("layer3")
+      setData3Index(displayTabData?.page)
       setBreadcrumbData(displayTabData?.tabLayer1Item)
       getLayer3Data(displayTabData?.tabLayer2index, displayTabData?.tabLayer2Item)
       setTabShow(false)
@@ -162,11 +163,13 @@ const Notes = ({
         }
         else if(r_api[1] == 2) {
           getLayer3Data(displayTabData?.tabLayer1index, displayTabData?.tabLayer1Item)
+          setData3Index(displayTabData?.page)
         }
         else if(r_api[1] == 3) {
           setData3(0)
           setTitle3('')
           getLayer3Data(0);
+          setData3Index(displayTabData?.page)
         }
       // }
       // setTimeout(() => {
@@ -237,7 +240,6 @@ const Notes = ({
 
   const getLayer2Data = (index, title) => {
     // window.scroll(0,0)
-    console.log('heel')
     setBreadcrumbData(title);
     setLayer1Index(index);
     setShowLayer("layer2");
@@ -388,6 +390,7 @@ const Notes = ({
               tabLayer1Item: displayTabData?.tabLayer1Item ? displayTabData?.tabLayer1Item : tabLayer1Item,
               tabLayer2index: displayTabData?.tabLayer2index ?? tabLayer2index,
               tabLayer2Item: displayTabData?.tabLayer2Item ? displayTabData?.tabLayer2Item : tabLayer2Item,
+              page: data3Index,
               tabLayer3index: '',
               tabLayer3Item: ''
             })
@@ -423,6 +426,7 @@ const Notes = ({
   const setLayer1 = () => {
     // console.log('layer1Data87687868', courseDetail)
     let r_api = courseDetail?.revert_api.split("#");
+    setData3Index(1)
     if (
       // courseDetail?.revert_api == "1#0#0#0" ||
       // courseDetail?.revert_api == "0#0#0#0" ||
@@ -449,6 +453,7 @@ const Notes = ({
   const setLayer2 = () => {
     // console.log('layer1Data', courseDetail)
     let r_api = courseDetail?.revert_api.split("#");
+    setData3Index(1)
     if (
       // courseDetail?.revert_api == "1#0#0#0" ||
       // courseDetail?.revert_api == "0#0#0#0" ||
@@ -859,7 +864,7 @@ const Notes = ({
                           />
                         );
                       })}
-                      {/* {console.log('page', data3Index)} */}
+                     {/* {console.log('page', data3Index)} */}
                       {page.length > 1 && (
                         <div className="pagination_button m-2">
                           <button

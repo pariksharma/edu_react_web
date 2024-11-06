@@ -74,6 +74,7 @@ export const userUpdateProfileService = async (params) => await axiosClient.post
 
 const NotificationUrl = "notification/"
 export const getNotificationService = async (params) => await axiosClient.post(NotificationUrl + 'get_notifications', params)
+export const markReadNotification = async (params) => await axiosClient.post(NotificationUrl + 'mark_as_read', params);
 
 // Payment
 

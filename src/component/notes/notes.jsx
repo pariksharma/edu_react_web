@@ -403,13 +403,20 @@ const Notes = ({
           // console.log('watch')
         }
         else if (onlineCourseAry?.is_purchased == 0) {
-          // dispatch(
-          //   all_tabName({
-          //     index,
-          //     tab: keyValue,
-          //     layer: showLayer,
-          //   })
-          // );
+          dispatch(
+            all_tabName({
+              index,
+              tab: displayTabData?.tab ? displayTabData?.tab : keyValue,
+              layer: displayTabData?.layer ? displayTabData?.layer: showLayer,
+              tabLayer1index: displayTabData?.tabLayer1index ?? tabLayer1index,
+              tabLayer1Item: displayTabData?.tabLayer1Item ? displayTabData?.tabLayer1Item : tabLayer1Item,
+              tabLayer2index: displayTabData?.tabLayer2index ?? tabLayer2index,
+              tabLayer2Item: displayTabData?.tabLayer2Item ? displayTabData?.tabLayer2Item : tabLayer2Item,
+              page: data3Index,
+              tabLayer3index: '',
+              tabLayer3Item: ''
+            })
+          );
           router.push({
             pathname: `/private/myProfile/play/${data.id}`,
             query: playData,

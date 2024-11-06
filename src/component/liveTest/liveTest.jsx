@@ -67,7 +67,7 @@ const LiveTest = () => {
       const encryptedData = encrypt(JSON.stringify(formData), token);
       const response = await getLiveTestService(encryptedData);
       const decryptedData = decrypt(response.data, token);
-      // console.log("decryptedData", decryptedData);
+      console.log("decryptedData", decryptedData);
       if (decryptedData?.status) {
         if (decryptedData?.data?.length == 0) {
           setShowError(true);

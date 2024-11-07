@@ -25,7 +25,9 @@ import {
   stateListService,
 } from "@/services";
 import Script from "next/script";
-import toast, { Toaster } from "react-hot-toast";
+// import toast, { Toaster } from "react-hot-toast";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import LoginModal from "@/component/modal/loginModal";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import CouponModal from "@/component/modal/couponModal";
@@ -1167,20 +1169,17 @@ const CourseOrderID = () => {
   return (
     <>
       {/* <Toaster position="top-right" reverseOrder={false} /> */}
-      <Toaster
+      <ToastContainer
         position="top-right"
-        toastOptions={{
-          success: {
-            style: {
-              opacity: "1",
-            },
-          },
-          error: {
-            style: {
-              opacity: "1",
-            },
-          },
-        }}
+        autoClose={1000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
       />
       <Script
         id="razorpay-checkout-js"

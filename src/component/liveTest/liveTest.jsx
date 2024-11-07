@@ -1,14 +1,17 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState, useRef, Suspense, lazy } from "react";
 import { useQuery } from "react-query";
 import { decrypt, encrypt, get_token } from "@/utils/helpers";
 import { getLiveTestService } from "@/services";
 import Tab from "react-bootstrap/Tab";
 import Tabs from "react-bootstrap/Tabs";
-import LiveTestCard from "../cards/liveTestCard";
+// import LiveTestCard from "../cards/liveTestCard";
 import { useRouter } from "next/router";
 import ErrorPageAfterLogin from "../errorPageAfterLogin";
 import LoaderAfterLogin from "../loaderAfterLogin";
-import toast, { Toaster } from "react-hot-toast";
+// import toast, { Toaster } from "react-hot-toast";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+const LiveTestCard = lazy(() => import("../cards/liveTestCard"));
 
 const LiveTest = () => {
   const [key, setKey] = useState("LIVE");
@@ -116,6 +119,19 @@ const LiveTest = () => {
 
   return (
     <>
+      <ToastContainer
+        position="top-right"
+        autoClose={1000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
+
       {/* <Toaster position="top-right" reverseOrder={false} />  */}
       <section className="container-fluid">
         <div className="row">
@@ -146,18 +162,20 @@ const LiveTest = () => {
               <Tab eventKey="LIVE" title="LIVE">
                 <div className="row">
                   {liveTests?.length > 0 ? (
-                    liveTests.map((item, index) => {
-                      return (
-                        <LiveTestCard
-                          testData={item}
-                          value={key}
-                          key={index}
-                          popupRef={popupRef}
-                          intervalRef={intervalRef}
-                          handleCallFunction={handleCallFunction}
-                        />
-                      );
-                    })
+                    <Suspense fallback={<LoaderAfterLogin />}>
+                      {liveTests.map((item, index) => {
+                        return (
+                          <LiveTestCard
+                            testData={item}
+                            value={key}
+                            key={index}
+                            popupRef={popupRef}
+                            intervalRef={intervalRef}
+                            handleCallFunction={handleCallFunction}
+                          />
+                        );
+                      })}
+                    </Suspense>
                   ) : (
                     <>
                       {showError ? (
@@ -172,18 +190,20 @@ const LiveTest = () => {
               <Tab eventKey="UPCOMING" title="UPCOMING">
                 <div className="row">
                   {liveTests?.length > 0 ? (
-                    liveTests.map((item, index) => {
-                      return (
-                        <LiveTestCard
-                          testData={item}
-                          value={key}
-                          key={index}
-                          popupRef={popupRef}
-                          intervalRef={intervalRef}
-                          handleCallFunction={handleCallFunction}
-                        />
-                      );
-                    })
+                    <Suspense fallback={<LoaderAfterLogin />}>
+                      {liveTests.map((item, index) => {
+                        return (
+                          <LiveTestCard
+                            testData={item}
+                            value={key}
+                            key={index}
+                            popupRef={popupRef}
+                            intervalRef={intervalRef}
+                            handleCallFunction={handleCallFunction}
+                          />
+                        );
+                      })}
+                    </Suspense>
                   ) : (
                     <>
                       {showError ? (
@@ -198,18 +218,20 @@ const LiveTest = () => {
               <Tab eventKey="COMPLETED" title="COMPLETED">
                 <div className="row">
                   {liveTests?.length > 0 ? (
-                    liveTests.map((item, index) => {
-                      return (
-                        <LiveTestCard
-                          testData={item}
-                          value={key}
-                          key={index}
-                          popupRef={popupRef}
-                          intervalRef={intervalRef}
-                          handleCallFunction={handleCallFunction}
-                        />
-                      );
-                    })
+                    <Suspense fallback={<LoaderAfterLogin />}>
+                      {liveTests.map((item, index) => {
+                        return (
+                          <LiveTestCard
+                            testData={item}
+                            value={key}
+                            key={index}
+                            popupRef={popupRef}
+                            intervalRef={intervalRef}
+                            handleCallFunction={handleCallFunction}
+                          />
+                        );
+                      })}
+                    </Suspense>
                   ) : (
                     <>
                       {showError ? (

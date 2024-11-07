@@ -6122,7 +6122,7 @@ span.liveIndicator {
   bottom: 20px !important;
   padding-left: 40px !important;
   padding-right: 40px !important;
-  z-index: 9 !important;
+  z-index: 99 !important;
 }
 
 .d_container {
@@ -7321,7 +7321,6 @@ input.shaka-range-element.shaka-seek-bar.shaka-no-propagation.shaka-show-control
   bottom: 9px !important;
   padding-left: 35px !important;
   padding-right: 40px !important;
-  z-index: 9 !important;
 }
 .video_icon_margin___:hover ._quality_ {
   display: block !important;

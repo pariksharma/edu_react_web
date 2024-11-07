@@ -2,7 +2,9 @@ import { decrypt, encrypt, get_token } from "@/utils/helpers";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import Select from "react-select";
-import toast, { Toaster } from "react-hot-toast";
+// import toast, { Toaster } from "react-hot-toast";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import {
   InquiryListService,
   InquiryReplyListService,
@@ -45,6 +47,13 @@ const Inquiry = () => {
   const versionData = useSelector((state) => state.allCategory?.versionData);
   const token = get_token();
   const router = useRouter();
+
+  useEffect(() => {
+    toast.dismiss();
+    return () => {
+      toast.dismiss();
+    };
+  }, []);
 
   useEffect(() => {
     setShowError(false);
@@ -314,22 +323,21 @@ const Inquiry = () => {
 
   return (
     <>
-      <Toaster position="top-right" reverseOrder={false} />
-      {/* <Toaster
+      {/* <Toaster position="top-right" reverseOrder={false} /> */}
+
+      <ToastContainer
         position="top-right"
-        toastOptions={{
-          success: {
-            style: {
-              opacity:'1'
-            },
-          },
-          error: {
-            style: {
-             opacity:'1'
-            },
-          },
-        }}
-      /> */}
+        autoClose={1000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
+ 
       <div className="container-fluid p-0">
         {convoDetail && (
           <div className="col-md-12 p-0">

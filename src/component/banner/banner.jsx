@@ -6,7 +6,7 @@ import { isValidData } from '@/utils/helpers';
 import { useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
 
-const Banner = () => {
+const Banner = ({IsMargin}) => {
     const [index, setIndex] = useState(0);
     const router = useRouter();
     const bannerData = useSelector((state) => state.allCategory?.allCategory?.banner_list_web)
@@ -37,7 +37,7 @@ const Banner = () => {
 
 
     return (
-        <div className='banner_container'>
+        <div className={`${IsMargin ? "m-0 mb-5" : " " } banner_container`}>
             <div className="row align-items-center ">
                 <div className={`owl-carousel owl-theme owl_custom owl-loaded owl-drag `}>
                     <Carousel

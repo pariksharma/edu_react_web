@@ -1,15 +1,16 @@
-import React, { useEffect, useState } from "react";
-import toast, { Toaster } from "react-hot-toast";
+import React, { useEffect, useState, Suspense, lazy } from "react";
+// import toast, { Toaster } from "react-hot-toast";
+import { ToastContainer, toast } from 'react-toastify';
 import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
-import LiveClassCard from "../cards/liveClassCard";
+// import LiveClassCard from "../cards/liveClassCard";
 import { decrypt, encrypt, get_token } from "@/utils/helpers";
 import { getLiveCourseService } from "@/services";
-import SearchCourses from "../searchCourses/searchCourses";
-import ErrorPage from "../errorPage";
 import LoaderAfterLogin from "../loaderAfterLogin";
 import ErrorPageAfterLogin from "../errorPageAfterLogin";
 import { useRouter } from "next/router";
+import 'react-toastify/dist/ReactToastify.css';
+const LiveClassCard = lazy(() => import("../cards/liveClassCard"));
 
 const LiveClass = () => {
 
@@ -28,10 +29,10 @@ const LiveClass = () => {
   useEffect(() => {
     setShowError(false)
     setLiveCourses([])
-    if(key == "LIVE") {
+    if (key == "LIVE") {
       fetchLiveCourse(0);
     }
-    else if(key == "UPCOMING") {
+    else if (key == "UPCOMING") {
       fetchLiveCourse(1);
     }
     else {
@@ -47,7 +48,7 @@ const LiveClass = () => {
 
 
   const fetchLiveCourse = async (value) => {
-    try{
+    try {
       const formData = {
         page: 1,
         type: value
@@ -55,8 +56,8 @@ const LiveClass = () => {
       const response_getLiveCourse_service = await getLiveCourseService(encrypt(JSON.stringify(formData), token));
       const response_getLiveCourse_data = decrypt(response_getLiveCourse_service.data, token);
       // console.log('response_getLiveCourse_data', response_getLiveCourse_data);
-      if(response_getLiveCourse_data.status) {
-        if(response_getLiveCourse_data?.data?.length == 0) {
+      if (response_getLiveCourse_data.status) {
+        if (response_getLiveCourse_data?.data?.length == 0) {
           setShowError(true)
         }
         else setLiveCourses(response_getLiveCourse_data.data);
@@ -83,22 +84,19 @@ const LiveClass = () => {
 
   return (
     <>
-    {/* <Toaster position="top-right" reverseOrder={false} /> */}
-    {/* <Toaster
+      {/* <Toaster position="top-right" reverseOrder={false} /> */}
+      <ToastContainer
         position="top-right"
-        toastOptions={{
-          success: {
-            style: {
-              opacity:'1'
-            },
-          },
-          error: {
-            style: {
-             opacity:'1'
-            },
-          },
-        }}
-      /> */}
+        autoClose={1000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
       {/* <SearchCourses /> */}
       <section className="container-fluid">
         <div className="row">
@@ -112,50 +110,59 @@ const LiveClass = () => {
             >
               <Tab eventKey="LIVE" title="LIVE">
                 <div className="row">
-                {liveCourses?.length > 0 ? liveCourses.map((item, index) => {
-                  return <LiveClassCard courseData = {item} value={key} key={index} />
-                })
-                  :
-                  <>
-                    {showError ? 
-                      <ErrorPageAfterLogin />
-                      :
-                      <LoaderAfterLogin />
-                    }
-                  </>
-                }
+                  {liveCourses?.length > 0 ?
+                    <Suspense fallback={<LoaderAfterLogin />}>
+                      {liveCourses.map((item, index) => {
+                        return <LiveClassCard courseData={item} value={key} key={index} />
+                      })}
+                    </Suspense>
+                    :
+                    <>
+                      {showError ?
+                        <ErrorPageAfterLogin />
+                        :
+                        <LoaderAfterLogin />
+                      }
+                    </>
+                  }
                 </div>
               </Tab>
               <Tab eventKey="UPCOMING" title="UPCOMING">
                 <div className="row">
-                {liveCourses?.length > 0 ? liveCourses.map((item, index) => {
-                  return <LiveClassCard courseData = {item} value={key} key={index} />
-                })
-                  :
-                  <>
-                    {showError ? 
-                      <ErrorPageAfterLogin />
-                      :
-                      <LoaderAfterLogin />
-                    }
-                  </>
-                }
+                  {liveCourses?.length > 0 ?
+                    <Suspense fallback={<LoaderAfterLogin />}>
+                      {liveCourses.map((item, index) => {
+                        return <LiveClassCard courseData={item} value={key} key={index} />
+                      })}
+                    </Suspense>
+                    :
+                    <>
+                      {showError ?
+                        <ErrorPageAfterLogin />
+                        :
+                        <LoaderAfterLogin />
+                      }
+                    </>
+                  }
                 </div>
               </Tab>
               <Tab eventKey="COMPLETED" title="COMPLETED">
                 <div className="row">
-                {liveCourses?.length > 0 ? liveCourses.map((item, index) => {
-                  return <LiveClassCard courseData = {item} value={key} key={index} />
-                })
-                  :
-                  <>
-                    {showError ? 
-                      <ErrorPageAfterLogin />
-                      :
-                      <LoaderAfterLogin />
-                    }
-                  </>
-                }
+                  {liveCourses?.length > 0 ?
+                    <Suspense fallback={<LoaderAfterLogin />}>
+                      {liveCourses.map((item, index) => {
+                        return <LiveClassCard courseData={item} value={key} key={index} />
+                      })}
+                    </Suspense>
+                    :
+                    <>
+                      {showError ?
+                        <ErrorPageAfterLogin />
+                        :
+                        <LoaderAfterLogin />
+                      }
+                    </>
+                  }
                 </div>
               </Tab>
             </Tabs>

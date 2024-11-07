@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { getMasterDataService, getNotificationService, markReadNotification } from "@/services";
 import { decrypt, encrypt, get_token } from "@/utils/helpers";
-import toast, { Toaster } from "react-hot-toast";
+// import toast, { Toaster } from "react-hot-toast";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { useRouter } from "next/router";
 import { format } from "date-fns";
 import ErrorPage from "../errorPage";
@@ -87,19 +89,19 @@ const Notification = () => {
   };
 
   const markAsRead = async (notification_id) => {
-    console.log("mark")
+    // console.log("mark")
     try {
       const formData = {
         id: notification_id
       }
       const response_ReadNotification_serice = await markReadNotification(encrypt(JSON.stringify(formData), token))
       const response_ReadNotification_data = decrypt(response_ReadNotification_serice.data, token)
-      console.log('response_ReadNotification_data', response_ReadNotification_data)
+      // console.log('response_ReadNotification_data', response_ReadNotification_data)
       if(response_ReadNotification_data?.status) {
         fetchNotification();
       }
     } catch (error) {
-      console.log("error found: ", error)
+      // console.log("error found: ", error)
       router.push('/')
     }
   }
@@ -116,7 +118,7 @@ const Notification = () => {
         response_getNotification_service.data,
         token
       );
-      console.log("response_getNotification_data", response_getNotification_data);
+      // console.log("response_getNotification_data", response_getNotification_data);
       if (response_getNotification_data?.status) {
         if(response_getNotification_data?.data?.length < 0){
           setShowError(true)
@@ -175,7 +177,7 @@ const Notification = () => {
       }
       else if(data?.extra?.tile_type == "test") {
         if(compareTime(videoDetail?.list[0]?.start_date, videoDetail?.list[0]?.end_date) == "pending") {
-          console.log("pending")
+          // console.log("pending")
         }
         else if(compareTime(videoDetail?.list[0]?.start_date, videoDetail?.list[0]?.end_date) == "attempt") {
           // console.log("attempt", data)
@@ -202,7 +204,7 @@ const Notification = () => {
   }
 
   const handleTakeTest = (val, course_data) => {
-    console.log("val111111111", val);
+    // console.log("val111111111", val);
     const isLoggedIn = localStorage.getItem("jwt");
     if (!isLoggedIn) {
       setModalShow(true);
@@ -344,22 +346,21 @@ const Notification = () => {
 
   return (
     <>
-      <Toaster position="top-right" reverseOrder={false} />
-      {/* <Toaster
+       <ToastContainer
         position="top-right"
-        toastOptions={{
-          success: {
-            style: {
-              opacity:'1'
-            },
-          },
-          error: {
-            style: {
-             opacity:'1'
-            },
-          },
-        }}
-      /> */}
+        autoClose={1000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
+
+      {/* <Toaster position="top-right" reverseOrder={false} /> */}
+
       {/* <div>Notification</div> */}
       <section className="container-fluid mt-3">
         <div className="row">
@@ -368,7 +369,8 @@ const Notification = () => {
               notificationData?.map((item, index) => {
                 return (
                     <div 
-                      className={`card p-2 mx-auto NotifyCard ${item?.view_state == 0 ? "active" : ""} mb-2` } 
+                      className={`card p-2 mx-auto NotifyCard ${item?.view_state == 0 ? "active" : ""} mb-2` }
+                      style={(item?.action_element == 4 || item?.action_element == 2) ? {cursor: "pointer" } : {}}
                       key={index}
                       onClick={() => handleNotify(item, index)}
                     >
@@ -382,7 +384,7 @@ const Notification = () => {
                           />
                         </div>
                         <div className="pt-1">
-                          {console.log('length', item?.title, item?.action_element  )}
+                          {/* {console.log('length', item?.title, item?.action_element  )} */}
                           <h5 className="m-0 notifyTitle">{item.title}</h5>
                           {(item?.message?.length < 200 && (item?.action_element != 5 || item?.action_element != 5)) ? 
                           <p
@@ -403,7 +405,10 @@ const Notification = () => {
                             )}
                             <span
                               className="m-0"
-                              onClick={() => toggleReadMore(index, item)}
+                              onClick={(e) => {
+                                e.stopPropagation(); // Prevent handleNotify from being triggered
+                                toggleReadMore(index, item);
+                              }}
                               style={{ color: 'blue', cursor: 'pointer', marginLeft: '5px' }}
                             >
                               {isExpanded && (id == index) ? 'Read Less' : 'Read More'}

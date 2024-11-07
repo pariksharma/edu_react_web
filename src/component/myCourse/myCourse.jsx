@@ -1,16 +1,17 @@
+import React, { useEffect, useState, Suspense, lazy } from "react";
 import { getMyCourseService } from "@/services";
 import { decrypt, encrypt, get_token } from "@/utils/helpers";
-import React, { useEffect, useState } from "react";
 import Tab from "react-bootstrap/Tab";
 import Tabs from "react-bootstrap/Tabs";
-import Card2 from "../cards/card2";
 import { useRouter } from "next/router";
-import toast, { Toaster } from "react-hot-toast";
-import Card4 from "../cards/card4";
-import SearchCourses from "../searchCourses/searchCourses";
-import ErrorPage from "../errorPage";
+// import toast, { Toaster } from "react-hot-toast";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+// import Card4 from "../cards/card4";
 import ErrorPageAfterLogin from "../errorPageAfterLogin";
 import LoaderAfterLogin from "../loaderAfterLogin";
+
+const Card4 = lazy(() => import("../cards/card4"));
 
 const MyCourse = () => {
   const [showDetail, setShowDetail] = useState(false);
@@ -122,22 +123,20 @@ const MyCourse = () => {
   // console.log('showDetail', showDetail)
   return (
     <>
-      <Toaster position="top-right" reverseOrder={false} />
-      {/* <Toaster
+      {/* <Toaster position="top-right" reverseOrder={false} /> */}
+      <ToastContainer
         position="top-right"
-        toastOptions={{
-          success: {
-            style: {
-              opacity:'1'
-            },
-          },
-          error: {
-            style: {
-             opacity:'1'
-            },
-          },
-        }}
-      /> */}
+        autoClose={1000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
+
       {/* <SearchCourses /> */}
       <section className="container-fluid">
         <div className="row">
@@ -159,6 +158,7 @@ const MyCourse = () => {
                               className="col-12 col-sm-6 col-md-4 col-lg-4 col-xl-3 mb-4 p-0"
                               key={index}
                             >
+                              <Suspense fallback={<LoaderAfterLogin />}>
                               <Card4
                                 value={item}
                                 titleName={""}
@@ -167,6 +167,7 @@ const MyCourse = () => {
                                 detail={false}
                                 setGetCourse={setGetCourse}
                               />
+                              </Suspense>
                             </div>
                           )
                         );
@@ -195,6 +196,7 @@ const MyCourse = () => {
                               className="col-12 col-sm-6 col-md-4 col-lg-4 col-xl-3 mb-4 p-0"
                               key={index}
                             >
+                            <Suspense fallback={<LoaderAfterLogin />}>
                               <Card4
                                 value={item}
                                 titleName={""}
@@ -203,6 +205,7 @@ const MyCourse = () => {
                                 detail={false}
                                 data={true}
                               />
+                            </Suspense>
                             </div>
                           )
                         );

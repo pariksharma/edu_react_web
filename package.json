@@ -42,7 +42,7 @@
     "react-select": "^5.8.0",
     "react-select2": "^4.0.3",
     "react-slick": "^0.30.2",
-    "react-toastify": "^10.0.6",
+    "react-toastify": "^8.0.0",
     "select2": "^4.1.0-rc.0",
     "shaka-player": "^4.11.7",
     "slick-carousel": "^1.8.1"

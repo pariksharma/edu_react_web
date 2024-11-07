@@ -321,7 +321,7 @@ const VideoJsPlayer = ({ source, dType, poster, keySystem, NonDRMVideourl, video
       }
       window.removeEventListener('keydown', handleKeyPress);
     };
-  }, [dType, keySystem, source?.token, source?.file_url]);
+  }, [dType, keySystem, source?.token, source?.file_url,Live]);
 
   const skipForward = () => {
     videoRef.current.currentTime += 10;

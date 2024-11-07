@@ -1,3 +1,4 @@
+import React, { useEffect, useState,useRef, Suspense, lazy } from "react";
 import { getCourseDetail_Service } from "@/services";
 import {
   comboDetail,
@@ -8,7 +9,6 @@ import {
   isValidData,
   userLoggedIn,
 } from "@/utils/helpers";
-import React, { useEffect, useRef, useState } from "react";
 import { LiaYoutube } from "react-icons/lia";
 import { IoDocumentTextOutline } from "react-icons/io5";
 import { FaShare } from "react-icons/fa";
@@ -18,19 +18,24 @@ import Tab from "react-bootstrap/Tab";
 import Tabs from "react-bootstrap/Tabs";
 import Button1 from "@/component/buttons/button1/button1";
 import Card3 from "@/component/cards/card3";
-import CourseDetail from "@/component/courseDetail/courseDetail";
-import Notes from "@/component/notes/notes";
+// import CourseDetail from "@/component/courseDetail/courseDetail";
+// import Notes from "@/component/notes/notes";
 import Card4 from "@/component/cards/card4";
 import { useRouter } from "next/router";
 import Header from "@/component/header/header";
 import SideBar from "@/component/sideBar/sideBar";
 import { useDispatch, useSelector } from "react-redux";
-import ComboCourse from "@/component/comboCourse/comboCourse";
+// import ComboCourse from "@/component/comboCourse/comboCourse";
 import Loader from "@/component/loader";
 import LoaderAfterLogin from "@/component/loaderAfterLogin";
 import ErrorPageAfterLogin from "@/component/errorPageAfterLogin";
 import LoginModal from "@/component/modal/loginModal";
 import { reset_tab } from "@/store/sliceContainer/masterContentSlice";
+
+const Notes = lazy(() => import("@/component/notes/notes"));
+const CourseDetail = lazy(() => import("@/component/courseDetail/courseDetail"));
+const ComboCourse = lazy(() => import("@/component/comboCourse/comboCourse"));
+
 
 const Details = ({ value }) => {
   const [key, setKey] = useState(null);
@@ -201,10 +206,10 @@ const Details = ({ value }) => {
 
   const handleBackdetails = () => {
     const back = localStorage.getItem("redirectdetails");
-    if(comboDetail(router.asPath)) {
+    if (comboDetail(router.asPath)) {
       router.back();
     }
-    else{
+    else {
       if (back) {
         router.push(back);
       } else {
@@ -219,8 +224,7 @@ const Details = ({ value }) => {
       const currentPath = router.asPath;
       localStorage.setItem("redirectAfterLogin", currentPath);
       router.push(
-        `/view-courses/course-order/${
-          titleName + ":" + onlineCourseAry.id + "&" + courseCombo
+        `/view-courses/course-order/${titleName + ":" + onlineCourseAry.id + "&" + courseCombo
         }`
       );
     } else {
@@ -259,7 +263,7 @@ const Details = ({ value }) => {
                             {titleName
                               ? titleName == "MyCourse"
                                 ? "My Courses"
-                                : comboDetail(router.asPath) ? titleName : isOurCourse() ? "Our Course" : titleName 
+                                : comboDetail(router.asPath) ? titleName : isOurCourse() ? "Our Course" : titleName
                               : `My Courses`}
                             <i className="bi bi-chevron-right"></i>
                           </li>
@@ -296,8 +300,8 @@ const Details = ({ value }) => {
                               <IoStar />{" "}
                               {onlineCourseAry.avg_rating
                                 ? parseFloat(onlineCourseAry.avg_rating).toFixed(
-                                    1
-                                  )
+                                  1
+                                )
                                 : "0.0"}
                             </span>
                           </p>
@@ -344,20 +348,20 @@ const Details = ({ value }) => {
                                     ₹
                                     {onlineCourseAry.is_gst == 0
                                       ? Number(onlineCourseAry.mrp) +
-                                        Number(onlineCourseAry.tax)
+                                      Number(onlineCourseAry.tax)
                                       : onlineCourseAry.mrp}
                                   </span>
                                   {Number(onlineCourseAry.mrp) +
                                     Number(onlineCourseAry.tax) !=
                                     onlineCourseAry.course_sp && (
-                                    <span className="discountPrice">
-                                      <del>
-                                        {/* <FaRupeeSign className="rupeeSign2" /> */}
-                                        ₹
-                                        {onlineCourseAry.course_sp}
-                                      </del>
-                                    </span>
-                                  )}
+                                      <span className="discountPrice">
+                                        <del>
+                                          {/* <FaRupeeSign className="rupeeSign2" /> */}
+                                          ₹
+                                          {onlineCourseAry.course_sp}
+                                        </del>
+                                      </span>
+                                    )}
                                 </div>
                                 <p className="m-0 ms-1 ex_gst">
                                   {onlineCourseAry.is_gst == 0
@@ -371,9 +375,8 @@ const Details = ({ value }) => {
                       </>
                       }
                       <div
-                        className={`d-none d-md-none d-lg-block MainCourseCard ${
-                          classSet ? "MainCourseCardAB" : "MainCourseCardFX"
-                        }`}
+                        className={`d-none d-md-none d-lg-block MainCourseCard ${classSet ? "MainCourseCardAB" : "MainCourseCardFX"
+                          }`}
                       >
                         <Card4
                           value={onlineCourseAry}
@@ -412,19 +415,21 @@ const Details = ({ value }) => {
                         <Tab
                           eventKey={OverView.tile_name}
                           title={OverView.tile_name}
-                          // key={index}
-                          // propsValue={isValidData(item) && item.tiles}
+                        // key={index}
+                        // propsValue={isValidData(item) && item.tiles}
                         >
-                          <CourseDetail
-                            title={OverView.tile_name}
-                            courseDetail={courseDetail}
-                            propsValue={
-                              isValidData(relateCourseAry) && relateCourseAry
-                            }
-                            relateCourseAry={relateCourseAry}
-                            course={onlineCourseAry}
-                            titleName={titleName}
-                          />
+                          <Suspense fallback={<Loader />}>
+                            <CourseDetail
+                              title={OverView.tile_name}
+                              courseDetail={courseDetail}
+                              propsValue={
+                                isValidData(relateCourseAry) && relateCourseAry
+                              }
+                              relateCourseAry={relateCourseAry}
+                              course={onlineCourseAry}
+                              titleName={titleName}
+                            />
+                          </Suspense>
                         </Tab>
                       )}
                       {/* {console.log("key 214",tiles,  versionData.same_content_view)} */}
@@ -432,9 +437,9 @@ const Details = ({ value }) => {
                         (item, index) =>
                           // console.log('item', item)
                           (item.type !== "content" &&
-                          item.type !== "faq" &&
-                          item.type !== "overview" &&
-                          item.type !== "concept") &&
+                            item.type !== "faq" &&
+                            item.type !== "overview" &&
+                            item.type !== "concept") &&
                           !(
                             item.type == "content" &&
                             versionData.same_content_view == 1
@@ -443,7 +448,7 @@ const Details = ({ value }) => {
                               eventKey={item.tile_name}
                               title={item.tile_name}
                               key={index}
-                              // propsValue={isValidData(item) && item.tiles}
+                            // propsValue={isValidData(item) && item.tiles}
                             >
                               {/* {item.tile_name == "Course Overview" && (
                             <CourseDetail
@@ -486,25 +491,29 @@ const Details = ({ value }) => {
                                 (item.type == "test" ||
                                   item.type == "pdf" ||
                                   item.type == "video") && (
-                                  <Notes
-                                    resetRef={resetLayerRef}
+                                  <Suspense fallback={<Loader />}>
+                                    <Notes
+                                      resetRef={resetLayerRef}
+                                      courseDetail={item}
+                                      CourseID={id}
+                                      tabName={item.tile_name}
+                                      keyValue={key}
+                                      onlineCourseAry={onlineCourseAry}
+                                    // propsValue={isValidData(pdfData) && pdfData}
+                                    />
+                                  </Suspense>
+                                )}
+                              {item.type == "course_combo" && (
+                                <Suspense fallback={<Loader />}>
+                                  <ComboCourse
                                     courseDetail={item}
                                     CourseID={id}
                                     tabName={item.tile_name}
                                     keyValue={key}
+                                    titleName={titleName}
                                     onlineCourseAry={onlineCourseAry}
-                                    // propsValue={isValidData(pdfData) && pdfData}
                                   />
-                                )}
-                              {item.type == "course_combo"  && (
-                                <ComboCourse
-                                  courseDetail={item}
-                                  CourseID={id}
-                                  tabName={item.tile_name}
-                                  keyValue={key}
-                                  titleName={titleName}
-                                  onlineCourseAry={onlineCourseAry}
-                                />
+                                </Suspense>
                               )}
                             </Tab>
                           )

@@ -1,15 +1,18 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, Suspense, lazy } from "react";
 import Tab from "react-bootstrap/Tab";
 import Tabs from "react-bootstrap/Tabs";
 import { useSelector } from "react-redux";
-import SubTabsData from "../subTabsData/subTabsData";
+// import SubTabsData from "../subTabsData/subTabsData";
 import { useRouter } from "next/router";
-import SearchCourses from "../searchCourses/searchCourses";
+// import SearchCourses from "../searchCourses/searchCourses";
 import { getCourse_service } from "@/services";
 import { decrypt, encrypt, get_token } from "@/utils/helpers";
 import ErrorPageAfterLogin from "../errorPageAfterLogin";
 import LoaderAfterLogin from "../loaderAfterLogin";
-import Banner from "../banner/banner";
+// import Banner from "../banner/banner";
+const Banner = lazy(() => import("../banner/banner"));
+const SearchCourses = lazy(() => import("../searchCourses/searchCourses"));
+const SubTabsData = lazy(() => import("../subTabsData/subTabsData"));
 
 const OurCourses = () => {
   const [showDetail, setShowDetail] = useState(false);
@@ -39,14 +42,14 @@ const OurCourses = () => {
       // console.log('localStorage', localStorage.getItem('mainTab'))
       const getTabName = localStorage.getItem('mainTab');
       // console.log('getTabName',getTabName)
-      if(getTabName){
+      if (getTabName) {
         setKey(getTabName)
         setCatId(contentData?.course_type_master?.filter(item => item.name == getTabName)[0]?.id)
         setTimeout(() => {
           localStorage.setItem('mainTab', "")
-        }, [2000])  
+        }, [2000])
       }
-      else{
+      else {
         setCatId(contentData?.course_type_master[0]?.id)
         setKey(contentData?.course_type_master[0]?.name);
       }
@@ -55,7 +58,7 @@ const OurCourses = () => {
 
   useEffect(() => {
     setShowError(false)
-    if(key != '') {
+    if (key != '') {
       fetchCategoryData();
     }
   }, [key, catId])
@@ -64,7 +67,7 @@ const OurCourses = () => {
     // console.log(key)
     setKey(k);
     setCatId(tabData.filter(item => item.name == k)[0]?.id)
-    if(key != k) {
+    if (key != k) {
       setFilterCoursesList([])
     }
   };
@@ -76,17 +79,15 @@ const OurCourses = () => {
   const handleDetail = (value, titleName, keyValue) => {
     // console.log("detailesss", titleName);
     localStorage.setItem('mainTab', keyValue)
-    if(titleName) {
+    if (titleName) {
       router.push(
-        `/private/myProfile/detail/${
-         titleName+":" + value.id + "&" + value.combo_course_ids+'parent:'
+        `/private/myProfile/detail/${titleName + ":" + value.id + "&" + value.combo_course_ids + 'parent:'
         }`
       );
     }
     else {
       router.push(
-        `/private/myProfile/detail/${
-         "ourCourse"+":" + value.id + "&" + value.combo_course_ids +'parent:'
+        `/private/myProfile/detail/${"ourCourse" + ":" + value.id + "&" + value.combo_course_ids + 'parent:'
         }`
       )
     }
@@ -112,16 +113,16 @@ const OurCourses = () => {
       );
       // console.log("response_getCourse_data", response_getCourse_data);
       if (response_getCourse_data.status) {
-        if(response_getCourse_data?.data?.length == 0) {
+        if (response_getCourse_data?.data?.length == 0) {
           setShowError(true)
         }
-        else{
+        else {
           setGetCourses(response_getCourse_data.data);
           setFilterCoursesList(response_getCourse_data.data)
           // console.log("detail", response_getCourse_data.data);
         }
       }
-      else{
+      else {
         setGetCourses([]);
         setFilterCoursesList([])
         setShowError(true)
@@ -133,14 +134,14 @@ const OurCourses = () => {
   };
 
   const handleFilterCourses = (filterCourses, searchInputValue) => {
-    if(filterCourses?.length > 0) {
+    if (filterCourses?.length > 0) {
       setFilterCoursesList(filterCourses)
     }
     else {
-      if(searchInputValue == ''){
+      if (searchInputValue == '') {
         setFilterCoursesList(getCourses);
       }
-      else{
+      else {
         setFilterCoursesList([])
         setShowError(true)
       }
@@ -159,48 +160,55 @@ const OurCourses = () => {
           </div>
         </div>
         } */}
-        <Banner />
+        <Suspense fallback={<LoaderAfterLogin />}>
+          <Banner IsMargin={true} />
+           <SearchCourses catId={catId} handleFilterCourses={handleFilterCourses} />
+        </Suspense>
       </section>
-      <SearchCourses catId = {catId} handleFilterCourses = {handleFilterCourses} />
+      {/* <Suspense fallback={<LoaderAfterLogin />}>
+      </Suspense> */}
       <section className="container-fluid">
         {tabData?.length > 0 ?
-        <div className="row">
-          <div className="col-md-12">
-            <Tabs
-              defaultActiveKey="profile"
-              id="uncontrolled-tab-example"
-              className="mb-3 CustomTab"
-              activeKey={key}
-              onSelect={(k) => handleTabChange(k)}
-            >
-              {tabData.map((item, index) => {
-                if (item?.cat_type == 0) {
-                  return (
-                    <Tab
-                      eventKey={item.name}
-                      title={item.name}
-                      key={index}
+          <div className="row">
+            <div className="col-md-12">
+              <Tabs
+                defaultActiveKey="profile"
+                id="uncontrolled-tab-example"
+                className="mb-3 CustomTab"
+                activeKey={key}
+                onSelect={(k) => handleTabChange(k)}
+              >
+                {tabData.map((item, index) => {
+                  if (item?.cat_type == 0) {
+                    return (
+                      <Tab
+                        eventKey={item.name}
+                        title={item.name}
+                        key={index}
                       // data = {item}
-                    >
-                      <SubTabsData
-                        data={item}
-                        handleDetail={handleDetail}
-                        keyValue={key}
-                        getCourses = {filterCoursesList}
-                        showError = {showError}
-                      />
-                    </Tab>
-                  );
-                }
-              })}
-            </Tabs>
+                      >
+                        <Suspense fallback={<LoaderAfterLogin />}>
+                          <SubTabsData
+                            data={item}
+                            handleDetail={handleDetail}
+                            keyValue={key}
+                            getCourses={filterCoursesList}
+                            showError={showError}
+                          />
+                        </Suspense>
+                      </Tab>
+                    );
+                  }
+                })}
+              </Tabs>
+            </div>
           </div>
-        </div>
-        :
-        showError ? 
-          <ErrorPageAfterLogin />
           :
-          <LoaderAfterLogin />
+          null
+          // showError ?
+          //   <ErrorPageAfterLogin />
+          //   :
+          //   <LoaderAfterLogin />
         }
       </section>
     </>

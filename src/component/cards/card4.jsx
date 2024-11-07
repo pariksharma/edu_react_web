@@ -3,7 +3,10 @@ import { useRouter } from "next/router";
 import { IoStar } from "react-icons/io5";
 import Button1 from "../buttons/button1/button1";
 import Button2 from "../buttons/button2/button2";
-import toast, { Toaster } from "react-hot-toast";
+// import toast, { Toaster } from "react-hot-toast";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 import { MdOutlineCalendarMonth } from "react-icons/md";
 import { format } from "date-fns";
 import ExtendValiditymodal from "../modal/extendValiditymodal";
@@ -362,22 +365,22 @@ const Card4 = ({ value, titleName, handleDetail, titleId, setGetCourse }) => {
         src="https://checkout.razorpay.com/v1/checkout.js"
       />
       <Script src="https://ebz-static.s3.ap-south-1.amazonaws.com/easecheckout/v2.0.0/easebuzz-checkout-v2.min.js" />
-      <Toaster position="top-right" reverseOrder={false} />
-      {/* <Toaster
+      {/* <Toaster position="top-right" reverseOrder={false} /> */}
+
+      <ToastContainer
         position="top-right"
-        toastOptions={{
-          success: {
-            style: {
-              opacity: "1",
-            },
-          },
-          error: {
-            style: {
-              opacity: "1",
-            },
-          },
-        }}
-      /> */}
+        autoClose={1000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
+
+
       <div
         className={`card border-0 mb-3 ${
           titleName != "detail"

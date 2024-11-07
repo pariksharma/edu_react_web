@@ -2,7 +2,9 @@ import { getBlogListService, getCurrentAffair_service } from "@/services";
 import { decrypt, encrypt, get_token } from "@/utils/helpers";
 import React, { useEffect, useState } from "react";
 import BlogCard from "../cards/blogCard";
-import toast, { Toaster } from "react-hot-toast";
+// import toast, { Toaster } from "react-hot-toast";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { useRouter } from "next/router";
 import BlogDetail from "./blogDetail";
 import ErrorPage from "../errorPage";
@@ -72,21 +74,19 @@ const Blogs = () => {
 
   return (
     <>
-    <Toaster
+   <ToastContainer
         position="top-right"
-        toastOptions={{
-          success: {
-            style: {
-              opacity:'1'
-            },
-          },
-          error: {
-            style: {
-             opacity:'1'
-            },
-          },
-        }}
+        autoClose={1000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
       />
+      
       {/* <Toaster position="top-right" reverseOrder={false} /> */}
       <div className="container-fluid">
         <div className="row mt-2">

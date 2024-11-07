@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import Button1 from '../buttons/button1/button1'
-import toast, { Toaster } from 'react-hot-toast';
+// import toast, { Toaster } from 'react-hot-toast';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { decrypt, encrypt, get_token } from '@/utils/helpers';
 // import { getInTouchService } from '@/services';
 import { useSelector } from 'react-redux';
@@ -184,20 +186,18 @@ const GetInTouch = () => {
   return (
     <>
     {/* <Toaster position="top-right" reverseOrder={false} /> */}
-    <Toaster
+    
+    <ToastContainer
         position="top-right"
-        toastOptions={{
-          success: {
-            style: {
-              opacity:'1'
-            },
-          },
-          error: {
-            style: {
-             opacity:'1'
-            },
-          },
-        }}
+        autoClose={1000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
       />
     <div className='container px-0 px-md-0 px-lg-5 mb-3 git_container'>
         <div className='row px-5 px-sm-0'>

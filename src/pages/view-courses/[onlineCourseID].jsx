@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useEffect, useState,useRef, Suspense, lazy } from "react";
 import Header from "../../component/header/header";
 import Footer from "../../component/footer/footer";
 import { useRouter } from "next/router";
-import Card1 from "@/component/cards/card1";
+// import Card1 from "@/component/cards/card1";
 import { get_token, isValidData } from "@/utils/helpers";
 import { getCourse_service, getCourse_Catergory_Service } from "@/services";
 import { encrypt, decrypt } from "@/utils/helpers";
@@ -11,6 +11,7 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 import { useSelector } from "react-redux";
 import ErrorPage from "@/component/errorPage";
 import Loader from "@/component/loader";
+const Card1 = lazy(() => import("@/component/cards/card1"));
 
 const OC_image = "/assets/images/courseRightImg.svg";
 
@@ -188,9 +189,11 @@ const OnlineCourse = ({ onlineCourseID }) => {
         <div className="course_cardContainer  mb-3">
           <div className="row">
             {onlineCourse?.length > 0 ? (
-              onlineCourse.map((item, index) => {
+              <Suspense fallback={<Loader />}>
+              {onlineCourse.map((item, index) => {
                 return <Card1 value={item} titleName={titleName} key={index} />;
-              })
+              })}
+              </Suspense>
             ) : showError ? (
               <ErrorPage />
             ) : (

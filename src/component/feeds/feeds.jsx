@@ -2,7 +2,9 @@ import { addCommentService, feedCommentListService, getPostListService, likeUnli
 import { decrypt, encrypt, get_token, userLoggedIn } from '@/utils/helpers';
 import { useRouter } from 'next/router';
 import React, { useEffect, useRef, useState } from 'react'
-import toast, { Toaster } from 'react-hot-toast'
+// import toast, { Toaster } from 'react-hot-toast'
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { FaRegComment } from "react-icons/fa";
 import { PiShareFatBold } from "react-icons/pi";
 import { format } from "date-fns";
@@ -307,20 +309,17 @@ const Feeds = () => {
   return (
     <>
     {/* <Toaster position="top-right" reverseOrder={false} /> */}
-    <Toaster
+    <ToastContainer
         position="top-right"
-        toastOptions={{
-          success: {
-            style: {
-              opacity:'1'
-            },
-          },
-          error: {
-            style: {
-             opacity:'1'
-            },
-          },
-        }}
+        autoClose={1000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
       />
       {
       postList.length > 0 ?

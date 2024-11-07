@@ -16,7 +16,6 @@ import SideBar from "@/component/sideBar/sideBar";
 import Testimonial from "@/component/testimonial/testimonial";
 import { useRouter } from "next/router";
 import { decrypt, get_token, userLoggedIn } from "@/utils/helpers";
-
 import React, { useEffect, useState } from "react";
 
 const Index = ({ initialTab }) => {

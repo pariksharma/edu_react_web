@@ -5,7 +5,9 @@ import { FaShare } from "react-icons/fa";
 import { format } from "date-fns";
 import { useRouter } from "next/router";
 import { useSelector } from "react-redux";
-import toast, { Toaster } from "react-hot-toast";
+// import toast, { Toaster } from "react-hot-toast";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const LiveClassCard = ({ courseData, value }) => {
   const [timeLeft, setTimeLeft] = useState(calculateTimeLeft());
@@ -128,6 +130,19 @@ const LiveClassCard = ({ courseData, value }) => {
 
   return (
     <>
+       {/* <ToastContainer
+        position="top-right"
+        autoClose={1000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      /> */}
+
       {/* <Toaster position="top-right" reverseOrder={false} /> */}
       <div className="d-flex justify-content-center col-12 col-sm-6 col-md-4 col-lg-4 col-xl-3 mb-4 p-0">
         <div className="card border-0 shadow b-radius course_card m-0">

@@ -3,7 +3,9 @@ import { decrypt, encrypt, get_token } from "@/utils/helpers";
 import React, { useEffect, useState } from "react";
 import { Modal } from "react-bootstrap";
 import { useSelector } from "react-redux";
-import toast, { Toaster } from "react-hot-toast";
+// import toast, { Toaster } from "react-hot-toast";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import OtpInput from "react-otp-input";
 import * as Icon from "react-bootstrap-icons";
 
@@ -264,6 +266,19 @@ const UpdatePasswordModal = (props) => {
   };
 
   return (
+    <>
+       <ToastContainer
+        position="top-right"
+        autoClose={1000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
     <Modal
       {...props}
       size={"sm"}
@@ -432,6 +447,7 @@ const UpdatePasswordModal = (props) => {
       </>
       }
     </Modal>
+    </>
   );
 };
 

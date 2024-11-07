@@ -15,7 +15,9 @@ import {
   getVersionService,
   userUpdateProfileService,
 } from "@/services";
-import toast, { Toaster } from "react-hot-toast";
+// import toast, { Toaster } from "react-hot-toast";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import Select from "react-select";
 import { useRouter } from "next/router";
 import { useDispatch, useSelector } from "react-redux";
@@ -916,6 +918,18 @@ const LoginModal = (props) => {
 
   return (
     <>
+       {/* <ToastContainer
+        position="top-right"
+        autoClose={1000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      /> */}
       <Modal
         className="UserModal"
         {...props}
@@ -923,22 +937,8 @@ const LoginModal = (props) => {
         aria-labelledby="contained-modal-title-vcenter"
         centered
       >
-        {/* <Toaster position="top-right" reverseOrder={false} toastOptions={{duration: 1500}}/> */}
-        <Toaster
-          position="top-right"
-          toastOptions={{
-            success: {
-              style: {
-                opacity: "1",
-              },
-            },
-            error: {
-              style: {
-                opacity: "1",
-              },
-            },
-          }}
-        />
+        {/* <Toaster position="top-right" reverseOrder={false}/> */}
+
         {!forgetPassword ? (
           <div className="row">
             {!isRegisterPage ? (

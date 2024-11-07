@@ -8,7 +8,9 @@ import { decrypt, encrypt, get_token } from "@/utils/helpers";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { FaRupeeSign } from "react-icons/fa";
-import toast, { Toaster } from "react-hot-toast";
+// import toast, { Toaster } from "react-hot-toast";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { format } from "date-fns";
 import Button1 from "../buttons/button1/button1";
 import ErrorPage from "../errorPage";
@@ -584,21 +586,20 @@ const PurchaseHistory = () => {
   return (
     <>
       {/* <Toaster position="top-right" reverseOrder={false} /> */}
-      <Toaster
+
+      <ToastContainer
         position="top-right"
-        toastOptions={{
-          success: {
-            style: {
-              opacity:'1'
-            },
-          },
-          error: {
-            style: {
-             opacity:'1'
-            },
-          },
-        }}
+        autoClose={1000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
       />
+
       <Script
         id="razorpay-checkout-js"
         src="https://checkout.razorpay.com/v1/checkout.js"

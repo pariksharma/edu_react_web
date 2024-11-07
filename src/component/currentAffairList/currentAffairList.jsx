@@ -1,16 +1,19 @@
+import React, { useEffect, useState, Suspense, lazy } from "react";
 import { getCurrentAffair_service } from "@/services";
 import { decrypt, encrypt, get_token } from "@/utils/helpers";
-import React, { useEffect, useState } from "react";
 import Tab from "react-bootstrap/Tab";
 import Tabs from "react-bootstrap/Tabs";
-import CurrentAffCard from "../cards/currentAffCard";
+// import CurrentAffCard from "../cards/currentAffCard";
 import BlogCard from "../cards/blogCard";
 import BlogDetail from "../blogs/blogDetail";
-import CurrentAffairDetail from "./currentAffairDetail";
+// import CurrentAffairDetail from "./currentAffairDetail";
 import ErrorPage from "../errorPage";
 import LoaderAfterLogin from "../loaderAfterLogin";
 import ErrorPageAfterLogin from "../errorPageAfterLogin";
 import { useRouter } from "next/router";
+
+const CurrentAffCard = lazy(() => import("../cards/currentAffCard"));
+const CurrentAffairDetail = lazy(() => import("./currentAffairDetail"));
 
 const CurrentAffairList = () => {
   const [currentAffList, setCurrentAffList] = useState([]);
@@ -98,11 +101,13 @@ const CurrentAffairList = () => {
                         {item.data?.length > 0 ? (
                           item.data.map((blogAry, index) => {
                             return (
-                              <CurrentAffCard
-                                value={blogAry}
-                                handleBlogDetail={handleBlogDetail}
-                                key={index}
-                              />
+                              <Suspense fallback={<LoaderAfterLogin />}>
+                                <CurrentAffCard
+                                  value={blogAry}
+                                  handleBlogDetail={handleBlogDetail}
+                                  key={index}
+                                />
+                              </Suspense>
                             );
                           })
                         ) : (
@@ -122,10 +127,12 @@ const CurrentAffairList = () => {
         </section>
       ) : (
         <section>
-          <CurrentAffairDetail
-            id={currentAffId}
-            handleShow={() => setIsShowDetail(false)}
-          />
+          <Suspense fallback={<LoaderAfterLogin />}>
+            <CurrentAffairDetail
+              id={currentAffId}
+              handleShow={() => setIsShowDetail(false)}
+            />
+          </Suspense>
         </section>
       )}
     </>

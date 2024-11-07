@@ -4,7 +4,9 @@ import Button1 from "../buttons/button1/button1";
 import ReactStars from "react-rating-stars-component";
 import { decrypt, encrypt, get_token } from "@/utils/helpers";
 import { postCourseReviewService } from "@/services";
-import toast, { Toaster } from "react-hot-toast";
+// import toast, { Toaster } from "react-hot-toast";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { useRouter } from "next/router";
 import { useDispatch } from "react-redux";
 import { all_review } from "@/store/sliceContainer/masterContentSlice";
@@ -110,25 +112,17 @@ const AddReviewModal = (props) => {
       centered
       className="reviewModal"
     >
-      {/* <Toaster
+     <ToastContainer
         position="top-right"
-        reverseOrder={false}
-        toastOptions={{ duration: 1500 }}
-      /> */}
-      <Toaster
-        position="top-right"
-        toastOptions={{
-          success: {
-            style: {
-              opacity:'1'
-            },
-          },
-          error: {
-            style: {
-             opacity:'1'
-            },
-          },
-        }}
+        autoClose={1000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
       />
       <div className="modal-body rateAndreviewModal">
         <h4 className="m-0 r_title">Review</h4>

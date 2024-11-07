@@ -151,14 +151,14 @@ const MyCourse = () => {
                   <div className="row">
                     {/* {console.log('myCourseData', FreeCourseData)} */}
                     {myCourseData?.length > 0 ? (
-                      myCourseData.map((item, index) => {
+                      <Suspense fallback={<LoaderAfterLogin />}>
+                      {myCourseData.map((item, index) => {
                         return (
                           item.mrp !== 0 && (
                             <div
                               className="col-12 col-sm-6 col-md-4 col-lg-4 col-xl-3 mb-4 p-0"
                               key={index}
                             >
-                              <Suspense fallback={<LoaderAfterLogin />}>
                               <Card4
                                 value={item}
                                 titleName={""}
@@ -167,11 +167,11 @@ const MyCourse = () => {
                                 detail={false}
                                 setGetCourse={setGetCourse}
                               />
-                              </Suspense>
                             </div>
                           )
                         );
-                      })
+                      })}
+                      </Suspense>
                     ) : (
                       <>
                         {showError ? (

@@ -27,7 +27,7 @@ axiosClient.interceptors.request.use((req) => {
             'Content-Type': 'application/json',
             "Authorization": "Bearer 01*#NerglnwwebOI)30@I*Dm'@@",
             "Appid": app_id ? app_id : '' ,
-            "User-Agent":'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36'
+            // "User-Agent":'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36'
             // "User-Agent": navigator.userAgent
     }
 

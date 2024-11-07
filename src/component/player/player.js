@@ -30,11 +30,24 @@ const VideoJsPlayer = ({ source, dType, poster, keySystem, NonDRMVideourl, video
 
   const router = useRouter()
 
+  // const formatTime = (time) => {
+  //   const minutes = Math.floor(time / 60);
+  //   const seconds = Math.floor(time % 60);
+  //   return `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
+  // };
+
   const formatTime = (time) => {
-    const minutes = Math.floor(time / 60);
+    const hours = Math.floor(time / 3600);
+    const minutes = Math.floor((time % 3600) / 60);
     const seconds = Math.floor(time % 60);
-    return `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
+  
+    if (hours > 0) {
+      return `${hours}:${minutes < 10 ? "0" : ""}${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
+    } else {
+      return `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
+    }
   };
+  
 
   useEffect(() => {
     currentTimeRef.current = currentTime; // Update the ref with the latest currentTime

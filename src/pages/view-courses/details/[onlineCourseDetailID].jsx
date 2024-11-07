@@ -252,10 +252,14 @@ const ViewOnlineCourseDetail = () => {
         setCourseDetail(response_getCourseDetail_data?.data?.tiles);
         setTiles(response_getCourseDetail_data?.data?.tiles);
         // console.log("detail", response_getCourseDetail_data?.data?.tiles);
+        // if()
         setKey(
           response_getCourseDetail_data?.data?.tiles?.find(
             (item) => (item.type == "overview")
-          )?.tile_name
+          )?.tile_name 
+          ? response_getCourseDetail_data?.data?.tiles?.find(
+            (item) => (item.type == "overview")
+          )?.tile_name : response_getCourseDetail_data?.data?.tiles[0]?.tile_name
         );
         setContentData(
           response_getCourseDetail_data?.data?.tiles
@@ -281,6 +285,7 @@ const ViewOnlineCourseDetail = () => {
       setServerError(true);
     }
   };
+  console.log('key', key)
 
   const handleAddToMyCourse = async () => {
     try {

@@ -7314,7 +7314,7 @@ input.shaka-range-element.shaka-seek-bar.shaka-no-propagation.shaka-show-control
   transition: 0.4s ease all !important;
 }
 ._controls_video_ {
-  width: -moz-fit-content !important;
+  /* width: -moz-fit-content !important; */
   /* width: fit-content !important; */
   margin: 0 auto !important;
   position: absolute !important;

@@ -123,13 +123,14 @@ const Bookstore = () => {
               {/* {bookstoreData[0]?.description} */}
             </p>
           </div>
-          {filterCoursesList?.length > 0 ? filterCoursesList.map((item, index) => {
-            return (
-              <Suspense fallback={<LoaderAfterLogin />}>
-                <Card1 value={item} titleName={bookstoreData[0]?.name} key={index} handleDetail={handleDetail} />
-              </Suspense>
-            )
-          })
+          {filterCoursesList?.length > 0 ?
+            <Suspense fallback={<LoaderAfterLogin />}>
+              {filterCoursesList.map((item, index) => {
+                return (
+                  <Card1 value={item} titleName={bookstoreData[0]?.name} key={index} handleDetail={handleDetail} />
+                )
+              })}
+            </Suspense>
             :
             <>
               {showError ?

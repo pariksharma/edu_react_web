@@ -145,6 +145,7 @@ const CourseOrderID = () => {
     const isPrivate = localStorage.getItem("previousTab");
     const show = isPrivate?.substring(0, isPrivate?.indexOf("private"));
     setShowError(false);
+    setIsChecked('')
     if (show) {
       setIsPrivateTab(true);
     } else {
@@ -972,7 +973,7 @@ const CourseOrderID = () => {
         const defaultAddressAry = response_getUserAddress_data.data
         if (defaultAddressAry?.length > 0) {
           defaultAddressAry.map((item) => {
-            if (item.is_default) {
+            if (item?.is_default != 0) {
               setIsChecked(item.id);
               if (item.is_default == "1") {
                 const defaultAddres = JSON.parse(item.address);
@@ -1015,7 +1016,7 @@ const CourseOrderID = () => {
   useEffect(() => {
     if (savedAddress?.length > 0) {
       savedAddress.map((item) => {
-        if (item.is_default) {
+        if (item.is_default != 0) {
           setIsChecked(item.id);
           if (item.is_default == "1") {
             const defaultAddres = JSON.parse(item.address);
@@ -1542,6 +1543,7 @@ const CourseOrderID = () => {
                           handleClick={handleAddNewAddress}
                         />
                       </div>
+                      {/* {console.log('savedAddress', savedAddress, isChecked)} */}
                       {savedAddress?.length > 0 &&
                         savedAddress.map((item, index) => {
                           let userAddress = JSON.parse(item.address);
@@ -1987,14 +1989,14 @@ const CourseOrderID = () => {
                                         Number(couponData?.mrp) +
                                         Number(couponData?.tax) +
                                         Number(
-                                          couponData?.delivery_charge
+                                          couponData?.delivery_charge ? couponData?.delivery_charge : 0
                                         )
                                       ).toFixed(2)
                                       : parseFloat(
                                         Number(courseData?.mrp) +
                                         Number(courseData?.tax) +
                                         Number(
-                                          courseData?.delivery_charge
+                                          courseData?.delivery_charge ? courseData?.delivery_charge : 0
                                         )
                                       ).toFixed(2))}
                                 </p>

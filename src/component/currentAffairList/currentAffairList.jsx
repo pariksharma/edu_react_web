@@ -99,17 +99,17 @@ const CurrentAffairList = () => {
                     <div className="m-0 w-100" key={index}>
                       <div className="row mt-2">
                         {item.data?.length > 0 ? (
-                          item.data.map((blogAry, index) => {
-                            return (
-                              <Suspense fallback={<LoaderAfterLogin />}>
+                          <Suspense fallback={<LoaderAfterLogin />}>
+                            {item.data.map((blogAry, index) => {
+                              return (
                                 <CurrentAffCard
                                   value={blogAry}
                                   handleBlogDetail={handleBlogDetail}
                                   key={index}
                                 />
-                              </Suspense>
-                            );
-                          })
+                              );
+                            })}
+                          </Suspense>
                         ) : (
                           <ErrorPageAfterLogin />
                         )}

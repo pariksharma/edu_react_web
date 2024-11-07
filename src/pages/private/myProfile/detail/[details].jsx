@@ -544,7 +544,7 @@ const Details = ({ value }) => {
           ) : (
             <>
               {/* <div className="spinner-border" role="status" /> */}
-              <LoaderAfterLogin />
+              <Loader />
             </>
           )}
         </main>

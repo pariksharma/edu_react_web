@@ -334,6 +334,7 @@ const Profile = () => {
   };
 
   const uploadFile = (file) => {
+    console.log('file', file)
     const params = {
       ACL: 'public-read',
       Body: file,

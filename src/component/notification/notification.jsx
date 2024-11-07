@@ -118,7 +118,7 @@ const Notification = () => {
         response_getNotification_service.data,
         token
       );
-      // console.log("response_getNotification_data", response_getNotification_data);
+      console.log("response_getNotification_data", response_getNotification_data);
       if (response_getNotification_data?.status) {
         if(response_getNotification_data?.data?.length < 0){
           setShowError(true)
@@ -178,24 +178,39 @@ const Notification = () => {
       else if(data?.extra?.tile_type == "test") {
         if(compareTime(videoDetail?.list[0]?.start_date, videoDetail?.list[0]?.end_date) == "pending") {
           // console.log("pending")
+          if(data?.view_state == 0) {
+            markAsRead(data?.id)
+          }
         }
         else if(compareTime(videoDetail?.list[0]?.start_date, videoDetail?.list[0]?.end_date) == "attempt") {
           // console.log("attempt", data)
           if(videoDetail?.list[0]?.state == "" || videoDetail?.list[0]?.state == 0) {
             handleTakeTest(videoDetail?.list[0], data?.extra)
+            if(data?.view_state == 0) {
+              markAsRead(data?.id)
+            }
           }
           else if(videoDetail?.list[0]?.state == 1 && videoDetail?.list[0]?.is_reattempt != 0) {
             handleTakeTest(videoDetail?.list[0], data?.extra)
+            if(data?.view_state == 0) {
+              markAsRead(data?.id)
+            }
           }
         }
         else if(compareTime(videoDetail?.list[0]?.start_date, videoDetail?.list[0]?.end_date) == "result") {
           if(videoDetail?.list[0]?.is_reattempt == 0 && videoDetail?.list[0]?.state == 1) {
             // console.log("result")
             handleResultTest(videoDetail?.list[0], data?.extra)
+            if(data?.view_state == 0) {
+              markAsRead(data?.id)
+            }
           }
           else if(videoDetail?.list[0]?.is_reattempt == 0 && videoDetail?.list[0]?.state != 1){
             // console.log("leadership")
             handleRankTest(videoDetail?.list[0], data?.extra)
+            if(data?.view_state == 0) {
+              markAsRead(data?.id)
+            }
           }
         }
       }
@@ -386,11 +401,36 @@ const Notification = () => {
                         <div className="pt-1">
                           {/* {console.log('length', item?.title, item?.action_element  )} */}
                           <h5 className="m-0 notifyTitle">{item.title}</h5>
-                          {(item?.message?.length < 200 && (item?.action_element != 5 || item?.action_element != 5)) ? 
-                          <p
-                            className="m-0 notify_Text"
-                            dangerouslySetInnerHTML={{ __html: item.message }}
-                          ></p>
+                          {(item?.message?.length < 200 && (item?.action_element != 5 || item?.action_element != 6)) ? 
+                            (item?.action_element != 5 && item?.action_element != 6) ?
+                              <p
+                                className="m-0 notify_Text"
+                                dangerouslySetInnerHTML={{ __html: item.message }}
+                              ></p>
+                              :
+                              <p className="m-0 notify_Text">
+                                {(id == index) ? ( <>
+                                  <span dangerouslySetInnerHTML={{ __html: item?.message }}></span>
+                                  {item?.action_element == 5 && <img src={item?.extra?.image} alt="" />}
+                                  {/* <img src="https://images.unsplash.com/photo-1576158113928-4c240eaaf360?q=80&w=1780&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="" /> */}
+                                  {(item?.action_element == 6 && item?.extra?.link_type == "" ) && <a href={item?.extra?.url} target="_blank">click here</a>}
+                                  {(item?.action_element == 6 && item?.extra?.link_type == "out-app" ) && <a href={item?.extra?.url} target="_blank">click here</a>}
+                                  {(item?.action_element == 6 && item?.extra?.link_type == "in-app" ) && <Link href={item?.extra?.url} >click here</Link>}
+                                  </>
+                                ) : (
+                                  <span dangerouslySetInnerHTML={{ __html: item?.message.slice(0, 200) }}></span>
+                                )}
+                                <span
+                                  className="m-0"
+                                  onClick={(e) => {
+                                    e.stopPropagation(); // Prevent handleNotify from being triggered
+                                    toggleReadMore(index, item);
+                                  }}
+                                  style={{ color: 'blue', cursor: 'pointer', marginLeft: '5px' }}
+                                >
+                                  {(id == index) ? 'Read Less' : 'Read More'}
+                                </span>
+                              </p>
                           :
                           <p className="m-0 notify_Text">
                             {isExpanded && (id == index) ? ( <>

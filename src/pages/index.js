@@ -18,8 +18,8 @@ export default function Home() {
   useEffect(() => {
     const fetchAppDetail = async () => {
       const token = get_token();
-      // const formData = { domain: "https://educryptnetlify.videocrypt.in" };    //dev data
-      const formData = { domain: "https://lab.live" };   // lab data
+      const formData = { domain: "https://educryptnetlify.videocrypt.in" };    //dev data
+      // const formData = { domain: "https://lab.live" };   // lab data
       // const formData = { domain: "https://nexttoppers.com/" };   // Next Topper data
       try {
         const response_content_service = await getAppDetial(

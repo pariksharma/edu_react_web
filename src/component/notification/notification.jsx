@@ -20,7 +20,7 @@ const Notification = () => {
     height: window.innerHeight,
   });
 
-  const [id, setId] = useState('')
+  const [id, setId] = useState(-1)
   const [appLogo, setAppLogo] = useState('')
   const [BaseURL, setBaseURL] = useState("");
   const router = useRouter();
@@ -80,14 +80,19 @@ const Notification = () => {
       }
   }
 
-  const toggleReadMore = (id, notification) => {
-    setId(id)
+  const toggleReadMore = (notify_id, notification) => {
+    if(id != notify_id) {
+      setId(notify_id)
+    }
+    else {
+      setId(-1)
+    }
     setIsExpanded(!isExpanded);
     if(notification?.view_state == 0) {
       markAsRead(notification?.id)
     }
   };
-
+console.log(id)
   const markAsRead = async (notification_id) => {
     // console.log("mark")
     try {

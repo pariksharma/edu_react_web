@@ -27,12 +27,13 @@ const Notes = ({
   keyValue,
   onlineCourseAry,
 }) => {
-  // console.log("keyValue",keyValue)
+  // console.log("keyValue",courseDetail)
 
   const [modalShow, setModalShow] = useState(false);
   const [showError, setShowError] = useState(false);
   const [isToasterOpen, setIsToasterOpen] = useState(false);
   const [tabShow, setTabShow] = useState(false);
+  const [showServerError, setShowServerError] = useState(false);
   const [data3, setData3] = useState('');
   const [title3, setTitle3] = useState('');
   const [status, setStatus] = useState("");
@@ -76,7 +77,7 @@ const Notes = ({
   const versionData = useSelector((state) => state.allCategory?.versionData);
   const popupRef = useRef(null);
   const intervalRef = useRef(null);
-  // console.log('versionData', versionData)
+  console.log('versionData', keyValue)
   useEffect(() => {
     let domain = localStorage.getItem("domain");
     if (process.env.NEXT_PUBLIC_TEST_URL) {
@@ -101,7 +102,7 @@ const Notes = ({
   }, [isToasterOpen]);
 
   useEffect(() => {
-    // console.log("courseDetail 21",courseDetail)
+    console.log("courseDetail 21",courseDetail)
     if (courseDetail) {
       setLayer1Data(courseDetail);
     }
@@ -125,13 +126,13 @@ const Notes = ({
 
   // console.log('tabsssss', displayTabData)
 
-  const handleShowData = async () => {
-    dispatch(reset_tab());
-  };
+  // const handleShowData = async () => {
+  //   dispatch(reset_tab());
+  // };
 
   useEffect(() => {
-    // console.log('hhhhh')
     if (tabShow && layer2List && layer2List?.length > 0) {
+      // console.log('hhhhh')
       setShowLayer("layer3")
       setData3Index(displayTabData?.page)
       setBreadcrumbData(displayTabData?.tabLayer1Item)
@@ -140,14 +141,6 @@ const Notes = ({
     }
   }, [layer2List])
 
-  // useEffect(() => {
-  //   console.log('change', displayTabData, keyValue)
-  //   if(displayTabData?.tab != keyValue) {
-  //     handleShowData()
-  //   }
-  // }, [keyValue, displayTabData])
-
-  // console.log(layer2List, showLayer, displayTabData)
   useEffect(() => {
     setData3Index(1);
     // setLayer3updateData([]);
@@ -173,22 +166,14 @@ const Notes = ({
           getLayer3Data(0);
           setData3Index(displayTabData?.page)
         }
-      // }
-      // setTimeout(() => {
-      //   handleShowData();
-      // }, 2500)
-
     } else {
       if (
         r_api[1] == 0
       ) {
         setShowLayer("layer1");
-        // skipLayer1Data();
       } else if (
         r_api[1] == 1
       ) {
-        // console.log('skip layer1')
-        // getLayer2Data(0);
         skipLayer1Data()
       } else if (
         r_api[1] == 2
@@ -204,7 +189,7 @@ const Notes = ({
 
       }
     }
-  }, [courseDetail, keyValue]);
+  }, [keyValue]);
 
   useEffect(() => {
     // console.log('hhhhhhhhhhhhhhhhhhhhhhhh')
@@ -245,7 +230,7 @@ const Notes = ({
     setBreadcrumbData(title);
     setLayer1Index(index);
     setShowLayer("layer2");
-    setLayer2List(layer1Data?.meta?.list[index]?.list);
+    setLayer2List(courseDetail?.meta?.list[index]?.list);
     // console.log(layer1Data.meta?.list[index]);
   };
 
@@ -262,35 +247,25 @@ const Notes = ({
 
       let r_api = courseDetail?.revert_api.split("#");
       if (
-        // layer1Data?.revert_api == "1#1#0#0" ||
-        // layer1Data?.revert_api == "1#3#0#0" ||
-        // layer1Data?.revert_api == "0#1#0#0" ||
-        // layer1Data?.revert_api == "0#3#0#0" ||
         r_api[1] == 1 ||
         r_api[1] == 3
       ) {
         return 0;
       } else {
         if (
-          // layer1Data?.revert_api == "0#0#0#0" ||
-          // layer1Data?.revert_api == "1#0#0#0"
           r_api[1] == 0
         ) {
-          return layer1Data.meta?.list[0]?.id;
+          return courseDetail.meta?.list[0]?.id;
         } else {
-          return layer1Data?.meta?.list[index]?.id;
+          return courseDetail?.meta?.list[index]?.id;
         }
       }
     };
 
     const topi_id = () => {
       let r_api = courseDetail?.revert_api.split("#");
-      console.log("index", index, layer2List, displayTabData);
+      // console.log("index", index, layer2List, displayTabData);
       if (
-        // layer1Data?.revert_api == "1#2#0#0" ||
-        // layer1Data?.revert_api == "1#3#0#0" ||
-        // layer1Data?.revert_api == "0#2#0#0" ||
-        // layer1Data?.revert_api == "0#3#0#0"
         r_api[1] == 2 ||
         r_api[1] == 3
       ) {
@@ -300,9 +275,9 @@ const Notes = ({
       }
     };
     const data = {
-      tile_id: layer1Data?.id && layer1Data?.id,
-      type: layer1Data?.type && layer1Data?.type,
-      revert_api: layer1Data?.revert_api && layer1Data?.revert_api,
+      tile_id: courseDetail?.id && courseDetail?.id,
+      type: courseDetail?.type && courseDetail?.type,
+      revert_api: courseDetail?.revert_api && courseDetail?.revert_api,
       topic_id: topi_id(),
       subject_id: subj_id(),
       layer: 3,
@@ -310,8 +285,6 @@ const Notes = ({
     };
     // console.log('data', data)
     const result = await getDetail(data); /// Api Call
-    // const result = "";
-    // console.log('result', result);
     setLayer3Data(result);
   };
 
@@ -345,6 +318,7 @@ const Notes = ({
     } catch (error) {
       console.log("error found: ", error);
       toast.error("Server Error");
+      setShowServerError(true);
       // router.push('/')
     }
   };
@@ -922,7 +896,7 @@ const Notes = ({
                   ) : showError ? (
                     <ErrorPageAfterLogin />
                   ) : (
-                    <LoaderAfterLogin />
+                    showServerError ? <h3>Internal Server Error</h3> : <LoaderAfterLogin />
                   )
                 ) : showLayer == "layer2" ? (
                   layer2List &&

@@ -94,47 +94,46 @@ const Index = ({ initialTab }) => {
 
 // // Use `getStaticPaths` to define available dynamic routes
 // Use `getStaticPaths` to define available dynamic routes
-// export const getStaticPaths = async () => {
-//   const paths = [
-//     { params: { tab: "feeds" } },
-//     { params: { tab: "ourCourse" } },
-//     { params: { tab: "live_Test" } },
-//     { params: { tab: "live_Classes" } },
-//     { params: { tab: "blog" } },
-//     { params: { tab: "28" } },
-//     { params: { tab: "current_affairs" } },
-//     { params: { tab: "testimonial" } },
-//     { params: { tab: "bookstore" } },
-//     { params: { tab: "notification" } },
-//     { params: { tab: "myCourse" } },
-//     { params: { tab: "purchase-history" } },
-//     { params: { tab: "inquiry" } },
-//     { params: { tab: "8" } },
-//     { params: { tab: "9" } },
-//     { params: { tab: "Blog" } },
-//     { params: { tab: "29" } },
-//     { params: { tab: "17" } },
-//     { params: { tab: "Testimonial" } },
-//     { params: { tab: "14" } },
-//     { params: { tab: "notification" } },
-//     { params: { tab: "myCourse" } },
-//     { params: { tab: "purchase-history" } },
-//     { params: { tab: "12" } },
-//     { params: { tab: "profile" } },
-//   ];
+export const getStaticPaths = async () => {
+  const paths = [
+    { params: { tab: "feeds" } },
+    { params: { tab: "ourCourse" } },
+    { params: { tab: "live_Test" } },
+    { params: { tab: "live_Classes" } },
+    { params: { tab: "blog" } },
+    { params: { tab: "28" } },
+    { params: { tab: "current_affairs" } },
+    { params: { tab: "testimonial" } },
+    { params: { tab: "bookstore" } },
+    { params: { tab: "notification" } },
+    { params: { tab: "myCourse" } },
+    { params: { tab: "purchase-history" } },
+    { params: { tab: "inquiry" } },
+    { params: { tab: "8" } },
+    { params: { tab: "9" } },
+    { params: { tab: "Blog" } },
+    { params: { tab: "29" } },
+    { params: { tab: "17" } },
+    { params: { tab: "Testimonial" } },
+    { params: { tab: "14" } },
+    { params: { tab: "myCourse" } },
+    { params: { tab: "purchase-history" } },
+    { params: { tab: "12" } },
+    { params: { tab: "profile" } },
+  ];
 
-//   return { paths, fallback: false };
-// };
+  return { paths, fallback: false };
+};
 
-// // Use `getStaticProps` to provide data at build time
-// export const getStaticProps = async ({ params }) => {
-//   const { tab } = params;
+// Use `getStaticProps` to provide data at build time
+export const getStaticProps = async ({ params }) => {
+  const { tab } = params;
 
-//   return {
-//     props: {
-//       initialTab: tab || null, // Provide initialTab as a prop
-//     },
-//   };
-// };
+  return {
+    props: {
+      initialTab: tab || null, // Provide initialTab as a prop
+    },
+  };
+};
 
 export default Index;

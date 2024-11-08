@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef, Suspense, lazy } from "react";
+import React, { useEffect, useState, useRef,useCallback, Suspense, lazy } from "react";
 import { useQuery } from "react-query";
 import { decrypt, encrypt, get_token } from "@/utils/helpers";
 import { getLiveTestService } from "@/services";
@@ -61,7 +61,7 @@ const LiveTest = () => {
     };
   }, []);
 
-  const fetchLiveTest = async (type) => {
+  const fetchLiveTest = useCallback(async (type) => {
     try {
       const formData = {
         page: 1,
@@ -94,7 +94,7 @@ const LiveTest = () => {
       console.log("error found: ", error);
       router.push("/");
     }
-  };
+  }, []);
 
   useEffect(() => {
     setShowError(false);

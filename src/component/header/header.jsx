@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState,useCallback } from "react";
 import Button1 from "../buttons/button1/button1";
 import { useRouter } from "next/router";
 import LoginModal from "../modal/loginModal";
@@ -96,26 +96,20 @@ const Header = ({ search }) => {
     setModalShow(true);
   };
 
-  const fetchMyProfile = async () => {
+  const fetchMyProfile = useCallback(async () => {
     try {
-      const formData = {};
-      const response_getMyProfile_service = await getMyProfileService(
-        encrypt(JSON.stringify(formData), token)
-      );
-      const response_getMyProfile_data = decrypt(
-        response_getMyProfile_service.data,
-        token
-      );
-      if (response_getMyProfile_data.status) {
-        setUserData(response_getMyProfile_data.data)
-        dispatch(profile_data(response_getMyProfile_data.data))
+      const response = await getMyProfileService(encrypt("{}", token));
+      const profileData = decrypt(response.data, token);
+      if (profileData.status) {
+        setUserData(profileData.data)
+        dispatch(profile_data(profileData.data));
       }
     } catch (error) {
-      console.log("error found: ", error)
+      console.error("Error fetching profile data:", error);
     }
-  }
+  }, [dispatch, token]);
 
-  const fetchSearchCourse = async (value) => {
+  const fetchSearchCourse = useCallback(async () => {
     try {
       if (value) {
         const formData = {
@@ -138,7 +132,7 @@ const Header = ({ search }) => {
       console.log("error found: ", error)
       // router.push('/')
     }
-  }
+  }, [dispatch, token]);
 
   const handleSearchCourseDetail = (value) => {
     router.push(
@@ -154,32 +148,29 @@ const Header = ({ search }) => {
     }
   }
 
-  const fetchContentData = async () => {
+  const fetchContentData = useCallback(async () => {
     try {
-      const formData = new FormData();
-      const response_content_service = await getCourse_Catergory_Service(formData);
-      const content_service_Data = decrypt(response_content_service.data, token)
-      if (content_service_Data.status) {
-        dispatch(all_CategoryAction(content_service_Data.data))
+      const response = await getCourse_Catergory_Service(new FormData());
+      const data = decrypt(response.data, token);
+      if (data.status) {
+        dispatch(all_CategoryAction(data.data));
       }
     } catch (error) {
-      console.log("error found: ", error)
+      console.error("Error fetching content data:", error);
     }
-  }
+  }, [dispatch, token]);
 
-  const getVersion = async () => {
+  const getVersion = useCallback(async () => {
     try {
-      const formData = {};
-      const response_getVersion_service = await getVersionService(encrypt(JSON.stringify(formData), token))
-      const response_getVersion_data = decrypt(response_getVersion_service.data, token);
-      if (response_getVersion_data.status) {
-        dispatch(all_version(response_getVersion_data?.data?.permissions))
+      const response = await getVersionService(encrypt("{}", token));
+      const versionData = decrypt(response.data, token);
+      if (versionData.status) {
+        dispatch(all_version(versionData.data.permissions));
       }
     } catch (error) {
-      console.log("error found: ", error)
-      // router.push('/')
+      console.error("Error fetching version:", error);
     }
-  }
+  }, [dispatch, token]);
 
   const handleRedirect = () => {
     const isLoggedIn = userLoggedIn();
@@ -368,4 +359,4 @@ const Header = ({ search }) => {
   );
 };
 
-export default Header;
+export default React.memo(Header);

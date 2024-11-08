@@ -181,7 +181,10 @@ const Details = ({ value }) => {
           setKey(
             response_getCourseDetail_data?.data?.tiles?.find(
               (item) => (item.type == "overview")
-            )?.tile_name
+            )?.tile_name 
+            ? response_getCourseDetail_data?.data?.tiles?.find(
+              (item) => (item.type == "overview")
+            )?.tile_name : response_getCourseDetail_data?.data?.tiles[0]?.tile_name
           );
           // console.log("detail", response_getCourseDetail_data?.data?.tiles);
         }
@@ -404,6 +407,7 @@ const Details = ({ value }) => {
                       onSelect={(k) => handleTabChange(k)}
                       className=""
                     >
+                      
                       {/* <Tab
                     eventKey={'course Detail'}
                     title={'course Detail' }
@@ -450,42 +454,6 @@ const Details = ({ value }) => {
                               key={index}
                             // propsValue={isValidData(item) && item.tiles}
                             >
-                              {/* {item.tile_name == "Course Overview" && (
-                            <CourseDetail
-                              title={item.tile_name}
-                              courseDetail={courseDetail}
-                              propsValue={
-                                isValidData(relateCourseAry) && relateCourseAry
-                              }
-                              relateCourseAry={relateCourseAry}
-                              course = {onlineCourseAry}
-                              titleName = {titleName}
-                            />
-                          )} */}
-                              {/* {item.tile_name == "Description" && (
-                            <CourseDetail
-                              title={item.tile_name}
-                              courseDetail={courseDetail}
-                              propsValue={
-                                isValidData(relateCourseAry) && relateCourseAry
-                              }
-                              relateCourseAry={relateCourseAry}
-                              course = {onlineCourseAry}
-                              keyValue={key}
-                            />
-                          )} */}
-                              {/* {item.tile_name == "Detail" && (
-                            <CourseDetail
-                              title={item.tile_name}
-                              courseDetail={courseDetail}
-                              propsValue={
-                                isValidData(relateCourseAry) && relateCourseAry
-                              }
-                              relateCourseAry={relateCourseAry}
-                              course = {onlineCourseAry}
-                              keyValue={key}
-                            />
-                          )} */}
                               {/* {item.tile_name === "Notes" && ( */}
                               {item.type !== "course_combo" &&
                                 (item.type == "test" ||

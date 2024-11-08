@@ -1,4 +1,4 @@
-import React, { useEffect, useState,useRef, Suspense, lazy } from "react";
+import React, { useEffect, useState,useRef,useCallback, Suspense, lazy } from "react";
 import Header from "../../component/header/header";
 import Footer from "../../component/footer/footer";
 import { useRouter } from "next/router";
@@ -68,7 +68,7 @@ const OnlineCourse = ({ onlineCourseID }) => {
     }
   }, [titleName]);
 
-  const fetchCourseDetail = async (id) => {
+  const fetchCourseDetail = useCallback(async (id) => {
     try {
       const token = get_token();
       const formData = {
@@ -98,7 +98,7 @@ const OnlineCourse = ({ onlineCourseID }) => {
       console.log("error found: ", error);
       // router.push('/')
     }
-  };
+  }, []);
 
   return (
     <>

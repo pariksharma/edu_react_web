@@ -137,7 +137,7 @@ const index = () => {
   return (
     <>
       <Suspense fallback={<Loader />}>
-      <Header />
+        <Header />
         <Banner />
         <TrendingCourses />
         <Free_Test_Course />

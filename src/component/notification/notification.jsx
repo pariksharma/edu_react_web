@@ -16,8 +16,8 @@ const Notification = () => {
   const [showError, setShowError] = useState(false)
   const [isExpanded, setIsExpanded] = useState(false);
   const [windowSize, setWindowSize] = useState({
-    width: window.innerWidth,
-    height: window.innerHeight,
+    width: 0,
+    height: 0,
   });
 
   const [id, setId] = useState(-1)
@@ -48,12 +48,14 @@ const Notification = () => {
         height: window.innerHeight,
       });
     };
-
+    if (typeof window !== 'undefined') {
     window.addEventListener("resize", handleResize);
-
+    }
     // Cleanup event listener on component unmount
     return () => {
+      if (typeof window !== 'undefined') {
       window.removeEventListener("resize", handleResize);
+      }
     };
   }, []);
 
@@ -170,9 +172,9 @@ console.log(id)
       }
     }
     else if(data?.action_element == 4) {
-      // console.log('hhjhjkhk', data)
+      console.log('hhjhjkhk', data)
       const videoDetail = await getDetail(data?.extra);
-      // console.log('videDetail', videoDetail)
+      console.log('videDetail', videoDetail)
       if(data?.extra?.tile_type == "video") {
         handleWatch(videoDetail?.list[0])
         if(data?.view_state == 0) {
@@ -219,6 +221,26 @@ console.log(id)
           }
         }
       }
+      else if(data?.extra?.tile_type == "image") {
+        window.open(videoDetail?.list[0]?.file_url, '_blank')
+        if(data?.view_state == 0) {
+          markAsRead(data?.id)
+        }
+      }
+      else if(data?.extra?.tile_type == "pdf") {
+        if(videoDetail?.list[0]?.file_url.includes('.pdf')) {
+          window.open(videoDetail?.list[0]?.file_url, '_blank')
+          if(data?.view_state == 0) {
+            markAsRead(data?.id)
+          }
+        }
+      }
+      else if(data?.extra?.tile_type == "link") {
+        window.open(videoDetail?.list[0]?.file_url, '_blank')
+        if(data?.view_state == 0) {
+          markAsRead(data?.id)
+        }
+      }
     }
     // else if(data?.action_element == 4)
   }
@@ -247,11 +269,13 @@ console.log(id)
 
         // console.log("formData", formData);
         const encryptData = btoa(JSON.stringify(formData));
+        if (typeof window !== 'undefined') {
         window.open(
           `${BaseURL}/web/LiveTest/attempt_now_window?data=${encryptData}`,
           "popupWindow",
           `width=${windowSize.width},height=${windowSize.height},scrollbars=yes,resizable=no`
         );
+      }
         // Start interval to check if the popup is still open
     }
   };
@@ -284,11 +308,13 @@ console.log(id)
     // console.log("encryptData", encryptData);
     // const encryptData = encrypt(JSON.stringify(formData));
     // Router.push(`https://educryptnetlify.videocrypt.in/webstaging/web/LiveTest/learn_result_window?data=${encryptData}`)
+    if (typeof window !== 'undefined') {
     window.open(
       `${BaseURL}/web/LiveTest/learn_result_window?data=${encryptData}`,
       "popupWindow",
       `width=${windowSize.width},height=${windowSize.height},scrollbars=yes,resizable=no`
     );
+  }
   };
 
   const handleRankTest = (val, course_data) => {
@@ -306,12 +332,13 @@ console.log(id)
     // console.log("formData", formData);
     const encryptData = btoa(JSON.stringify(formData));
     // console.log("encryptData", encryptData);
-
+    if (typeof window !== 'undefined') {
     window.open(
       `${BaseURL}/web/LiveTest/result_window?data=${encryptData}`,
       "popupWindow",
       `width=${windowSize.width},height=${windowSize.height},scrollbars=yes,resizable=no`
     );
+  }
   };
 
   const getDetail = async (data) => {

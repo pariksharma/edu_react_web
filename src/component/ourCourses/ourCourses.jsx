@@ -205,10 +205,6 @@ const OurCourses = () => {
           </div>
           :
           null
-          // showError ?
-          //   <ErrorPageAfterLogin />
-          //   :
-          //   <LoaderAfterLogin />
         }
       </section>
     </>

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef, Suspense, lazy } from "react";
+import React, { useEffect, useState, useRef,useCallback, Suspense, lazy } from "react";
 import Header from "../../../component/header/header";
 import Footer from "../../../component/footer/footer";
 import { LiaYoutube } from "react-icons/lia";
@@ -220,7 +220,7 @@ const ViewOnlineCourseDetail = () => {
     }
   }, [tiles]);
 
-  const fetchCourseDetail = async (course_id) => {
+  const fetchCourseDetail =  useCallback(async (course_id) => {
     try {
       // console.log('idddddd', courseCombo)
       const formData = {
@@ -284,8 +284,7 @@ const ViewOnlineCourseDetail = () => {
       // router.push('/')
       setServerError(true);
     }
-  };
-  console.log('key', key)
+  }, []);
 
   const handleAddToMyCourse = async () => {
     try {

@@ -1,3 +1,4 @@
+import React, { useEffect, useState,useCallback } from "react";
 import {
   getFPaymentService,
   getMyOrderService,
@@ -6,7 +7,6 @@ import {
 } from "@/services";
 import { decrypt, encrypt, get_token } from "@/utils/helpers";
 import { useRouter } from "next/router";
-import React, { useEffect, useState } from "react";
 import { FaRupeeSign } from "react-icons/fa";
 // import toast, { Toaster } from "react-hot-toast";
 import { ToastContainer, toast } from 'react-toastify';
@@ -44,7 +44,7 @@ const PurchaseHistory = () => {
     }
   }, [thankYouModalShow])
 
-  const fetchMyOrders = async () => {
+  const fetchMyOrders = useCallback(async () => {
     const formData = {
       page: 1,
       type: 1,
@@ -134,7 +134,7 @@ const PurchaseHistory = () => {
       console.error("Error fetching orders or installments:", error);
       toast.error("An error occurred while fetching data.");
     }
-  };
+  }, []);
 
   const formatDate = (value) => {
     const cr_date = new Date(value * 1000);

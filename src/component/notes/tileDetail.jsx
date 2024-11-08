@@ -35,6 +35,17 @@ const TileDetail = ({item, layer1Data, handleRead, handleWatch, handleTakeTest, 
            }
       }
 
+      const ReAttemptTime = (time) => {
+        const givenTime = new Date(time * 1000);
+        const currentTime = new Date();
+        if(currentTime < givenTime){
+            return true
+        }
+        else {
+            return false
+        }
+    }
+
       useEffect(() => {
         // Immediately call compareTime
         compareTime(startTime   , endTime );
@@ -106,18 +117,18 @@ const TileDetail = ({item, layer1Data, handleRead, handleWatch, handleTakeTest, 
                         />
                         )}
 
-                        {layer1Data?.type == "test" && (timeValue == "result"  && (item?.state == 1) && item?.is_reattempt != 0 &&
+                        {layer1Data?.type == "test" && (timeValue == "result"  && (item?.state == 1) && ReAttemptTime(item?.is_reattempt) &&
                         <Button1 value="Re-Attempt" 
                             handleClick={() => handleTakeTest(item, i)} 
                         />
                         )}
-                        {layer1Data?.type == "test" && (timeValue == "result" && item?.is_reattempt == 0 &&
+                        {layer1Data?.type == "test" && (timeValue == "result" && !ReAttemptTime(item?.is_reattempt) &&
                         <Button1 value={item?.state == 1 ? "View Result" : "LeaderBoard"}
                             handleClick={() => item?.state == 1 ? handleResultTest(item, i) : handleRankTest(item, i)} 
                         />
                         )}
 
-                        {layer1Data?.type == "test" && (timeValue == "attempt" && item?.is_reattempt != 0 && item?.state == 1) &&
+                        {layer1Data?.type == "test" && (timeValue == "attempt" && ReAttemptTime(item?.is_reattempt) && item?.state == 1) &&
                             <>
                                 <Button1 value="Attempt Now" 
                                     handleClick={() => handleTakeTest(item, i)} 
@@ -149,7 +160,7 @@ const TileDetail = ({item, layer1Data, handleRead, handleWatch, handleTakeTest, 
                             handleClick={() => handleTakeTest(item, i)} 
                         />
                         )}
-                        {layer1Data?.type == "test" && (timeValue == "attempt"  && (item?.state == 1) && item?.is_reattempt != 0 &&
+                        {layer1Data?.type == "test" && (timeValue == "attempt"  && (item?.state == 1) && ReAttemptTime(item?.is_reattempt) &&
                         <Button1 value="Re-Attempt" 
                             handleClick={() => handleTakeTest(item, i)} 
                         />
@@ -159,13 +170,13 @@ const TileDetail = ({item, layer1Data, handleRead, handleWatch, handleTakeTest, 
                             handleClick={() => handleResultTest(item, i)} 
                         />
                         )}
-                        {layer1Data?.type == "test" && (timeValue == "result" && item?.is_reattempt == 0 &&
+                        {layer1Data?.type == "test" && (timeValue == "result" && !ReAttemptTime(item?.is_reattempt) &&
                         <Button1 value={item?.state == 1 ? "View Result" : "LeaderBoard"}
                             handleClick={() => item?.state == 1 ? handleResultTest(item, i) : handleRankTest(item, i)} 
                         />
                         )}
 
-                        {layer1Data?.type == "test" && (timeValue == "result"  && (item?.state == 1) && item?.is_reattempt != 0 &&
+                        {layer1Data?.type == "test" && (timeValue == "result"  && (item?.state == 1) && ReAttemptTime(item?.is_reattempt) &&
                         <Button1 value="Re-Attempt" 
                             handleClick={() => handleTakeTest(item, i)} 
                         />

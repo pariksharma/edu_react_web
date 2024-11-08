@@ -83,6 +83,17 @@ const LiveTestCard = ({
     }
   }, [timeLeft]);
 
+  const ReAttemptTime = (time) => {
+    const givenTime = new Date(time * 1000);
+    const currentTime = new Date();
+    if(currentTime < givenTime){
+        return true
+    }
+    else {
+        return false
+    }
+}
+
   function calculateTimeLeft() {
     const currentTime = Math.floor(Date.now() / 1000); // Get current Unix time in seconds
     const difference = testData.start_date - currentTime;
@@ -116,7 +127,7 @@ const LiveTestCard = ({
     // // else if (App.Server_Time.ToUnixTimeSeconds() > long.Parse(Current_Selected_Resource.end_date)){
     // //   firstAttempt = "0";
     // // }
-    else if (Number(val.is_reattempt) > 0) {
+    else if (ReAttemptTime(val.is_reattempt)) {
       firstAttempt = "0";
     }
     const formData = {
@@ -153,7 +164,7 @@ const LiveTestCard = ({
     // {
     //     firstAttempt = "0";
     // }
-    else if (Number(val.is_reattempt) > 0) {
+    else if (ReAttemptTime(val.is_reattempt)) {
       firstAttempt = "0";
     }
     const formData = {
@@ -300,7 +311,7 @@ const LiveTestCard = ({
                 />
               )}
             {value == "LIVE" &&
-              testData?.is_reattempt != 0 &&
+              ReAttemptTime(testData?.is_reattempt) &&
               testData?.state == 1 && (
                 <>
                   <Button1

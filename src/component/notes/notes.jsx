@@ -57,8 +57,8 @@ const Notes = ({
   const [tabLayer2Item, setTabLayer2item] = useState('')
   const [tabLayer3Item, setTabLayer3item] = useState('')
   const [windowSize, setWindowSize] = useState({
-    width: window.innerWidth,
-    height: window.innerHeight,
+    width: 0,
+    height: 0,
   });
 
   const [checkLogin, setCheckLogin] = useState("");
@@ -77,7 +77,6 @@ const Notes = ({
   const versionData = useSelector((state) => state.allCategory?.versionData);
   const popupRef = useRef(null);
   const intervalRef = useRef(null);
-  console.log('versionData', keyValue)
   useEffect(() => {
     let domain = localStorage.getItem("domain");
     if (process.env.NEXT_PUBLIC_TEST_URL) {
@@ -89,7 +88,6 @@ const Notes = ({
 
   useEffect(() => {
     const token = router.asPath;
-    // console.log("token", token);
     setCheckLogin(token.startsWith("/private/myProfile"));
   }, []);
 
@@ -102,7 +100,6 @@ const Notes = ({
   }, [isToasterOpen]);
 
   useEffect(() => {
-    console.log("courseDetail 21",courseDetail)
     if (courseDetail) {
       setLayer1Data(courseDetail);
     }
@@ -110,28 +107,28 @@ const Notes = ({
 
   useEffect(() => {
     const handleResize = () => {
+      if (typeof window !== 'undefined') {
       setWindowSize({
         width: window.innerWidth,
         height: window.innerHeight,
       });
+    }
     };
 
+    if (typeof window !== 'undefined') {
     window.addEventListener("resize", handleResize);
+    }
 
     // Cleanup event listener on component unmount
     return () => {
+      if (typeof window !== 'undefined') {
       window.removeEventListener("resize", handleResize);
+      }
     };
   }, []);
 
-  // console.log('tabsssss', displayTabData)
-
-  // const handleShowData = async () => {
-  //   dispatch(reset_tab());
-  // };
-
   useEffect(() => {
-    if (tabShow && layer2List && layer2List?.length > 0) {
+    if (showLayer != 'layer2' && tabShow && layer2List && layer2List?.length > 0) {
       // console.log('hhhhh')
       setShowLayer("layer3")
       setData3Index(displayTabData?.page)
@@ -143,13 +140,10 @@ const Notes = ({
 
   useEffect(() => {
     setData3Index(1);
-    // setLayer3updateData([]);
     let r_api = courseDetail?.revert_api.split("#");
     if (displayTabData?.layer) {
-      // if(displayTabData?.tabLayer2Item) {
-        // console.log('displayTabData', r_api[1])
         if(r_api[1] == 0) {
-          setLayer2List(layer1Data?.meta?.list[displayTabData?.tabLayer1index]?.list);
+          setLayer2List(courseDetail?.meta?.list[displayTabData?.tabLayer1index]?.list);
           setTabShow(true);
         }
         else if(r_api[1] == 1) {
@@ -233,8 +227,6 @@ const Notes = ({
     setLayer2List(courseDetail?.meta?.list[index]?.list);
     // console.log(layer1Data.meta?.list[index]);
   };
-
-  // console.log('layer2list', layer2List)
 
   const getLayer3Data = async (index, title) => {
     // window.scroll(0,200)
@@ -473,6 +465,7 @@ const Notes = ({
       setTabLayer1index(i)
       setTabLayer1item(item.title)
     } else {
+      // console.log('8888')
       setTabLayer1index(i)
       setTabLayer1item(item.title)
       getLayer2Data(i, item.title)
@@ -643,11 +636,13 @@ const Notes = ({
         const encryptData = btoa(JSON.stringify(formData));
         // console.log("encryptData", encryptData);
         // const encryptData = encrypt(JSON.stringify(formData));
+        if (typeof window !== 'undefined') {
         window.open(
           `${BaseURL}/web/LiveTest/learn_result_window?data=${encryptData}`,
           "popupWindow",
           `width=${windowSize.width},height=${windowSize.height},scrollbars=yes,resizable=no`
         );
+      }
       } else {
         showErrorToast("Please, purchase the course");
       }

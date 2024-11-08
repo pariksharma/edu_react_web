@@ -82,6 +82,17 @@ const Notification = () => {
       }
   }
 
+  const compareWithCurrentTime = (time) => {
+    const givenTime = new Date(time * 1000);
+    const currentTime = new Date();
+    if(currentTime < givenTime){
+        return true
+    }
+    else {
+        return false
+    }
+  }
+
   const toggleReadMore = (notify_id, notification) => {
     if(id != notify_id) {
       setId(notify_id)
@@ -94,7 +105,6 @@ const Notification = () => {
       markAsRead(notification?.id)
     }
   };
-console.log(id)
   const markAsRead = async (notification_id) => {
     // console.log("mark")
     try {
@@ -171,16 +181,36 @@ console.log(id)
         markAsRead(data?.id)
       }
     }
+    else if (data.action_element == 1) {
+      if(data?.view_state == 0) {
+        markAsRead(data?.id)
+      }
+    }
     else if(data?.action_element == 4) {
-      console.log('hhjhjkhk', data)
+      // console.log('hhjhjkhk', data)
       const videoDetail = await getDetail(data?.extra);
       console.log('videDetail', videoDetail)
       if(data?.extra?.tile_type == "video") {
-        handleWatch(videoDetail?.list[0])
-        if(data?.view_state == 0) {
-          // console.log('ghfjjfhgkjhjytjbgu')
-          markAsRead(data?.id)
+        if(!compareWithCurrentTime(videoDetail?.list[0]?.start_date)) {
+          handleWatch(videoDetail?.list[0])
+          if(data?.view_state == 0) {
+            // console.log('ghfjjfhgkjhjytjbgu')
+            markAsRead(data?.id)
+          }
+        } else{
+          toast.error("Class is not started yet", {
+            // onClose: () => setIsToasterOpen(false),  // Set isToasterOpen to false when the toaster closes
+            autoClose: 1500,
+          });
+          if(data?.view_state == 0) {
+            // console.log('ghfjjfhgkjhjytjbgu')
+            markAsRead(data?.id)
+          }
         }
+        // if(data?.view_state == 0) {
+        //   // console.log('ghfjjfhgkjhjytjbgu')
+        //   markAsRead(data?.id)
+        // }
       }
       else if(data?.extra?.tile_type == "test") {
         if(compareTime(videoDetail?.list[0]?.start_date, videoDetail?.list[0]?.end_date) == "pending") {
@@ -197,7 +227,7 @@ console.log(id)
               markAsRead(data?.id)
             }
           }
-          else if(videoDetail?.list[0]?.state == 1 && videoDetail?.list[0]?.is_reattempt != 0) {
+          else if(videoDetail?.list[0]?.state == 1 && compareWithCurrentTime(videoDetail?.list[0]?.is_reattempt)) {
             handleTakeTest(videoDetail?.list[0], data?.extra)
             if(data?.view_state == 0) {
               markAsRead(data?.id)
@@ -205,14 +235,14 @@ console.log(id)
           }
         }
         else if(compareTime(videoDetail?.list[0]?.start_date, videoDetail?.list[0]?.end_date) == "result") {
-          if(videoDetail?.list[0]?.is_reattempt == 0 && videoDetail?.list[0]?.state == 1) {
+          if(!compareWithCurrentTime(videoDetail?.list[0]?.is_reattempt) && videoDetail?.list[0]?.state == 1) {
             // console.log("result")
             handleResultTest(videoDetail?.list[0], data?.extra)
             if(data?.view_state == 0) {
               markAsRead(data?.id)
             }
           }
-          else if(videoDetail?.list[0]?.is_reattempt == 0 && videoDetail?.list[0]?.state != 1){
+          else if(!compareWithCurrentTime(videoDetail?.list[0]?.is_reattempt) && videoDetail?.list[0]?.state != 1){
             // console.log("leadership")
             handleRankTest(videoDetail?.list[0], data?.extra)
             if(data?.view_state == 0) {
@@ -288,7 +318,7 @@ console.log(id)
     // // else if (App.Server_Time.ToUnixTimeSeconds() > long.Parse(Current_Selected_Resource.end_date)){
     // //   firstAttempt = "0";
     // // }
-    else if (Number(val.is_reattempt) > 0) {
+    else if (compareWithCurrentTime(val.is_reattempt)) {
       firstAttempt = "0";
     }
     const formData = {

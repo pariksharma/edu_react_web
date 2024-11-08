@@ -468,14 +468,14 @@ const Inquiry = () => {
                                     )[0].label}
                                 </b>
                               </p>
-                              <div className="viewDetail position-relative">
+                              {/* <div className="viewDetail position-relative">
                                 <button
                                   onClick={() => handleViewDetail(item)}
                                   className="viewbtn"
                                 >
                                   <Icon.ChevronRight />
                                 </button>
-                              </div>
+                              </div> */}
                             </div>
                           </div>
                         );

@@ -254,7 +254,7 @@ const LiveTestCard = ({
         pauseOnHover
         theme="light"
       /> */}
-
+      {/* {console.log("test", testData)} */}
       {/* <Toaster position="top-right" reverseOrder={false} /> */}
       <div className="d-flex justify-content-center col-12 col-sm-6 col-md-4 col-lg-4 col-xl-3 mb-4 p-0">
         <div className="card border-0 shadow b-radius course_card m-0">
@@ -309,6 +309,26 @@ const LiveTestCard = ({
                   handleClick={() => handleTakeTest(testData)}
                   data={true}
                 />
+              )}
+              {value == "LIVE" &&
+              !ReAttemptTime(testData?.is_reattempt) &&
+              testData?.state == 1 && (
+                <>
+                  {/* <Button1
+                    value="Re-Attempt"
+                    handleClick={() => handleTakeTest(testData)}
+                    data={true}
+                  /> */}
+                  <Button1
+                    value={testData?.state == 1 ? `View Result` : `Leaderboard`}
+                    handleClick={() =>
+                      testData?.state
+                        ? handleResultTest(testData)
+                        : handleRankTest(testData)
+                    }
+                    data={true}
+                  />
+                </>
               )}
             {value == "LIVE" &&
               ReAttemptTime(testData?.is_reattempt) &&

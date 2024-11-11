@@ -131,30 +131,31 @@ const Details = ({ value }) => {
 
   useEffect(() => {
     // Getting the heights of the elements once after the component mounts
-    const pageSection1 =
-      document.querySelector(".page-section-1")?.offsetHeight || 0;
+    const pageSection1 = document.querySelector(".page-section-1")?.offsetHeight || 0;
     const offset1 = document.querySelector(".offset--1")?.offsetHeight || 0;
-    const pageSection6 =
-      document.querySelector(".page-section-6")?.offsetHeight || 0;
+    const pageSection6 = document.querySelector(".page-section-6")?.offsetHeight || 0;
     // console.log("pageSection1", pageSection1);
     // console.log("offset1", offset1);
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
       setScrollY(currentScrollY);
-
+      // console.log('h0', pageSection1, window.scrollY)
       if (pageSection1 > 0) {
+        console.log('h1')
         if (currentScrollY >= pageSection1) {
           setClass(true);
         } else {
           setClass(false);
         }
       } else if (offset1 > 0) {
+        console.log('h2')
         if (currentScrollY >= offset1) {
           setClass(true);
         } else {
           setClass(false);
         }
       } else if (pageSection6 > 0) {
+        console.log('h3')
         if (currentScrollY >= pageSection6) {
           setClass(true);
         } else {
@@ -169,7 +170,7 @@ const Details = ({ value }) => {
       // Clean up the event listener on component unmount
       return () => window.removeEventListener("scroll", handleScroll);
     // }
-  }, [tiles, key]);
+  }, []);
 
   // console.log('courseCombo', courseCombo)
 

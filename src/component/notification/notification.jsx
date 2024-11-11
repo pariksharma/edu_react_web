@@ -16,8 +16,8 @@ const Notification = () => {
   const [showError, setShowError] = useState(false)
   const [isExpanded, setIsExpanded] = useState(false);
   const [windowSize, setWindowSize] = useState({
-    width: 0,
-    height: 0,
+    width: window.innerWidth,
+    height: window.innerHeight,
   });
 
   const [id, setId] = useState(-1)
@@ -213,8 +213,18 @@ const Notification = () => {
         // }
       }
       else if(data?.extra?.tile_type == "test") {
+        // if(compareWithCurrentTime(videoDetail?.list[0]?.start_date)) {
+        //   toast.error("Test is not started yet", {
+        //     // onClose: () => setIsToasterOpen(false),  // Set isToasterOpen to false when the toaster closes
+        //     autoClose: 1500,
+        //   });
+        // }
         if(compareTime(videoDetail?.list[0]?.start_date, videoDetail?.list[0]?.end_date) == "pending") {
           // console.log("pending")
+          toast.error("Test is not started yet", {
+                // onClose: () => setIsToasterOpen(false),  // Set isToasterOpen to false when the toaster closes
+                autoClose: 1500,
+              });
           if(data?.view_state == 0) {
             markAsRead(data?.id)
           }
@@ -223,6 +233,12 @@ const Notification = () => {
           // console.log("attempt", data)
           if(videoDetail?.list[0]?.state == "" || videoDetail?.list[0]?.state == 0) {
             handleTakeTest(videoDetail?.list[0], data?.extra)
+            if(data?.view_state == 0) {
+              markAsRead(data?.id)
+            }
+          }
+          else if(videoDetail?.list[0]?.state == 1 && !compareWithCurrentTime(videoDetail?.list[0]?.is_reattempt)) {
+            handleResultTest(videoDetail?.list[0], data?.extra)
             if(data?.view_state == 0) {
               markAsRead(data?.id)
             }

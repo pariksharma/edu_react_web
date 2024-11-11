@@ -16,8 +16,8 @@ const Notification = () => {
   const [showError, setShowError] = useState(false)
   const [isExpanded, setIsExpanded] = useState(false);
   const [windowSize, setWindowSize] = useState({
-    width: 0,
-    height: 0,
+    width: window.innerWidth,
+    height: window.innerHeight,
   });
 
   const [id, setId] = useState(-1)

@@ -75,38 +75,38 @@ const Details = ({ value }) => {
 
   const [scrollY, setScrollY] = useState(0);
 
-  // useEffect(() => {
-  //   // Getting the heights of the elements once after the component mounts
-  //   const pageSection1 =
-  //     document.querySelector(".page-section-1")?.offsetHeight || 0;
-  //   const offset1 = document.querySelector(".offset--1")?.offsetHeight || 0;
-  //   const pageSection6 =
-  //     document.querySelector(".page-section-6")?.offsetHeight || 0;
-  //   // console.log("pageSection1", pageSection1);
-  //   const handleScroll = () => {
-  //     const currentScrollY = window.scrollY;
-  //     // alert("k");
-  //     setScrollY(currentScrollY);
+  useEffect(() => {
+    // Getting the heights of the elements once after the component mounts
+    const pageSection1 =
+      document.querySelector(".page-section-1")?.offsetHeight || 0;
+    const offset1 = document.querySelector(".offset--1")?.offsetHeight || 0;
+    const pageSection6 =
+      document.querySelector(".page-section-6")?.offsetHeight || 0;
+    // console.log("pageSection1", pageSection1);
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+      // alert("k");
+      setScrollY(currentScrollY);
 
-  //     // Calculate if the currentScrollY meets the height conditions
-  //     const combinedHeight = Math.max(pageSection1, offset1, pageSection6);
-  //     // console.log("combinedHeight", combinedHeight);
-  //     if (
-  //       currentScrollY >= pageSection1 &&
-  //       key === tiles?.find((item) => item.type === "overview")?.tile_name
-  //     ) {
-  //       setClass(true);
-  //     } else {
-  //       setClass(false);
-  //     }
-  //   };
+      // Calculate if the currentScrollY meets the height conditions
+      const combinedHeight = Math.max(pageSection1, offset1, pageSection6);
+      // console.log("combinedHeight", combinedHeight);
+      if (
+        currentScrollY >= pageSection1 &&
+        key === tiles?.find((item) => item.type === "overview")?.tile_name
+      ) {
+        setClass(true);
+      } else {
+        setClass(false);
+      }
+    };
 
-  //   // Attach the scroll event listener
-  //   window.addEventListener("scroll", handleScroll);
+    // Attach the scroll event listener
+    window.addEventListener("scroll", handleScroll);
 
-  //   // Clean up the event listener on component unmount
-  //   return () => window.removeEventListener("scroll", handleScroll);
-  // }, [tiles, key]);
+    // Clean up the event listener on component unmount
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [tiles, key]);
 
   useEffect(() => {
     if (details) {
@@ -128,49 +128,6 @@ const Details = ({ value }) => {
       setKey(tiles.find((item) => item.type == "overview")?.tile_name);
     }
   }, [tiles]);
-
-  useEffect(() => {
-    // Getting the heights of the elements once after the component mounts
-    const pageSection1 = document.querySelector(".page-section-1")?.offsetHeight || 0;
-    const offset1 = document.querySelector(".offset--1")?.offsetHeight || 0;
-    const pageSection6 = document.querySelector(".page-section-6")?.offsetHeight || 0;
-    // console.log("pageSection1", pageSection1);
-    // console.log("offset1", offset1);
-    const handleScroll = () => {
-      const currentScrollY = window.scrollY;
-      setScrollY(currentScrollY);
-      // console.log('h0', pageSection1, window.scrollY)
-      if (pageSection1 > 0) {
-        console.log('h1')
-        if (currentScrollY >= pageSection1) {
-          setClass(true);
-        } else {
-          setClass(false);
-        }
-      } else if (offset1 > 0) {
-        console.log('h2')
-        if (currentScrollY >= offset1) {
-          setClass(true);
-        } else {
-          setClass(false);
-        }
-      } else if (pageSection6 > 0) {
-        console.log('h3')
-        if (currentScrollY >= pageSection6) {
-          setClass(true);
-        } else {
-          setClass(false);
-        }
-      }
-    };
-    if (typeof window !== 'undefined') {
-      // Attach the scroll event listener
-      window.addEventListener("scroll", handleScroll);
-
-      // Clean up the event listener on component unmount
-      return () => window.removeEventListener("scroll", handleScroll);
-    }
-  }, []);
 
   // console.log('courseCombo', courseCombo)
 

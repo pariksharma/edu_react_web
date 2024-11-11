@@ -69,7 +69,7 @@ const ViewOnlineCourseDetail = ({ initialData, onlineCourseDetailID, IsTranding 
   const OverView = tiles.find((item) => (item.type == "overview"));
 
 
-  console.log("initialData", initialData)
+  // console.log("initialData", initialData)
 
   // useEffect(() => {
     
@@ -122,13 +122,13 @@ const ViewOnlineCourseDetail = ({ initialData, onlineCourseDetailID, IsTranding 
         }
       }
     };
-    if (typeof window !== 'undefined') {
+    // if (typeof window !== 'undefined') {
       // Attach the scroll event listener
       window.addEventListener("scroll", handleScroll);
 
       // Clean up the event listener on component unmount
       return () => window.removeEventListener("scroll", handleScroll);
-    }
+    // }
   }, [tiles, key]);
 
   const fetchCourseDetail = useCallback(async (course_id) => {

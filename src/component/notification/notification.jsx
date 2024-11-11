@@ -482,16 +482,16 @@ const Notification = () => {
                                 ) : (
                                   <span dangerouslySetInnerHTML={{ __html: item?.message.slice(0, 200) }}></span>
                                 )}
-                                <span
+                                &nbsp;<a href="javascript:void(0)"
                                   className="m-0"
                                   onClick={(e) => {
                                     e.stopPropagation(); // Prevent handleNotify from being triggered
                                     toggleReadMore(index, item);
                                   }}
-                                  style={{ color: 'blue', cursor: 'pointer', marginLeft: '5px' }}
+                                  style={{ color: 'blue', cursor: 'pointer', marginLeft: '5px', fontWeight: '400' }}
                                 >
                                   {(id == index) ? 'Read Less' : 'Read More'}
-                                </span>
+                                </a>
                               </p>
                           :
                           <p className="m-0 notify_Text">

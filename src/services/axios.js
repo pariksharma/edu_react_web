@@ -53,8 +53,12 @@ axiosClient.interceptors.request.use(async (req) => {
         'Content-Type': 'application/json',
         "Authorization": "Bearer 01*#NerglnwwebOI)30@I*Dm'@@",
         "Appid": app_id || '', // Use the fetched or stored appId
-        "User-Agent": 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36'
+        // "User-Agent": 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36'
     };
+
+    if (typeof window === "undefined") {
+        headers["User-Agent"] = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36';
+    }
 
     req.headers = { ...req.headers, ...headers };  // Merge headers with existing headers
 

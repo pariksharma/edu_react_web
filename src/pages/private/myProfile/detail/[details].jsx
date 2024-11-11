@@ -163,13 +163,13 @@ const Details = ({ value }) => {
         }
       }
     };
-    // if (typeof window !== 'undefined') {
+    if (typeof window !== 'undefined') {
       // Attach the scroll event listener
       window.addEventListener("scroll", handleScroll);
 
       // Clean up the event listener on component unmount
       return () => window.removeEventListener("scroll", handleScroll);
-    // }
+    }
   }, []);
 
   // console.log('courseCombo', courseCombo)

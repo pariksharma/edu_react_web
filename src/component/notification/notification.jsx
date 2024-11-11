@@ -473,7 +473,7 @@ const Notification = () => {
                               <p className="m-0 notify_Text">
                                 {(id == index) ? ( <>
                                   <span dangerouslySetInnerHTML={{ __html: item?.message }}></span>
-                                  {item?.action_element == 5 && <img src={item?.extra?.image} alt="" />}
+                                  {item?.action_element == 5 && <div style={{width: '40%'}}><img className="img-fluid" src={item?.extra?.image} alt="" /></div>}
                                   {/* <img src="https://images.unsplash.com/photo-1576158113928-4c240eaaf360?q=80&w=1780&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="" /> */}
                                   {(item?.action_element == 6 && item?.extra?.link_type == "" ) && <a href={item?.extra?.url} target="_blank">click here</a>}
                                   {(item?.action_element == 6 && item?.extra?.link_type == "out-app" ) && <a href={item?.extra?.url} target="_blank">click here</a>}
@@ -497,7 +497,7 @@ const Notification = () => {
                           <p className="m-0 notify_Text">
                             {isExpanded && (id == index) ? ( <>
                               <span dangerouslySetInnerHTML={{ __html: item?.message }}></span>
-                              {item?.action_element == 5 && <img src={item?.extra?.image} alt="" />}
+                              {item?.action_element == 5 && <div style={{width: '40%'}}><img className="img-fluid" src={item?.extra?.image} alt="" /></div>}
                               {/* <img src="https://images.unsplash.com/photo-1576158113928-4c240eaaf360?q=80&w=1780&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="" /> */}
                               {(item?.action_element == 6 && item?.extra?.link_type == "out-app" ) && <a href={item?.extra?.url} target="_blank">click here</a>}
                               {(item?.action_element == 6 && item?.extra?.link_type == "in-app" ) && <Link href={item?.extra?.url} >click here</Link>}

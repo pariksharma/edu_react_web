@@ -57,8 +57,8 @@ const Notes = ({
   const [tabLayer2Item, setTabLayer2item] = useState('')
   const [tabLayer3Item, setTabLayer3item] = useState('')
   const [windowSize, setWindowSize] = useState({
-    width: 0,
-    height: 0,
+    width: window.innerWidth,
+    height: window.innerHeight,
   });
 
   const [checkLogin, setCheckLogin] = useState("");
@@ -139,6 +139,7 @@ const Notes = ({
   }, [layer2List])
 
   useEffect(() => {
+    // console.log(displayTabData)
     setData3Index(1);
     let r_api = courseDetail?.revert_api.split("#");
     if (displayTabData?.layer) {
@@ -399,6 +400,7 @@ const Notes = ({
   };
 
   const setLayer1 = () => {
+    dispatch(reset_tab())
     // console.log('layer1Data87687868', courseDetail)
     let r_api = courseDetail?.revert_api.split("#");
     setData3Index(1)
@@ -426,7 +428,16 @@ const Notes = ({
   };
 
   const setLayer2 = () => {
+    // dispatch(reset_tab())
     // console.log('layer1Data', courseDetail)
+    dispatch(
+      all_tabName({
+        ...all_tabName, 
+        tabLayer2index: '',
+        tabLayer2Item: '',
+        page: data3Index,
+      })
+    );
     let r_api = courseDetail?.revert_api.split("#");
     setData3Index(1)
     if (
@@ -518,7 +529,7 @@ const Notes = ({
     if (!isLoggedIn) {
       setModalShow(true);
     } else {
-      if (onlineCourseAry.is_purchased == 1) {
+      // if (onlineCourseAry.is_purchased == 1) {
         var firstAttempt = "0";
         if (val.state == "") {
           firstAttempt = "1";
@@ -560,9 +571,9 @@ const Notes = ({
             // console.log('867867687687')
           }
         }, 500); // Check every 500ms
-      } else {
-        showErrorToast("Please, purchase the course");
-      }
+      // } else {
+      //   showErrorToast("Please, purchase the course");
+      // }
     }
   };
 
@@ -577,7 +588,7 @@ const Notes = ({
     if (!isLoggedIn) {
       setModalShow(true);
     } else {
-      if (onlineCourseAry.is_purchased == 1) {
+      // if (onlineCourseAry.is_purchased == 1) {
         const formData = {
           jwt: localStorage.getItem("jwt"),
           user_id: localStorage.getItem("user_id"),
@@ -598,9 +609,9 @@ const Notes = ({
           "popupWindow",
           `width=${windowSize.width},height=${windowSize.height},scrollbars=yes,resizable=no`
         );
-      } else {
-        showErrorToast("Please, purchase the course");
-      }
+      // } else {
+      //   showErrorToast("Please, purchase the course");
+      // }
     }
   };
 
@@ -609,7 +620,7 @@ const Notes = ({
     if (!isLoggedIn) {
       setModalShow(true);
     } else {
-      if (onlineCourseAry.is_purchased == 1) {
+      // if (onlineCourseAry.is_purchased == 1) {
         var firstAttempt = "0";
         if (val.state == "") {
           firstAttempt = "1";
@@ -643,9 +654,9 @@ const Notes = ({
           `width=${windowSize.width},height=${windowSize.height},scrollbars=yes,resizable=no`
         );
       }
-      } else {
-        showErrorToast("Please, purchase the course");
-      }
+      // } else {
+      //   showErrorToast("Please, purchase the course");
+      // }
     }
   };
 
@@ -654,14 +665,14 @@ const Notes = ({
     if (!isLoggedIn) {
       setModalShow(true);
     } else {
-      if (onlineCourseAry.is_purchased == 1) {
+      // if (onlineCourseAry.is_purchased == 1) {
         const givenStartTime = new Date(item?.start_date * 1000);
         showErrorToast(
           `Test will start at ${givenStartTime.toLocaleTimeString()}`
         );
-      } else {
-        showErrorToast("Please, purchase the course");
-      }
+      // } else {
+      //   showErrorToast("Please, purchase the course");
+      // }
     }
   };
 

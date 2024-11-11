@@ -25,6 +25,9 @@ const Card1 = ({ value, titleName, handleDetail, keyValue }) => {
 
   const handleExplore = () => {
     localStorage.setItem("mainTab", keyValue);
+    const currentPath = router.asPath;
+    localStorage.setItem("redirectAfterLogin", currentPath);
+    localStorage.setItem("previousTab", currentPath);
     router.push(
       `/view-courses/details/${
         titleName?.split(" ").join("_") +
@@ -42,7 +45,7 @@ const Card1 = ({ value, titleName, handleDetail, keyValue }) => {
     if (isLoggedIn) {
       const currentPath = router.asPath;
       localStorage.setItem("redirectAfterLogin", currentPath);
-      localStorage.setItem("previousTab", router.pathname);
+      localStorage.setItem("previousTab", currentPath);
       // router.push(
       //   `/view-courses/course-order/${
       //     titleName?.split(" ").join("_") +

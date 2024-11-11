@@ -317,7 +317,7 @@ const LiveTestCard = ({
                   <Button1
                     value="Re-Attempt"
                     handleClick={() => handleTakeTest(testData)}
-                    data={1}
+                    data={true}
                   />
                   <Button1
                     value={testData?.state == 1 ? `View Result` : `Leaderboard`}
@@ -326,7 +326,7 @@ const LiveTestCard = ({
                         ? handleResultTest(testData)
                         : handleRankTest(testData)
                     }
-                    data={1}
+                    data={true}
                   />
                 </>
               )}
@@ -357,11 +357,11 @@ const LiveTestCard = ({
                 data={true}
               />
             )}
-            {versionData?.share_content == 1 && (
+            {/* {versionData?.share_content == 1 && (
               <button className="px-1 btn_detailShare">
                 <FaShare />
               </button>
-            )}
+            )} */}
             {/* <Button2 value="Extend Validity" handleClick={handleExplore} /> */}
           </div>
         </div>

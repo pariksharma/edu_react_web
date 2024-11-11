@@ -14,8 +14,8 @@ const fetchAppId = async () => {
 
     try {
         const token = typeof window !== "undefined" ? localStorage.getItem('jwt') : "";
-         const formData = { domain: "https://educryptnetlify.videocrypt.in" };    //dev data
-    //   const formData = { domain: "https://lab.live" };   // lab data
+        //  const formData = { domain: "https://educryptnetlify.videocrypt.in" };    //dev data
+      const formData = { domain: "https://lab.live" };   // lab data
       // const formData = { domain: "https://nexttoppers.com/" };   // Next Topper data
         const response_content_service = await getAppDetial(encrypt(JSON.stringify(formData), token));
         const app_detail_data = decrypt(response_content_service.data, token);

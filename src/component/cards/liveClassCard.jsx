@@ -227,11 +227,11 @@ const LiveClassCard = ({ courseData, value }) => {
                 data={true}
               />
             )}
-            {versionData?.share_content == 1 && (
+            {/* {versionData?.share_content == 1 && (
               <button className="btn_detailShare">
                 <FaShare />
               </button>
-            )}
+            )} */}
             {/* <Button2 value="Extend Validity" handleClick={handleExplore} /> */}
           </div>
         </div>

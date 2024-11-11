@@ -178,13 +178,21 @@ const Details = ({ value }) => {
               )
               ?.meta?.list?.find((item) => item.id == id)
           );
+          // setKey(
+          //   response_getCourseDetail_data?.data?.tiles?.find(
+          //     (item) => (item.type == "overview")
+          //   )?.tile_name 
+          //   ? response_getCourseDetail_data?.data?.tiles?.find(
+          //     (item) => (item.type == "overview")
+          //   )?.tile_name : response_getCourseDetail_data?.data?.tiles[0]?.tile_name
+          // );
           setKey(
             response_getCourseDetail_data?.data?.tiles?.find(
               (item) => (item.type == "overview")
-            )?.tile_name 
-            ? response_getCourseDetail_data?.data?.tiles?.find(
-              (item) => (item.type == "overview")
-            )?.tile_name : response_getCourseDetail_data?.data?.tiles[0]?.tile_name
+            )?.tile_name
+              ? response_getCourseDetail_data?.data?.tiles?.find(
+                (item) => (item.type == "overview")
+              )?.tile_name : response_getCourseDetail_data?.data?.tiles[0]?.tile_name
           );
           // console.log("detail", response_getCourseDetail_data?.data?.tiles);
         }
@@ -328,11 +336,11 @@ const Details = ({ value }) => {
                         {onlineCourseAry.mrp != 0 && (
                           <div className="gap-2 flex-wrap flex-sm-nowrap d-flex align-items-center button_price">
                             <div className="gap-2 share d-flex align-items-center">
-                              {versionData?.share_content == 1 && (
+                              {/* {versionData?.share_content == 1 && (
                                 <button className="button1_share">
                                   <FaShare />
                                 </button>
-                              )}
+                              )} */}
                               {/* {console.log(onlineCourseAry)} */}
                               {onlineCourseAry.is_purchased == 0 && (
                                 <p className="m-0 detailBbuyNow">

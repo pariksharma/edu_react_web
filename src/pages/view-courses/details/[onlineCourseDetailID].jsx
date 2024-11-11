@@ -15,10 +15,11 @@ import Card3 from "@/component/cards/card3";
 import { freeTransactionService, getCourseDetail_Service, getFPaymentService } from "@/services";
 import Button1 from "@/component/buttons/button1/button1";
 import LoginModal from "@/component/modal/loginModal";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import ThankyouModal from "@/component/modal/thankyouModal";
 import Loader from "@/component/loader";
 import dynamic from 'next/dynamic';
+import { reset_tab } from "@/store/sliceContainer/masterContentSlice";
 
 const CourseDetail = dynamic(() => import('@/component/courseDetail/courseDetail'), 
 { ssr: false, loading: () => <Loader /> });
@@ -47,7 +48,11 @@ const ViewOnlineCourseDetail = ({ initialData, onlineCourseDetailID, IsTranding 
   const [titleName, setTitleName] = useState(initialData?.title || "");
   const [contentData, setContentData] = useState([]);
   // const { onlineCourseDetailID, IsTranding } = router.query;
+
+  const dispatch = useDispatch()
   const versionData = useSelector((state) => state.allCategory?.versionData);
+  const displayTabData = useSelector((state) => state.allCategory?.tabName);
+
   const [pdfData, setPdfData] = useState("");
   let courseCombo = onlineCourseDetailID?.slice(
     onlineCourseDetailID?.indexOf("&") + 1,
@@ -66,22 +71,65 @@ const ViewOnlineCourseDetail = ({ initialData, onlineCourseDetailID, IsTranding 
 
   console.log("initialData", initialData)
 
+  // useEffect(() => {
+    
+  //   const handleScroll = () => {
+  //     if (typeof window !== 'undefined') {
+  //       const currentScrollY = window.scrollY;
+  //       setClass(currentScrollY > 0);
+  //     }
+  //   };
+  //   if (typeof window !== 'undefined') {
+  //     window.addEventListener("scroll", handleScroll);
+  //   }
+  //   return () => {
+  //     if (typeof window !== 'undefined') {
+  //       window.removeEventListener("scroll", handleScroll);
+  //     }
+  //   };
+  // }, []);
+
   useEffect(() => {
+    // Getting the heights of the elements once after the component mounts
+    const pageSection1 =
+      document.querySelector(".page-section-1")?.offsetHeight || 0;
+    const offset1 = document.querySelector(".offset--1")?.offsetHeight || 0;
+    const pageSection6 =
+      document.querySelector(".page-section-6")?.offsetHeight || 0;
+    // console.log("pageSection1", pageSection1);
+    // console.log("offset1", offset1);
     const handleScroll = () => {
-      if (typeof window !== 'undefined') {
-        const currentScrollY = window.scrollY;
-        setClass(currentScrollY > 0);
+      const currentScrollY = window.scrollY;
+      setScrollY(currentScrollY);
+
+      if (pageSection1 > 0) {
+        if (currentScrollY >= pageSection1) {
+          setClass(true);
+        } else {
+          setClass(false);
+        }
+      } else if (offset1 > 0) {
+        if (currentScrollY >= offset1) {
+          setClass(true);
+        } else {
+          setClass(false);
+        }
+      } else if (pageSection6 > 0) {
+        if (currentScrollY >= pageSection6) {
+          setClass(true);
+        } else {
+          setClass(false);
+        }
       }
     };
     if (typeof window !== 'undefined') {
+      // Attach the scroll event listener
       window.addEventListener("scroll", handleScroll);
+
+      // Clean up the event listener on component unmount
+      return () => window.removeEventListener("scroll", handleScroll);
     }
-    return () => {
-      if (typeof window !== 'undefined') {
-        window.removeEventListener("scroll", handleScroll);
-      }
-    };
-  }, []);
+  }, [tiles, key]);
 
   const fetchCourseDetail = useCallback(async (course_id) => {
     try {
@@ -146,6 +194,15 @@ const ViewOnlineCourseDetail = ({ initialData, onlineCourseDetailID, IsTranding 
     }
   }, [router.isReady, router.query.onlineCourseDetailID, fetchCourseDetail]);
 
+  useEffect(() => {
+    setShowError(false);
+    if (displayTabData?.tab) {
+      setKey(displayTabData?.tab);
+    } else {
+      setKey(tiles.find((item) => item.type == "overview")?.tile_name);
+    }
+  }, [tiles]);
+
   const handleAddToMyCourse = async () => {
     try {
       if (userLoggedIn()) {
@@ -171,13 +228,22 @@ const ViewOnlineCourseDetail = ({ initialData, onlineCourseDetailID, IsTranding 
     }
   };
 
-  const handleTabChange = (k) => setKey(k);
+  const handleTabChange = (k) => {
+    setKey(k);
+    // console.log("k 83", k);
+    dispatch(reset_tab())
+    // console.log('k', k)
+    if (resetLayerRef.current) {
+      resetLayerRef.current.click();
+    }
+  }
 
   const handleBackdetails = () => {
     if (IsTranding) {
       router.push("/");
     } else {
-      const back = localStorage.getItem("redirectdetails");
+      const back = localStorage.getItem("previousTab");
+      console.log("back",back)
       if (back) {
         router.push(back);
       } else {
@@ -191,7 +257,7 @@ const ViewOnlineCourseDetail = ({ initialData, onlineCourseDetailID, IsTranding 
     if (isLoggedIn) {
       const currentPath = router.asPath;
       localStorage.setItem("redirectAfterLogin", currentPath);
-      localStorage.setItem("previousTab", router.pathname);
+      // localStorage.setItem("previousTab", router.pathname);
       router.push(
         `/view-courses/course-order/${titleName + ":" + onlineCourseAry.id + "&" + courseCombo
         }`
@@ -275,11 +341,11 @@ const ViewOnlineCourseDetail = ({ initialData, onlineCourseDetailID, IsTranding 
                   {onlineCourseAry.mrp != 0 && (
                     <div className="gap-2 d-flex flex-wrap flex-sm-nowrap align-items-center button_price">
                       <div className="gap-2 share d-flex align-items-center">
-                        {versionData?.share_content == 1 && (
+                        {/* {versionData?.share_content == 1 && (
                           <button className="button1_share">
                             <FaShare />
                           </button>
-                        )}
+                        )} */}
                         {onlineCourseAry.is_purchased == 0 && (
                           <p className="m-0 detailBbuyNow">
                             <Button1

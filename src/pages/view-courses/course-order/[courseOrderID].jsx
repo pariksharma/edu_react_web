@@ -1158,11 +1158,11 @@ const CourseOrderID = () => {
     if (titleName == "Trending Courses") {
       router.push("/");
     } else {
-      const back = localStorage.getItem("redirectdetails");
+      router.back();
+      const back = localStorage.getItem("previousTab");
       if (back) {
         router.push(back);
       } else {
-        router.back();
       }
     }
   };

@@ -19,6 +19,7 @@ import Tabs from "react-bootstrap/Tabs";
 import LoaderAfterLogin from "../loaderAfterLogin";
 import ErrorPageAfterLogin from "../errorPageAfterLogin";
 import { useRouter } from "next/router";
+import Head from 'next/head';
 
 const InquiryType = [
   { value: 1, label: "Payment Issue" },
@@ -27,7 +28,7 @@ const InquiryType = [
   { value: 4, label: "Others" },
 ];
 
-const Inquiry = () => {
+const Inquiry = ({title}) => {
   const [isToasterOpen, setIsToasterOpen] = useState(false);
   const [showConversation, setShowConversation] = useState(false);
   const [showError, setShowError] = useState(false);
@@ -324,6 +325,10 @@ const Inquiry = () => {
   return (
     <>
       {/* <Toaster position="top-right" reverseOrder={false} /> */}
+      <Head>
+        <title>{title}</title>
+        <meta name={title} content={title} />
+      </Head>
 
       <ToastContainer
         position="top-right"
@@ -398,6 +403,7 @@ const Inquiry = () => {
                     <div className="getInTouchForm mb-1">
                       {/* {console.log(InquiryType)} */}
                       <Select
+                      className="select_2"
                         name="state"
                         value={
                           InquiryType.find(

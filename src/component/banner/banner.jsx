@@ -25,7 +25,11 @@ const Banner = ({IsMargin}) => {
             window.open(value.link, '_blank')
         }
         else if(value.link_type == 1) {
-            router.push(`/view-courses/details/${":" + value.course_id + "&"+"parent:"}`)
+            if(router.asPath.startsWith('/private/myProfile')) {
+                router.push(`/private/myProfile/detail/${"" + ":" + value.course_id + "&" + "parent:"
+      }`)
+            }
+            else router.push(`/view-courses/details/${":" + value.course_id + "&"+"parent:"}`)
         }
         else if(value.link_type == 3) {
             const ary = (courseType.filter(item => item.id == value.master_cat)[0])
@@ -47,7 +51,6 @@ const Banner = ({IsMargin}) => {
                         className="owl-theme owl_custom owl-loaded owl-drag result p-0"
                         data-bs-touch="false"
                     >   
-                    {/* {console.log("BannerData",bannerData)} */}
                         {status && 
                             bannerData?.map((item, index) => (
                                 <Carousel.Item key={index} onClick = {() => handleBannerLinks(item)} style={{cursor: 'pointer'}}>

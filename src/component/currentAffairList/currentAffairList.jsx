@@ -11,11 +11,12 @@ import ErrorPage from "../errorPage";
 import LoaderAfterLogin from "../loaderAfterLogin";
 import ErrorPageAfterLogin from "../errorPageAfterLogin";
 import { useRouter } from "next/router";
+import Head from 'next/head';
 
 const CurrentAffCard = lazy(() => import("../cards/currentAffCard"));
 const CurrentAffairDetail = lazy(() => import("./currentAffairDetail"));
 
-const CurrentAffairList = () => {
+const CurrentAffairList = ({title}) => {
   const [currentAffList, setCurrentAffList] = useState([]);
   const [isShowDetail, setIsShowDetail] = useState(false);
   const [showError, setShowError] = useState(false);
@@ -78,6 +79,11 @@ const CurrentAffairList = () => {
   };
   return (
     <>
+      <Head>
+        <title>{title}</title>
+        <meta name={title} content={title} />
+      </Head>
+      
       {!isShowDetail ? (
         <section>
           {currentAffList?.length > 0 ? (

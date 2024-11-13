@@ -235,7 +235,7 @@ const CourseReview = ({courseDetail}) => {
   return (
     <>
     {/* <Toaster position="top-right" reverseOrder={false} toastOptions={{duration: 1500}}/> */}
-    <ToastContainer
+    {/* <ToastContainer
         position="top-right"
         autoClose={1000}
         hideProgressBar={false}
@@ -246,7 +246,7 @@ const CourseReview = ({courseDetail}) => {
         draggable
         pauseOnHover
         theme="light"
-      />
+      /> */}
       
     <AddReviewModal
       show={reviewModalShow}

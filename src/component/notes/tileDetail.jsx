@@ -95,7 +95,7 @@ const TileDetail = ({item, layer1Data, handleRead, handleWatch, handleTakeTest, 
             </div>
             </div>
             <div className="pg-sb-topic pe-2">
-            <div className="btnsalltbba text-center d-flex">
+            <div className="btnsalltbba text-center gap-1 d-flex">
                 {" "}
                 {/* {console.log("time", layer1Data)} */}
                 {
@@ -208,4 +208,4 @@ const TileDetail = ({item, layer1Data, handleRead, handleWatch, handleTakeTest, 
   )
 }
 
-export default TileDetail
+export default React.memo(TileDetail)

@@ -58,10 +58,11 @@ const Notes = ({
   const [tabLayer3Item, setTabLayer3item] = useState('')
   const [windowSize, setWindowSize] = useState({
     width: window.innerWidth,
-    height: window.innerHeight,
+    height: window.innerHeight
   });
 
   const [checkLogin, setCheckLogin] = useState("");
+  let rApi = courseDetail?.revert_api.split("#");
 
   useEffect(() => { }, [checkLogin]);
 
@@ -108,21 +109,21 @@ const Notes = ({
   useEffect(() => {
     const handleResize = () => {
       if (typeof window !== 'undefined') {
-      setWindowSize({
-        width: window.innerWidth,
-        height: window.innerHeight,
-      });
-    }
+        setWindowSize({
+          width: window.innerWidth,
+          height: window.innerHeight,
+        });
+      }
     };
 
     if (typeof window !== 'undefined') {
-    window.addEventListener("resize", handleResize);
+      window.addEventListener("resize", handleResize);
     }
 
     // Cleanup event listener on component unmount
     return () => {
       if (typeof window !== 'undefined') {
-      window.removeEventListener("resize", handleResize);
+        window.removeEventListener("resize", handleResize);
       }
     };
   }, []);
@@ -143,24 +144,24 @@ const Notes = ({
     setData3Index(1);
     let r_api = courseDetail?.revert_api.split("#");
     if (displayTabData?.layer) {
-        if(r_api[1] == 0) {
-          setLayer2List(courseDetail?.meta?.list[displayTabData?.tabLayer1index]?.list);
-          setTabShow(true);
-        }
-        else if(r_api[1] == 1) {
-          setLayer2List(courseDetail?.meta?.list?.flatMap(item => item?.list))
-          setTabShow(true)
-        }
-        else if(r_api[1] == 2) {
-          getLayer3Data(displayTabData?.tabLayer1index, displayTabData?.tabLayer1Item)
-          setData3Index(displayTabData?.page)
-        }
-        else if(r_api[1] == 3) {
-          setData3(0)
-          setTitle3('')
-          getLayer3Data(0);
-          setData3Index(displayTabData?.page)
-        }
+      if (r_api[1] == 0) {
+        setLayer2List(courseDetail?.meta?.list[displayTabData?.tabLayer1index]?.list);
+        setTabShow(true);
+      }
+      else if (r_api[1] == 1) {
+        setLayer2List(courseDetail?.meta?.list?.flatMap(item => item?.list))
+        setTabShow(true)
+      }
+      else if (r_api[1] == 2) {
+        getLayer3Data(displayTabData?.tabLayer1index, displayTabData?.tabLayer1Item)
+        setData3Index(displayTabData?.page)
+      }
+      else if (r_api[1] == 3) {
+        setData3(0)
+        setTitle3('')
+        getLayer3Data(0);
+        setData3Index(displayTabData?.page)
+      }
     } else {
       if (
         r_api[1] == 0
@@ -203,15 +204,6 @@ const Notes = ({
     }
   };
 
-  const showErrorToast = (toastMsg) => {
-    if (!isToasterOpen) {
-      setIsToasterOpen(true);
-      toast.error(toastMsg, {
-        // onClose: () => setIsToasterOpen(false),  // Set isToasterOpen to false when the toaster closes
-        autoClose: 1000,
-      });
-    }
-  };
 
   const skipLayer1Data = () => {
     // console.log('courseDetail', courseDetail)
@@ -327,14 +319,14 @@ const Notes = ({
           window.open(value.file_url, "_blank");
         }
       } else {
-        showErrorToast("Please, purchase the course");
+        toast.error("Please, purchase the course");
       }
     }
   };
 
   const handleWatch = (data, index) => {
     if (data?.live_status == 2 && data?.video_type == 8) {
-      showErrorToast('Live class has been ended')
+      toast.error('Live class has been ended');
     }
     else {
       let playData = {
@@ -376,7 +368,7 @@ const Notes = ({
             all_tabName({
               index,
               tab: displayTabData?.tab ? displayTabData?.tab : keyValue,
-              layer: displayTabData?.layer ? displayTabData?.layer: showLayer,
+              layer: displayTabData?.layer ? displayTabData?.layer : showLayer,
               tabLayer1index: displayTabData?.tabLayer1index ?? tabLayer1index,
               tabLayer1Item: displayTabData?.tabLayer1Item ? displayTabData?.tabLayer1Item : tabLayer1Item,
               tabLayer2index: displayTabData?.tabLayer2index ?? tabLayer2index,
@@ -393,7 +385,7 @@ const Notes = ({
         }
 
         else {
-          showErrorToast("Please, purchase the course");
+          toast.error("Please, purchase the course");
         }
       }
     }
@@ -432,7 +424,7 @@ const Notes = ({
     // console.log('layer1Data', courseDetail)
     dispatch(
       all_tabName({
-        ...all_tabName, 
+        ...all_tabName,
         tabLayer2index: '',
         tabLayer2Item: '',
         page: data3Index,
@@ -530,47 +522,47 @@ const Notes = ({
       setModalShow(true);
     } else {
       // if (onlineCourseAry.is_purchased == 1) {
-        var firstAttempt = "0";
-        if (val.state == "") {
-          firstAttempt = "1";
-        }
-        // // else if (App.Server_Time.ToUnixTimeSeconds() > long.Parse(Current_Selected_Resource.end_date)){
-        // //   firstAttempt = "0";
-        // // }
-        // else if (Number(val.is_reattempt) > 0){
-        //   firstAttempt = "0";
-        // }
-        const formData = {
-          jwt: localStorage.getItem("jwt"),
-          user_id: localStorage.getItem("user_id"),
-          course_id: CourseID,
-          test_id: val?.id,
-          lang: val?.lang_used ? val?.lang_used : 1,
-          state: val?.state ? val?.state : 0,
-          test_type: val?.test_type,
-          first_attempt: firstAttempt,
-          appid: localStorage.getItem("appId"),
-        };
+      var firstAttempt = "0";
+      if (val.state == "") {
+        firstAttempt = "1";
+      }
+      // // else if (App.Server_Time.ToUnixTimeSeconds() > long.Parse(Current_Selected_Resource.end_date)){
+      // //   firstAttempt = "0";
+      // // }
+      // else if (Number(val.is_reattempt) > 0){
+      //   firstAttempt = "0";
+      // }
+      const formData = {
+        jwt: localStorage.getItem("jwt"),
+        user_id: localStorage.getItem("user_id"),
+        course_id: CourseID,
+        test_id: val?.id,
+        lang: val?.lang_used ? val?.lang_used : 1,
+        state: val?.state ? val?.state : 0,
+        test_type: val?.test_type,
+        first_attempt: firstAttempt,
+        appid: localStorage.getItem("appId"),
+      };
 
-        // console.log("formData", formData);
-        const encryptData = btoa(JSON.stringify(formData));
-        // console.log("encryptData", encryptData);
-        // const encryptData = encrypt(JSON.stringify(formData));
-        popupRef.current = window.open(
-          `${BaseURL}/web/LiveTest/attempt_now_window?data=${encryptData}`,
-          "popupWindow",
-          `width=${windowSize.width},height=${windowSize.height},scrollbars=yes,resizable=no`
-        );
-        // Start interval to check if the popup is still open
-        intervalRef.current = setInterval(() => {
-          if (popupRef.current && popupRef.current.closed) {
-            clearInterval(intervalRef.current);
-            popupRef.current = null;
-            // onPopupClose(); // Call the function to handle the popup close event
-            getLayer3Data(data3, title3);
-            // console.log('867867687687')
-          }
-        }, 500); // Check every 500ms
+      // console.log("formData", formData);
+      const encryptData = btoa(JSON.stringify(formData));
+      // console.log("encryptData", encryptData);
+      // const encryptData = encrypt(JSON.stringify(formData));
+      popupRef.current = window.open(
+        `${BaseURL}/web/LiveTest/attempt_now_window?data=${encryptData}`,
+        "popupWindow",
+        `width=${windowSize.width},height=${windowSize.height},scrollbars=yes,resizable=no`
+      );
+      // Start interval to check if the popup is still open
+      intervalRef.current = setInterval(() => {
+        if (popupRef.current && popupRef.current.closed) {
+          clearInterval(intervalRef.current);
+          popupRef.current = null;
+          // onPopupClose(); // Call the function to handle the popup close event
+          getLayer3Data(data3, title3);
+          // console.log('867867687687')
+        }
+      }, 500); // Check every 500ms
       // } else {
       //   showErrorToast("Please, purchase the course");
       // }
@@ -589,26 +581,26 @@ const Notes = ({
       setModalShow(true);
     } else {
       // if (onlineCourseAry.is_purchased == 1) {
-        const formData = {
-          jwt: localStorage.getItem("jwt"),
-          user_id: localStorage.getItem("user_id"),
-          course_id: CourseID,
-          test_id: val?.id,
-          lang: val?.lang_used ? val?.lang_used : 1,
-          state: val?.state ? val?.state : 0,
-          test_type: val?.test_type,
-          first_attempt: 1,
-          appid: localStorage.getItem("appId"),
-        };
-        // console.log("formData", formData);
-        const encryptData = btoa(JSON.stringify(formData));
-        // console.log("encryptData", encryptData);
+      const formData = {
+        jwt: localStorage.getItem("jwt"),
+        user_id: localStorage.getItem("user_id"),
+        course_id: CourseID,
+        test_id: val?.id,
+        lang: val?.lang_used ? val?.lang_used : 1,
+        state: val?.state ? val?.state : 0,
+        test_type: val?.test_type,
+        first_attempt: 1,
+        appid: localStorage.getItem("appId"),
+      };
+      // console.log("formData", formData);
+      const encryptData = btoa(JSON.stringify(formData));
+      // console.log("encryptData", encryptData);
 
-        window.open(
-          `${BaseURL}/web/LiveTest/result_window?data=${encryptData}`,
-          "popupWindow",
-          `width=${windowSize.width},height=${windowSize.height},scrollbars=yes,resizable=no`
-        );
+      window.open(
+        `${BaseURL}/web/LiveTest/result_window?data=${encryptData}`,
+        "popupWindow",
+        `width=${windowSize.width},height=${windowSize.height},scrollbars=yes,resizable=no`
+      );
       // } else {
       //   showErrorToast("Please, purchase the course");
       // }
@@ -621,35 +613,35 @@ const Notes = ({
       setModalShow(true);
     } else {
       // if (onlineCourseAry.is_purchased == 1) {
-        var firstAttempt = "0";
-        if (val.state == "") {
-          firstAttempt = "1";
-        }
-        // // else if (App.Server_Time.ToUnixTimeSeconds() > long.Parse(Current_Selected_Resource.end_date)){
-        // //   firstAttempt = "0";
-        // // }
-        else if (Number(val.is_reattempt) > 0) {
-          firstAttempt = "0";
-        }
-        const formData = {
-          jwt: localStorage.getItem("jwt"),
-          user_id: localStorage.getItem("user_id"),
-          course_id: CourseID,
-          test_id: val?.id,
-          lang: val?.lang_used ? val?.lang_used : 1,
-          state: val?.state ? val?.state : 0,
-          test_type: val?.test_type,
-          first_attempt: firstAttempt,
-          appid: localStorage.getItem("appId"),
-        };
+      var firstAttempt = "1";
+      // if (val.state == "") {
+      //   firstAttempt = "1";
+      // }
+      // // else if (App.Server_Time.ToUnixTimeSeconds() > long.Parse(Current_Selected_Resource.end_date)){
+      // //   firstAttempt = "0";
+      // // }
+      if (Number(val.is_reattempt) > 0) {
+        firstAttempt = "0";
+      }
+      const formData = {
+        jwt: localStorage.getItem("jwt"),
+        user_id: localStorage.getItem("user_id"),
+        course_id: CourseID,
+        test_id: val?.id,
+        lang: val?.lang_used ? val?.lang_used : 1,
+        state: val?.state ? val?.state : 0,
+        test_type: val?.test_type,
+        first_attempt: firstAttempt,
+        appid: localStorage.getItem("appId"),
+      };
 
-        // console.log("formData", formData);
-        const encryptData = btoa(JSON.stringify(formData));
-        // console.log("encryptData", encryptData);
-        // const encryptData = encrypt(JSON.stringify(formData));
-        if (typeof window !== 'undefined') {
+      // console.log("formData", formData);
+      const encryptData = btoa(JSON.stringify(formData));
+      // console.log("encryptData", encryptData);
+      // const encryptData = encrypt(JSON.stringify(formData));
+      if (typeof window !== 'undefined') {
         window.open(
-          `${BaseURL}/web/LiveTest/learn_result_window?data=${encryptData}`,
+          `${BaseURL}/web/LiveTest/result?inshow_result=${encryptData}`,
           "popupWindow",
           `width=${windowSize.width},height=${windowSize.height},scrollbars=yes,resizable=no`
         );
@@ -666,16 +658,24 @@ const Notes = ({
       setModalShow(true);
     } else {
       // if (onlineCourseAry.is_purchased == 1) {
-        const givenStartTime = new Date(item?.start_date * 1000);
-        showErrorToast(
-          `Test will start at ${givenStartTime.toLocaleTimeString()}`
-        );
+      const givenStartTime = new Date(item?.start_date * 1000);
+      localStorage.setItem("testClicked", "true");
+        setTimeout(() => {
+          localStorage.removeItem("testClicked");
+        }, 1000);
+        const testClicked = localStorage.getItem("testClicked");
+        if(testClicked){
+          toast.error(`Test will start at ${givenStartTime.toLocaleTimeString()}`);
+        }
+        console.log("testClicked",testClicked)
+      // alert(`Test will start at ${givenStartTime.toLocaleTimeString()}`)
       // } else {
       //   showErrorToast("Please, purchase the course");
       // }
     }
   };
 
+  // console.log('courseDetail',   courseDetail)
   return (
     <>
       <LoginModal
@@ -685,7 +685,8 @@ const Notes = ({
         }}
       />
       {/* <Toaster position="top-right" reverseOrder={false} toastOptions={{duration: 1500}}/> */}
-      <ToastContainer
+      
+      {/* <ToastContainer
         position="top-right"
         autoClose={1000}
         hideProgressBar={false}
@@ -696,14 +697,14 @@ const Notes = ({
         draggable
         pauseOnHover
         theme="light"
-      />
+      /> */}
 
       <div className="container-fluid p-4 pt-0">
         <div className={` ${checkLogin ? "row" : "row"}`}>
           <div
             className={`${checkLogin
-                ? "col-lg-8 col-md-12"
-                : "col-lg-7 offset--1  col-md-12"
+              ? "col-lg-8 col-md-12"
+              : "col-lg-7 offset--1  col-md-12"
               }`}
           >
             <section className={` ${checkLogin ? "px-2 " : ""}`}>
@@ -850,7 +851,7 @@ const Notes = ({
                           />
                         );
                       })}
-                     {/* {console.log('page', data3Index)} */}
+                      {/* {console.log('page', data3Index)} */}
                       {page.length > 1 && (
                         <div className="pagination_button m-2">
                           <button
@@ -938,14 +939,34 @@ const Notes = ({
                             {/* <h3>{item.title}</h3> */}
                             <div className="subjectDetails">
                               <p className="sub_name">{item.title}</p>
-                              {item.role == "subject" && (
+                              {rApi[1] == 0 && layer1Data?.type == "pdf" &&  (
                                 <p className="m-0 sub_topics">
-                                  {item.content} Topics
+                                  {item?.count} PDF's
                                 </p>
                               )}
-                              {item.role == "topic" && (
+                              {rApi[1] == 0 && layer1Data?.type == "video" &&  (
                                 <p className="m-0 sub_topics">
-                                  {item.content} PDF's
+                                  {item?.count} Videos
+                                </p>
+                              )}
+                              {rApi[1] == 0 && layer1Data?.type == "test" &&  (
+                                <p className="m-0 sub_topics">
+                                  {item?.count} Tests
+                                </p>
+                              )}
+                              {rApi[1] == 1 && layer1Data?.type == "pdf" &&  (
+                                <p className="m-0 sub_topics">
+                                  {item?.count} Pdf's
+                                </p>
+                              )}
+                              {rApi[1] == 1 && layer1Data?.type == "video" &&  (
+                                <p className="m-0 sub_topics">
+                                  {item?.count} Videos
+                                </p>
+                              )}
+                              {rApi[1] == 1 && layer1Data?.type == "test" &&  (
+                                <p className="m-0 sub_topics">
+                                  {item?.count} Tests
                                 </p>
                               )}
                             </div>
@@ -998,14 +1019,24 @@ const Notes = ({
                             {/* <h3>{item.title}</h3> */}
                             <div className="subjectDetails">
                               <p className="sub_name">{item.title}</p>
-                              {item.role == "subject" && (
+                              {rApi[1] == 0 &&  (
                                 <p className="m-0 sub_topics">
-                                  {item.content} Topics
+                                  {item?.list?.length} Topics
                                 </p>
                               )}
-                              {item.role == "topic" && (
+                              {rApi[1] == 2 && courseDetail?.type == "video" &&  (
                                 <p className="m-0 sub_topics">
-                                  {item.content} PDF's
+                                   {item?.count} Videos
+                                </p>
+                              )}
+                              {rApi[1] == 2 && courseDetail?.type == "pdf" && (
+                                <p className="m-0 sub_topics">
+                                   {item?.count} PDF's
+                                </p>
+                              )}
+                              {rApi[1] == 2 && courseDetail?.type == "test" && (
+                                <p className="m-0 sub_topics">
+                                   {item?.count} Tests
                                 </p>
                               )}
                             </div>

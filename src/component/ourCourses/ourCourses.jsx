@@ -10,6 +10,8 @@ import { decrypt, encrypt, get_token } from "@/utils/helpers";
 import ErrorPageAfterLogin from "../errorPageAfterLogin";
 import LoaderAfterLogin from "../loaderAfterLogin";
 // import Banner from "../banner/banner";
+import Head from 'next/head';
+
 const Banner = lazy(() => import("../banner/banner"));
 const SearchCourses = lazy(() => import("../searchCourses/searchCourses"));
 const SubTabsData = lazy(() => import("../subTabsData/subTabsData"));
@@ -43,16 +45,18 @@ const OurCourses = () => {
       const getTabName = localStorage.getItem('mainTab');
       // console.log('getTabName',getTabName)
       if (getTabName) {
+        console.log('getTabName1')
         setKey(getTabName)
         setCatId(contentData?.course_type_master?.filter(item => item.name == getTabName)[0]?.id)
         setTimeout(() => {
-          localStorage.setItem('mainTab', "")
+          localStorage.removeItem('mainTab')
         }, [2000])
       }
       else {
+        console.log('getTabName2')
         setCatId(contentData?.course_type_master[0]?.id)
         setKey(contentData?.course_type_master[0]?.name);
-      }
+      } 
     }
   }, [contentData])
 
@@ -152,6 +156,11 @@ const OurCourses = () => {
 
   return (
     <>
+      <Head>
+        <title>{'Our Courses'}</title>
+        <meta name={'Our Courses'} content={'Our Courses'} />
+      </Head>
+
       <section className="container-fluid">
         {/* {banner &&
         <div className="row">
@@ -162,7 +171,7 @@ const OurCourses = () => {
         } */}
         <Suspense fallback={<LoaderAfterLogin />}>
           <Banner IsMargin={true} />
-           <SearchCourses catId={catId} handleFilterCourses={handleFilterCourses} />
+          <SearchCourses catId={catId} handleFilterCourses={handleFilterCourses} />
         </Suspense>
       </section>
       {/* <Suspense fallback={<LoaderAfterLogin />}>

@@ -78,7 +78,7 @@ const SideBar = () => {
   };
 
   return (
-    <div className="d-flex" style={{ marginTop: "55px" }}>
+    <div className="d-flex" >
       <div>
         <div className="closeSidebar closeSidebarTop mx-3 py-1">
           <button
@@ -107,8 +107,10 @@ const SideBar = () => {
                   return (
                     <Nav.Item
                       key={index}
-                      onClick={() =>
+                      onClick={() => {
                         router.push(`/private/myProfile/${value?.title?.split(" ").join("_")}`)
+                        localStorage.removeItem('mainTab')
+                      }
                       }
                       className={`m-0 ${
                         statusTab && (statusTab == value?.title?.split(" ").join("_") ? " active" : "")
@@ -127,7 +129,11 @@ const SideBar = () => {
             </div>
             <Nav.Item
               // onClick={() => setStatusTab("ourCourse")}
-              onClick={() => router.push("/private/myProfile/ourCourse")}
+              onClick={() => {
+                  router.push("/private/myProfile/ourCourse")
+                  localStorage.removeItem('mainTab')
+                }
+              }
               className={`m-0 ${
                 statusTab && (statusTab == "ourCourse" ? "active" : "")
               }`}
@@ -150,8 +156,16 @@ const SideBar = () => {
                   return (
                     <Nav.Item
                       key={index}
-                      onClick={() =>
-                        router.push(`/private/myProfile/${value?.type}`)
+                      onClick={() => {
+                          // router.push(`/private/myProfile/${value?.type}`)
+                          router.push({
+                            pathname: `/private/myProfile/${value?.type}`,
+                            query: {
+                              title: value.title,
+                            }
+                          });
+                          localStorage.removeItem('mainTab')
+                        }
                       }
                       className={`m-0 ${
                         statusTab && (statusTab == value?.type ? "active" : "")
@@ -167,7 +181,11 @@ const SideBar = () => {
               })}
             <Nav.Item
               // onClick={() => setStatusTab("Notification")}
-              onClick={() => router.push("/private/myProfile/notification")}
+              onClick={() => {
+                  router.push("/private/myProfile/notification")
+                  localStorage.removeItem('mainTab')
+                }
+              }
               className={`m-0 ${
                 statusTab && (statusTab == "notification" ? "active" : "")
               }`}
@@ -182,7 +200,11 @@ const SideBar = () => {
             </div>
             <Nav.Item
               // onClick={() => setStatusTab("MyCourse")}
-              onClick={() => router.push("/private/myProfile/myCourse")}
+              onClick={() => {
+                  router.push("/private/myProfile/myCourse")
+                  localStorage.removeItem('mainTab')
+                }
+              }
               className={`m-0 ${
                 statusTab && (statusTab == "myCourse" ? "active" : "")
               }`}
@@ -193,7 +215,11 @@ const SideBar = () => {
               </Nav.Link>
             </Nav.Item>
             <Nav.Item
-              onClick={() => router.push("/private/myProfile/purchase-history")}
+              onClick={() => {
+                  router.push("/private/myProfile/purchase-history")
+                  localStorage.removeItem('mainTab')
+                }
+              }
               className={`m-0 ${
                 statusTab && (statusTab == "purchase-history" ? "active" : "")
               }`}
@@ -209,8 +235,16 @@ const SideBar = () => {
                   return (
                     <Nav.Item
                       key={index}
-                      onClick={() =>
-                        router.push(`/private/myProfile/${value?.type}`)
+                      onClick={() => {
+                          // router.push(`/private/myProfile/${value?.type}`)
+                          router.push({
+                            pathname: `/private/myProfile/${value?.type}`,
+                            query: {
+                              title: value.title,
+                            }
+                          });
+                          localStorage.removeItem('mainTab')
+                        }
                       }
                       className={`m-0 ${
                         statusTab && (statusTab == value?.type ? "active" : "")
@@ -226,7 +260,11 @@ const SideBar = () => {
               })}
             <Nav.Item
               // onClick={() => setStatusTab("profile")}
-              onClick={() => router.push("/private/myProfile/profile")}
+              onClick={() => {
+                  router.push("/private/myProfile/profile")
+                  localStorage.removeItem('mainTab')
+                }
+              }
               className={`m-0 ${
                 statusTab && (statusTab == "profile" ? "active" : "")
               }`}

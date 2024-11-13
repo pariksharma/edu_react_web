@@ -10,6 +10,7 @@ import 'react-toastify/dist/ReactToastify.css';
 // import Card4 from "../cards/card4";
 import ErrorPageAfterLogin from "../errorPageAfterLogin";
 import LoaderAfterLogin from "../loaderAfterLogin";
+import Head from 'next/head';
 
 const Card4 = lazy(() => import("../cards/card4"));
 
@@ -73,10 +74,10 @@ const MyCourse = () => {
             response_MyCourse_data.data.filter((item) => item?.mrp == 0)
           );
 
-          if((response_MyCourse_data.data.filter((item) => item?.mrp != 0)?.length == 0)) {
+          if ((response_MyCourse_data.data.filter((item) => item?.mrp != 0)?.length == 0)) {
             setShowError(true)
           }
-          if((response_MyCourse_data.data.filter((item) => item?.mrp == 0)?.length == 0)) {
+          if ((response_MyCourse_data.data.filter((item) => item?.mrp == 0)?.length == 0)) {
             setShowError2(true)
           }
         }
@@ -109,8 +110,7 @@ const MyCourse = () => {
   const handleDetail = (value) => {
     // console.log("detailesss", value);
     router.push(
-      `/private/myProfile/detail/${
-        "MyCourse" + ":" + value.id + "&" + value.combo_course_ids + "parent:"
+      `/private/myProfile/detail/${"MyCourse" + ":" + value.id + "&" + value.combo_course_ids + "parent:"
       }`
     );
   };
@@ -123,7 +123,11 @@ const MyCourse = () => {
   // console.log('showDetail', showDetail)
   return (
     <>
-      {/* <Toaster position="top-right" reverseOrder={false} /> */}
+      <Head>
+        <title>{'My Courses'}</title>
+        <meta name={'My Courses'} content={'My Courses'} />
+      </Head>
+
       <ToastContainer
         position="top-right"
         autoClose={1000}
@@ -137,7 +141,6 @@ const MyCourse = () => {
         theme="light"
       />
 
-      {/* <SearchCourses /> */}
       <section className="container-fluid">
         <div className="row">
           <div className="col-md-12">
@@ -149,28 +152,27 @@ const MyCourse = () => {
               <Tab eventKey="PAID COURSES" title="PAID COURSES">
                 <div className="container-fluid">
                   <div className="row">
-                    {/* {console.log('myCourseData', FreeCourseData)} */}
                     {myCourseData?.length > 0 ? (
                       <Suspense fallback={<LoaderAfterLogin />}>
-                      {myCourseData.map((item, index) => {
-                        return (
-                          item.mrp !== 0 && (
-                            <div
-                              className="col-12 col-sm-6 col-md-4 col-lg-4 col-xl-3 mb-4 p-0"
-                              key={index}
-                            >
-                              <Card4
-                                value={item}
-                                titleName={""}
-                                handleDetail={handleDetail}
-                                titleId="PAID COURSES"
-                                detail={false}
-                                setGetCourse={setGetCourse}
-                              />
-                            </div>
-                          )
-                        );
-                      })}
+                        {myCourseData.map((item, index) => {
+                          return (
+                            item.mrp !== 0 && (
+                              <div
+                                className="col-12 col-sm-6 col-md-4 col-lg-4 col-xl-3 mb-4 p-0"
+                                key={index}
+                              >
+                                <Card4
+                                  value={item}
+                                  titleName={""}
+                                  handleDetail={handleDetail}
+                                  titleId="PAID COURSES"
+                                  detail={false}
+                                  setGetCourse={setGetCourse}
+                                />
+                              </div>
+                            )
+                          );
+                        })}
                       </Suspense>
                     ) : (
                       <>
@@ -196,16 +198,16 @@ const MyCourse = () => {
                               className="col-12 col-sm-6 col-md-4 col-lg-4 col-xl-3 mb-4 p-0"
                               key={index}
                             >
-                            <Suspense fallback={<LoaderAfterLogin />}>
-                              <Card4
-                                value={item}
-                                titleName={""}
-                                handleDetail={handleDetail}
-                                titleId="FREE COURSES"
-                                detail={false}
-                                data={true}
-                              />
-                            </Suspense>
+                              <Suspense fallback={<LoaderAfterLogin />}>
+                                <Card4
+                                  value={item}
+                                  titleName={""}
+                                  handleDetail={handleDetail}
+                                  titleId="FREE COURSES"
+                                  detail={false}
+                                  data={true}
+                                />
+                              </Suspense>
                             </div>
                           )
                         );

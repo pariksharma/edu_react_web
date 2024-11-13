@@ -8,6 +8,8 @@ import { useSelector } from "react-redux";
 import ErrorPage from "@/component/errorPage";
 import Loader from "@/component/loader";
 import dynamic from 'next/dynamic';
+import Head from 'next/head';
+
 
 const Card1 = dynamic(() => import('@/component/cards/card1'), 
 { ssr: false, loading: () => <Loader /> });
@@ -96,8 +98,12 @@ const OnlineCourse = ({ onlineCourseID, initialData }) => {
 
   return (
     <>
+    <Head>
+        <title>{titleName}</title>
+        <meta name={titleName} content={titleName} />
+      </Head>
       <Header />
-      <div className="container-fluid p-0 mt-5">
+      <div className="container-fluid p-0">
         <div
           className={
             titleName &&

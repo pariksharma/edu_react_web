@@ -36,6 +36,8 @@ import { useSelector } from "react-redux";
 import Select from "react-select";
 import ThankyouModal from "@/component/modal/thankyouModal";
 import Link from "next/link";
+import Head from 'next/head';
+
 
 const CourseOrderID = () => {
   const [isProcessing, setIsProcessing] = useState(false);
@@ -1169,6 +1171,10 @@ const CourseOrderID = () => {
 
   return (
     <>
+        <Head>
+        <title>{courseData.title}</title>
+        <meta name={courseData?.title} content={courseData?.title} />
+      </Head>
       {/* <Toaster position="top-right" reverseOrder={false} /> */}
       <ToastContainer
         position="top-right"
@@ -1206,7 +1212,7 @@ const CourseOrderID = () => {
         show={thankYouModalShow}
         onHide={() => setThankYouModalShow(false)}
       />
-      <div className="container-fluid orderContainer mt-5 mb-4">
+      <div className="container-fluid orderContainer mb-4">
         {courseData ? (
           <>
             <div className="row">

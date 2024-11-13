@@ -9,11 +9,12 @@ import ErrorPage from '../errorPage'
 import Loader from '../loader'
 import ErrorPageAfterLogin from '../errorPageAfterLogin'
 import LoaderAfterLogin from '../loaderAfterLogin'
+import Head from 'next/head';
 
 const SearchCourses = lazy(() => import("../searchCourses/searchCourses"));
 const Card1 = lazy(() => import("../cards/card1"));
 
-const Bookstore = () => {
+const Bookstore = ({title}) => {
 
   const [banner, setBanner] = useState([])
   const [bookstoreData, setBookstoreData] = useState([])
@@ -104,6 +105,10 @@ const Bookstore = () => {
 
   return (
     <>
+      <Head>
+        <title>{title}</title>
+        <meta name={title} content={title} />
+      </Head>
       {banner &&
         <section className="container-fluid">
           <div className="row">

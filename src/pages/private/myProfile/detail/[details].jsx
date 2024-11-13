@@ -1,4 +1,4 @@
-import React, { useEffect, useState,useRef, Suspense, lazy } from "react";
+import React, { useEffect, useState, useRef, Suspense, lazy } from "react";
 import { getCourseDetail_Service } from "@/services";
 import {
   comboDetail,
@@ -31,6 +31,8 @@ import LoaderAfterLogin from "@/component/loaderAfterLogin";
 import ErrorPageAfterLogin from "@/component/errorPageAfterLogin";
 import LoginModal from "@/component/modal/loginModal";
 import { reset_tab } from "@/store/sliceContainer/masterContentSlice";
+import { ToastContainer, toast } from 'react-toastify';
+import Head from 'next/head';
 
 const Notes = lazy(() => import("@/component/notes/notes"));
 const CourseDetail = lazy(() => import("@/component/courseDetail/courseDetail"));
@@ -75,38 +77,38 @@ const Details = ({ value }) => {
 
   const [scrollY, setScrollY] = useState(0);
 
-  useEffect(() => {
-    // Getting the heights of the elements once after the component mounts
-    const pageSection1 =
-      document.querySelector(".page-section-1")?.offsetHeight || 0;
-    const offset1 = document.querySelector(".offset--1")?.offsetHeight || 0;
-    const pageSection6 =
-      document.querySelector(".page-section-6")?.offsetHeight || 0;
-    // console.log("pageSection1", pageSection1);
-    const handleScroll = () => {
-      const currentScrollY = window.scrollY;
-      // alert("k");
-      setScrollY(currentScrollY);
+  // useEffect(() => {
+  //   // Getting the heights of the elements once after the component mounts
+  //   const pageSection1 =
+  //     document.querySelector(".page-section-1")?.offsetHeight || 0;
+  //   const offset1 = document.querySelector(".offset--1")?.offsetHeight || 0;
+  //   const pageSection6 =
+  //     document.querySelector(".page-section-6")?.offsetHeight || 0;
+  //   // console.log("pageSection1", pageSection1);
+  //   const handleScroll = () => {
+  //     const currentScrollY = window.scrollY;
+  //     // alert("k");
+  //     setScrollY(currentScrollY);
 
-      // Calculate if the currentScrollY meets the height conditions
-      const combinedHeight = Math.max(pageSection1, offset1, pageSection6);
-      // console.log("combinedHeight", combinedHeight);
-      if (
-        currentScrollY >= pageSection1 &&
-        key === tiles?.find((item) => item.type === "overview")?.tile_name
-      ) {
-        setClass(true);
-      } else {
-        setClass(false);
-      }
-    };
+  //     // Calculate if the currentScrollY meets the height conditions
+  //     const combinedHeight = Math.max(pageSection1, offset1, pageSection6);
+  //     // console.log("combinedHeight", combinedHeight);
+  //     if (
+  //       currentScrollY >= pageSection1 &&
+  //       key === tiles?.find((item) => item.type === "overview")?.tile_name
+  //     ) {
+  //       setClass(true);
+  //     } else {
+  //       setClass(false);
+  //     }
+  //   };
 
-    // Attach the scroll event listener
-    window.addEventListener("scroll", handleScroll);
+  //   // Attach the scroll event listener
+  //   window.addEventListener("scroll", handleScroll);
 
-    // Clean up the event listener on component unmount
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, [tiles, key]);
+  //   // Clean up the event listener on component unmount
+  //   return () => window.removeEventListener("scroll", handleScroll);
+  // }, [tiles, key]);
 
   useEffect(() => {
     if (details) {
@@ -128,6 +130,45 @@ const Details = ({ value }) => {
       setKey(tiles.find((item) => item.type == "overview")?.tile_name);
     }
   }, [tiles]);
+
+  useEffect(() => {
+    // Getting the heights of the elements once after the component mounts
+    // console.log("pageSection1", pageSection1);
+    // console.log("offset1", offset1);
+    const handleScroll = () => {
+      const pageSection1 = document.querySelector(".page-section-1")?.offsetHeight || 0;
+      const offset1 = document.querySelector(".offset--1")?.offsetHeight || 0;
+      const pageSection6 = document.querySelector(".page-section-6")?.offsetHeight || 0;
+      const currentScrollY = window.scrollY;
+      setScrollY(currentScrollY);
+      if (pageSection1 > 0) {
+        if (currentScrollY >= pageSection1) {
+          setClass(true);
+        } else {
+          setClass(false);
+        }
+      } else if (offset1 > 0) {
+        if (currentScrollY >= offset1) {
+          setClass(true);
+        } else {
+          setClass(false);
+        }
+      } else if (pageSection6 > 0) {
+        if (currentScrollY >= pageSection6) {
+          setClass(true);
+        } else {
+          setClass(false);
+        }
+      }
+    };
+    // if (typeof window !== 'undefined') {
+    // Attach the scroll event listener
+    window.addEventListener("scroll", handleScroll);
+
+    // Clean up the event listener on component unmount
+    return () => window.removeEventListener("scroll", handleScroll);
+    // }
+  }, []);
 
   // console.log('courseCombo', courseCombo)
 
@@ -178,14 +219,6 @@ const Details = ({ value }) => {
               )
               ?.meta?.list?.find((item) => item.id == id)
           );
-          // setKey(
-          //   response_getCourseDetail_data?.data?.tiles?.find(
-          //     (item) => (item.type == "overview")
-          //   )?.tile_name 
-          //   ? response_getCourseDetail_data?.data?.tiles?.find(
-          //     (item) => (item.type == "overview")
-          //   )?.tile_name : response_getCourseDetail_data?.data?.tiles[0]?.tile_name
-          // );
           setKey(
             response_getCourseDetail_data?.data?.tiles?.find(
               (item) => (item.type == "overview")
@@ -247,6 +280,23 @@ const Details = ({ value }) => {
   const OverView = tiles.find((item) => item.type == "overview");
   return (
     <>
+      <Head>
+        <title>{onlineCourseAry?.title}</title>
+        <meta name={onlineCourseAry?.title} content={onlineCourseAry?.title} />
+      </Head>
+
+      <ToastContainer
+        position="top-right"
+        autoClose={1000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
       <Header />
       <LoginModal
         show={modalShow}
@@ -319,29 +369,11 @@ const Details = ({ value }) => {
 
                           <p className="m-0 freeCourseReview d-flex align-items-center">
                             {onlineCourseAry.user_rated} Reviews &nbsp;{" "}
-                            {/* {console.log('title', titleName)} */}
-                            {/* {onlineCourseAry?.cat_type == 1 && <>
-                          <span className="text-muted">|</span> &nbsp; Quantity
-                          :&emsp;{" "}
-                          <span className="quantityPrice ml-2">
-                            <input type="button" value={"-"} />
-                            <input type="text" readOnly min={1} />
-                            <input type="button" value={"+"} />
-                          </span>
-                          &nbsp; <span className="text-muted">|</span> &nbsp; In
-                          Stock:&nbsp;<span className="text-success"> Available</span>
-                          </>} */}
                           </p>
                         </div>
                         {onlineCourseAry.mrp != 0 && (
                           <div className="gap-2 flex-wrap flex-sm-nowrap d-flex align-items-center button_price">
                             <div className="gap-2 share d-flex align-items-center">
-                              {/* {versionData?.share_content == 1 && (
-                                <button className="button1_share">
-                                  <FaShare />
-                                </button>
-                              )} */}
-                              {/* {console.log(onlineCourseAry)} */}
                               {onlineCourseAry.is_purchased == 0 && (
                                 <p className="m-0 detailBbuyNow">
                                   <Button1
@@ -402,11 +434,6 @@ const Details = ({ value }) => {
                 </div>
               </section>
               <div className="container-fluid p-0">
-                {/* <div className="imgContainer">
-                <img src={freeCourseAry[0].image} alt="" />
-                </div> */}
-                {/* </div>
-            </div> */}
                 <div className="profileCourse_mainContainer tabs_design__">
                   <nav className="m-0 p-0">
                     <Tabs
@@ -415,14 +442,6 @@ const Details = ({ value }) => {
                       onSelect={(k) => handleTabChange(k)}
                       className=""
                     >
-                      
-                      {/* <Tab
-                    eventKey={'course Detail'}
-                    title={'course Detail' }
-                    key={'course Detail'}
-                    // propsValue={isValidData(item) && item.tiles}
-                    >
-                </Tab> */}
                       {OverView && (
                         <Tab
                           eventKey={OverView.tile_name}
@@ -444,7 +463,6 @@ const Details = ({ value }) => {
                           </Suspense>
                         </Tab>
                       )}
-                      {/* {console.log("key 214",tiles,  versionData.same_content_view)} */}
                       {tiles?.map(
                         (item, index) =>
                           // console.log('item', item)

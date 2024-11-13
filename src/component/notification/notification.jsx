@@ -10,6 +10,7 @@ import ErrorPage from "../errorPage";
 import LoaderAfterLogin from "../loaderAfterLogin";
 import ErrorPageAfterLogin from "../errorPageAfterLogin";
 import Link from "next/link";
+import Head from 'next/head';
 
 const Notification = () => {
   const [notificationData, setNotificationData] = useState([]);
@@ -49,12 +50,12 @@ const Notification = () => {
       });
     };
     if (typeof window !== 'undefined') {
-    window.addEventListener("resize", handleResize);
+      window.addEventListener("resize", handleResize);
     }
     // Cleanup event listener on component unmount
     return () => {
       if (typeof window !== 'undefined') {
-      window.removeEventListener("resize", handleResize);
+        window.removeEventListener("resize", handleResize);
       }
     };
   }, []);
@@ -70,38 +71,38 @@ const Notification = () => {
     const givenEndTime = new Date(endTime * 1000);
 
     // console.log("time", givenStartTime, givenEndTime)
-  
-      const currentTime = new Date();
-      if (currentTime < givenStartTime) {
-        return "pending"
-      } else if(currentTime > givenStartTime && currentTime < givenEndTime) {
-        return "attempt"
-      }
-      else if(currentTime > givenEndTime) {
+
+    const currentTime = new Date();
+    if (currentTime < givenStartTime) {
+      return "pending"
+    } else if (currentTime > givenStartTime && currentTime < givenEndTime) {
+      return "attempt"
+    }
+    else if (currentTime > givenEndTime) {
       return "result"
-      }
+    }
   }
 
   const compareWithCurrentTime = (time) => {
     const givenTime = new Date(time * 1000);
     const currentTime = new Date();
-    if(currentTime < givenTime){
-        return true
+    if (currentTime < givenTime) {
+      return true
     }
     else {
-        return false
+      return false
     }
   }
 
   const toggleReadMore = (notify_id, notification) => {
-    if(id != notify_id) {
+    if (id != notify_id) {
       setId(notify_id)
     }
     else {
       setId(-1)
     }
     setIsExpanded(!isExpanded);
-    if(notification?.view_state == 0) {
+    if (notification?.view_state == 0) {
       markAsRead(notification?.id)
     }
   };
@@ -114,7 +115,7 @@ const Notification = () => {
       const response_ReadNotification_serice = await markReadNotification(encrypt(JSON.stringify(formData), token))
       const response_ReadNotification_data = decrypt(response_ReadNotification_serice.data, token)
       // console.log('response_ReadNotification_data', response_ReadNotification_data)
-      if(response_ReadNotification_data?.status) {
+      if (response_ReadNotification_data?.status) {
         fetchNotification();
       }
     } catch (error) {
@@ -124,7 +125,7 @@ const Notification = () => {
   }
 
   const fetchNotification = async () => {
-    try{
+    try {
       const formData = {
         page: 1,
       };
@@ -137,7 +138,7 @@ const Notification = () => {
       );
       console.log("response_getNotification_data", response_getNotification_data);
       if (response_getNotification_data?.status) {
-        if(response_getNotification_data?.data?.length < 0){
+        if (response_getNotification_data?.data?.length < 0) {
           setShowError(true)
         }
         else setNotificationData(response_getNotification_data?.data);
@@ -169,40 +170,39 @@ const Notification = () => {
   };
 
   const handleNotify = async (data, index) => {
-    if(data.action_element == 2) {
+    if (data.action_element == 2) {
       const parent_id = data?.extra?.parent_id ? data?.extra?.parent_id : ''
       const course_id = data?.extra?.course_ids;
       router.push(
-        `/private/myProfile/detail/${
-          'course' + ":" + course_id + "&" + "" + "parent:" + parent_id
+        `/private/myProfile/detail/${'course' + ":" + course_id + "&" + "" + "parent:" + parent_id
         }`
       );
-      if(data?.view_state == 0) {
+      if (data?.view_state == 0) {
         markAsRead(data?.id)
       }
     }
     else if (data.action_element == 1) {
-      if(data?.view_state == 0) {
+      if (data?.view_state == 0) {
         markAsRead(data?.id)
       }
     }
-    else if(data?.action_element == 4) {
+    else if (data?.action_element == 4) {
       // console.log('hhjhjkhk', data)
       const videoDetail = await getDetail(data?.extra);
       console.log('videDetail', videoDetail)
-      if(data?.extra?.tile_type == "video") {
-        if(!compareWithCurrentTime(videoDetail?.list[0]?.start_date)) {
+      if (data?.extra?.tile_type == "video") {
+        if (!compareWithCurrentTime(videoDetail?.list[0]?.start_date)) {
           handleWatch(videoDetail?.list[0])
-          if(data?.view_state == 0) {
+          if (data?.view_state == 0) {
             // console.log('ghfjjfhgkjhjytjbgu')
             markAsRead(data?.id)
           }
-        } else{
+        } else {
           toast.error("Class is not started yet", {
             // onClose: () => setIsToasterOpen(false),  // Set isToasterOpen to false when the toaster closes
             autoClose: 1500,
           });
-          if(data?.view_state == 0) {
+          if (data?.view_state == 0) {
             // console.log('ghfjjfhgkjhjytjbgu')
             markAsRead(data?.id)
           }
@@ -212,78 +212,78 @@ const Notification = () => {
         //   markAsRead(data?.id)
         // }
       }
-      else if(data?.extra?.tile_type == "test") {
+      else if (data?.extra?.tile_type == "test") {
         // if(compareWithCurrentTime(videoDetail?.list[0]?.start_date)) {
         //   toast.error("Test is not started yet", {
         //     // onClose: () => setIsToasterOpen(false),  // Set isToasterOpen to false when the toaster closes
         //     autoClose: 1500,
         //   });
         // }
-        if(compareTime(videoDetail?.list[0]?.start_date, videoDetail?.list[0]?.end_date) == "pending") {
+        if (compareTime(videoDetail?.list[0]?.start_date, videoDetail?.list[0]?.end_date) == "pending") {
           // console.log("pending")
           toast.error("Test is not started yet", {
-                // onClose: () => setIsToasterOpen(false),  // Set isToasterOpen to false when the toaster closes
-                autoClose: 1500,
-              });
-          if(data?.view_state == 0) {
+            // onClose: () => setIsToasterOpen(false),  // Set isToasterOpen to false when the toaster closes
+            autoClose: 1500,
+          });
+          if (data?.view_state == 0) {
             markAsRead(data?.id)
           }
         }
-        else if(compareTime(videoDetail?.list[0]?.start_date, videoDetail?.list[0]?.end_date) == "attempt") {
+        else if (compareTime(videoDetail?.list[0]?.start_date, videoDetail?.list[0]?.end_date) == "attempt") {
           // console.log("attempt", data)
-          if(videoDetail?.list[0]?.state == "" || videoDetail?.list[0]?.state == 0) {
+          if (videoDetail?.list[0]?.state == "" || videoDetail?.list[0]?.state == 0) {
             handleTakeTest(videoDetail?.list[0], data?.extra)
-            if(data?.view_state == 0) {
+            if (data?.view_state == 0) {
               markAsRead(data?.id)
             }
           }
-          else if(videoDetail?.list[0]?.state == 1 && !compareWithCurrentTime(videoDetail?.list[0]?.is_reattempt)) {
+          else if (videoDetail?.list[0]?.state == 1 && !compareWithCurrentTime(videoDetail?.list[0]?.is_reattempt)) {
             handleResultTest(videoDetail?.list[0], data?.extra)
-            if(data?.view_state == 0) {
+            if (data?.view_state == 0) {
               markAsRead(data?.id)
             }
           }
-          else if(videoDetail?.list[0]?.state == 1 && compareWithCurrentTime(videoDetail?.list[0]?.is_reattempt)) {
+          else if (videoDetail?.list[0]?.state == 1 && compareWithCurrentTime(videoDetail?.list[0]?.is_reattempt)) {
             handleTakeTest(videoDetail?.list[0], data?.extra)
-            if(data?.view_state == 0) {
+            if (data?.view_state == 0) {
               markAsRead(data?.id)
             }
           }
         }
-        else if(compareTime(videoDetail?.list[0]?.start_date, videoDetail?.list[0]?.end_date) == "result") {
-          if(!compareWithCurrentTime(videoDetail?.list[0]?.is_reattempt) && videoDetail?.list[0]?.state == 1) {
+        else if (compareTime(videoDetail?.list[0]?.start_date, videoDetail?.list[0]?.end_date) == "result") {
+          if (!compareWithCurrentTime(videoDetail?.list[0]?.is_reattempt) && videoDetail?.list[0]?.state == 1) {
             // console.log("result")
             handleResultTest(videoDetail?.list[0], data?.extra)
-            if(data?.view_state == 0) {
+            if (data?.view_state == 0) {
               markAsRead(data?.id)
             }
           }
-          else if(!compareWithCurrentTime(videoDetail?.list[0]?.is_reattempt) && videoDetail?.list[0]?.state != 1){
+          else if (!compareWithCurrentTime(videoDetail?.list[0]?.is_reattempt) && videoDetail?.list[0]?.state != 1) {
             // console.log("leadership")
             handleRankTest(videoDetail?.list[0], data?.extra)
-            if(data?.view_state == 0) {
+            if (data?.view_state == 0) {
               markAsRead(data?.id)
             }
           }
         }
       }
-      else if(data?.extra?.tile_type == "image") {
+      else if (data?.extra?.tile_type == "image") {
         window.open(videoDetail?.list[0]?.file_url, '_blank')
-        if(data?.view_state == 0) {
+        if (data?.view_state == 0) {
           markAsRead(data?.id)
         }
       }
-      else if(data?.extra?.tile_type == "pdf") {
-        if(videoDetail?.list[0]?.file_url.includes('.pdf')) {
+      else if (data?.extra?.tile_type == "pdf") {
+        if (videoDetail?.list[0]?.file_url.includes('.pdf')) {
           window.open(videoDetail?.list[0]?.file_url, '_blank')
-          if(data?.view_state == 0) {
+          if (data?.view_state == 0) {
             markAsRead(data?.id)
           }
         }
       }
-      else if(data?.extra?.tile_type == "link") {
+      else if (data?.extra?.tile_type == "link") {
         window.open(videoDetail?.list[0]?.file_url, '_blank')
-        if(data?.view_state == 0) {
+        if (data?.view_state == 0) {
           markAsRead(data?.id)
         }
       }
@@ -297,44 +297,44 @@ const Notification = () => {
     if (!isLoggedIn) {
       setModalShow(true);
     } else {
-        var firstAttempt = "0";
-        if (val.state == ""){
-          firstAttempt = "1";
-        }
-        const formData = {
-          jwt: localStorage.getItem("jwt"),
-          user_id: localStorage.getItem("user_id"),
-          course_id: course_data?.course_id,
-          test_id: course_data?.file_id,
-          lang: val?.lang_used ? val?.lang_used : 1,
-          state: val?.state ? val?.state : 0,
-          test_type: val?.test_type,
-          first_attempt: firstAttempt,
-          appid: localStorage.getItem("appId"),
-        };
+      var firstAttempt = "0";
+      if (val.state == "") {
+        firstAttempt = "1";
+      }
+      const formData = {
+        jwt: localStorage.getItem("jwt"),
+        user_id: localStorage.getItem("user_id"),
+        course_id: course_data?.course_id,
+        test_id: course_data?.file_id,
+        lang: val?.lang_used ? val?.lang_used : 1,
+        state: val?.state ? val?.state : 0,
+        test_type: val?.test_type,
+        first_attempt: firstAttempt,
+        appid: localStorage.getItem("appId"),
+      };
 
-        // console.log("formData", formData);
-        const encryptData = btoa(JSON.stringify(formData));
-        if (typeof window !== 'undefined') {
+      // console.log("formData", formData);
+      const encryptData = btoa(JSON.stringify(formData));
+      if (typeof window !== 'undefined') {
         window.open(
           `${BaseURL}/web/LiveTest/attempt_now_window?data=${encryptData}`,
           "popupWindow",
           `width=${windowSize.width},height=${windowSize.height},scrollbars=yes,resizable=no`
         );
       }
-        // Start interval to check if the popup is still open
+      // Start interval to check if the popup is still open
     }
   };
 
   const handleResultTest = (val, course_data) => {
-    var firstAttempt = "0";
-    if (val.state == "") {
-      firstAttempt = "1";
-    }
+    var firstAttempt = "1";
+    // if (val.state == "") {
+    //   firstAttempt = "1";
+    // }
     // // else if (App.Server_Time.ToUnixTimeSeconds() > long.Parse(Current_Selected_Resource.end_date)){
     // //   firstAttempt = "0";
     // // }
-    else if (compareWithCurrentTime(val.is_reattempt)) {
+    if (compareWithCurrentTime(val.is_reattempt)) {
       firstAttempt = "0";
     }
     const formData = {
@@ -355,12 +355,12 @@ const Notification = () => {
     // const encryptData = encrypt(JSON.stringify(formData));
     // Router.push(`https://educryptnetlify.videocrypt.in/webstaging/web/LiveTest/learn_result_window?data=${encryptData}`)
     if (typeof window !== 'undefined') {
-    window.open(
-      `${BaseURL}/web/LiveTest/learn_result_window?data=${encryptData}`,
-      "popupWindow",
-      `width=${windowSize.width},height=${windowSize.height},scrollbars=yes,resizable=no`
-    );
-  }
+      window.open(
+        `${BaseURL}/web/LiveTest/result?inshow_result=${encryptData}`,
+        "popupWindow",
+        `width=${windowSize.width},height=${windowSize.height},scrollbars=yes,resizable=no`
+      );
+    }
   };
 
   const handleRankTest = (val, course_data) => {
@@ -379,12 +379,12 @@ const Notification = () => {
     const encryptData = btoa(JSON.stringify(formData));
     // console.log("encryptData", encryptData);
     if (typeof window !== 'undefined') {
-    window.open(
-      `${BaseURL}/web/LiveTest/result_window?data=${encryptData}`,
-      "popupWindow",
-      `width=${windowSize.width},height=${windowSize.height},scrollbars=yes,resizable=no`
-    );
-  }
+      window.open(
+        `${BaseURL}/web/LiveTest/result_window?data=${encryptData}`,
+        "popupWindow",
+        `width=${windowSize.width},height=${windowSize.height},scrollbars=yes,resizable=no`
+      );
+    }
   };
 
   const getDetail = async (data) => {
@@ -417,29 +417,34 @@ const Notification = () => {
 
   const handleWatch = (data) => {
     // console.log('data', data)
-    if(data?.live_status == 2 && data?.video_type == 8) {
+    if (data?.live_status == 2 && data?.video_type == 8) {
       showErrorToast('Live class has been ended')
     }
-    else{
+    else {
       let playData = {
-        vdc_id:data.vdc_id,
-        file_url:data.file_url,
-        title:data.title,
-        video_type:data.video_type
+        vdc_id: data.vdc_id,
+        file_url: data.file_url,
+        title: data.title,
+        video_type: data.video_type
       }
-        // router.push(`/private/myProfile/view-pdf/${encodeURIComponent(value.file_url)}`)
-        router.push({
-          pathname: `/private/myProfile/play/${data.id}`,
-          query: playData,
-        });
-        // router.push(`/private/myProfile/play/${data.file_url}&type=${data.file_type}`)
-        // console.log('watch')
-      }
+      // router.push(`/private/myProfile/view-pdf/${encodeURIComponent(value.file_url)}`)
+      router.push({
+        pathname: `/private/myProfile/play/${data.id}`,
+        query: playData,
+      });
+      // router.push(`/private/myProfile/play/${data.file_url}&type=${data.file_type}`)
+      // console.log('watch')
     }
+  }
 
   return (
     <>
-       <ToastContainer
+      <Head>
+        <title>{'Notification'}</title>
+        <meta name={'Notification'} content={'Notification'} />
+      </Head>
+
+      <ToastContainer
         position="top-right"
         autoClose={1000}
         hideProgressBar={false}
@@ -461,63 +466,63 @@ const Notification = () => {
             {notificationData?.length > 0 ? (
               notificationData?.map((item, index) => {
                 return (
-                    <div 
-                      className={`card p-2 mx-auto NotifyCard ${item?.view_state == 0 ? "active" : ""} mb-2` }
-                      style={(item?.action_element == 4 || item?.action_element == 2) ? {cursor: "pointer" } : {}}
-                      key={index}
-                      onClick={() => handleNotify(item, index)}
-                    >
-                      <div className="d-flex gap-2 ">
-                        <div className="m-0 position-relative">
-                          <p className={`m-0 ${item?.view_state == 0 ? "activeNotification" : ""}`}></p>
-                          <img
-                            className="notifyImg"
-                            src={appLogo ? appLogo : "/assets/images/notifyImg.svg"}
-                            alt=""
-                          />
-                        </div>
-                        <div className="pt-1">
-                          {/* {console.log('length', item?.title, item?.action_element  )} */}
-                          <h5 className="m-0 notifyTitle">{item.title}</h5>
-                          {(item?.message?.length < 200 && (item?.action_element != 5 || item?.action_element != 6)) ? 
-                            (item?.action_element != 5 && item?.action_element != 6) ?
-                              <p
-                                className="m-0 notify_Text"
-                                dangerouslySetInnerHTML={{ __html: item.message }}
-                              ></p>
-                              :
-                              <p className="m-0 notify_Text">
-                                {(id == index) ? ( <>
-                                  <span dangerouslySetInnerHTML={{ __html: item?.message }}></span>
-                                  {item?.action_element == 5 && <div style={{width: '40%'}}><img className="img-fluid" src={item?.extra?.image} alt="" /></div>}
-                                  {/* <img src="https://images.unsplash.com/photo-1576158113928-4c240eaaf360?q=80&w=1780&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="" /> */}
-                                  {(item?.action_element == 6 && item?.extra?.link_type == "" ) && <a href={item?.extra?.url} target="_blank">click here</a>}
-                                  {(item?.action_element == 6 && item?.extra?.link_type == "out-app" ) && <a href={item?.extra?.url} target="_blank">click here</a>}
-                                  {(item?.action_element == 6 && item?.extra?.link_type == "in-app" ) && <Link href={item?.extra?.url} >click here</Link>}
-                                  </>
-                                ) : (
-                                  <span dangerouslySetInnerHTML={{ __html: item?.message.slice(0, 200) }}></span>
-                                )}
-                                &nbsp;<a href="javascript:void(0)"
-                                  className="m-0"
-                                  onClick={(e) => {
-                                    e.stopPropagation(); // Prevent handleNotify from being triggered
-                                    toggleReadMore(index, item);
-                                  }}
-                                  style={{ color: 'blue', cursor: 'pointer', marginLeft: '5px', fontWeight: '400' }}
-                                >
-                                  {(id == index) ? 'Read Less' : 'Read More'}
-                                </a>
-                              </p>
+                  <div
+                    className={`card p-2 mx-auto NotifyCard ${item?.view_state == 0 ? "active" : ""} mb-2`}
+                    style={(item?.action_element == 4 || item?.action_element == 2) ? { cursor: "pointer" } : {}}
+                    key={index}
+                    onClick={() => handleNotify(item, index)}
+                  >
+                    <div className="d-flex gap-2 ">
+                      <div className="m-0 position-relative">
+                        <p className={`m-0 ${item?.view_state == 0 ? "activeNotification" : ""}`}></p>
+                        <img
+                          className="notifyImg"
+                          src={appLogo ? appLogo : "/assets/images/notifyImg.svg"}
+                          alt=""
+                        />
+                      </div>
+                      <div className="pt-1">
+                        {/* {console.log('length', item?.title, item?.action_element  )} */}
+                        <h5 className="m-0 notifyTitle">{item.title}</h5>
+                        {(item?.message?.length < 200 && (item?.action_element != 5 || item?.action_element != 6)) ?
+                          (item?.action_element != 5 && item?.action_element != 6) ?
+                            <p
+                              className="m-0 notify_Text"
+                              dangerouslySetInnerHTML={{ __html: item.message }}
+                            ></p>
+                            :
+                            <p className="m-0 notify_Text">
+                              {(id == index) ? (<>
+                                <span dangerouslySetInnerHTML={{ __html: item?.message }}></span>
+                                {item?.action_element == 5 && <div style={{ width: '40%' }}><img className="img-fluid" src={item?.extra?.image} alt="" /></div>}
+                                {/* <img src="https://images.unsplash.com/photo-1576158113928-4c240eaaf360?q=80&w=1780&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="" /> */}
+                                {(item?.action_element == 6 && item?.extra?.link_type == "") && <a href={item?.extra?.url} target="_blank">click here</a>}
+                                {(item?.action_element == 6 && item?.extra?.link_type == "out-app") && <a href={item?.extra?.url} target="_blank">click here</a>}
+                                {(item?.action_element == 6 && item?.extra?.link_type == "in-app") && <Link href={item?.extra?.url} >click here</Link>}
+                              </>
+                              ) : (
+                                <span dangerouslySetInnerHTML={{ __html: item?.message.slice(0, 200) }}></span>
+                              )}
+                              &nbsp;<a href="javascript:void(0)"
+                                className="m-0"
+                                onClick={(e) => {
+                                  e.stopPropagation(); // Prevent handleNotify from being triggered
+                                  toggleReadMore(index, item);
+                                }}
+                                style={{ color: 'blue', cursor: 'pointer', marginLeft: '5px', fontWeight: '400' }}
+                              >
+                                {(id == index) ? 'Read Less' : 'Read More'}
+                              </a>
+                            </p>
                           :
                           <p className="m-0 notify_Text">
-                            {isExpanded && (id == index) ? ( <>
+                            {isExpanded && (id == index) ? (<>
                               <span dangerouslySetInnerHTML={{ __html: item?.message }}></span>
-                              {item?.action_element == 5 && <div style={{width: '40%'}}><img className="img-fluid" src={item?.extra?.image} alt="" /></div>}
+                              {item?.action_element == 5 && <div style={{ width: '40%' }}><img className="img-fluid" src={item?.extra?.image} alt="" /></div>}
                               {/* <img src="https://images.unsplash.com/photo-1576158113928-4c240eaaf360?q=80&w=1780&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="" /> */}
-                              {(item?.action_element == 6 && item?.extra?.link_type == "out-app" ) && <a href={item?.extra?.url} target="_blank">click here</a>}
-                              {(item?.action_element == 6 && item?.extra?.link_type == "in-app" ) && <Link href={item?.extra?.url} >click here</Link>}
-                              </>
+                              {(item?.action_element == 6 && item?.extra?.link_type == "out-app") && <a href={item?.extra?.url} target="_blank">click here</a>}
+                              {(item?.action_element == 6 && item?.extra?.link_type == "in-app") && <Link href={item?.extra?.url} >click here</Link>}
+                            </>
                             ) : (
                               <span dangerouslySetInnerHTML={{ __html: item?.message.slice(0, 200) }}></span>
                             )}
@@ -532,21 +537,21 @@ const Notification = () => {
                               {isExpanded && (id == index) ? 'Read Less' : 'Read More'}
                             </span>
                           </p>
-                          }
-                          <p className="m-0 notifyDate">
-                            <i className="bi bi-clock"></i>{" "}
-                            {formatDate(item.created)}
-                          </p>
-                        </div>
+                        }
+                        <p className="m-0 notifyDate">
+                          <i className="bi bi-clock"></i>{" "}
+                          {formatDate(item.created)}
+                        </p>
                       </div>
                     </div>
+                  </div>
                 );
               })
             ) : <>
-              {showError ? 
-              <ErrorPageAfterLogin /> 
-              :
-              <LoaderAfterLogin />}
+              {showError ?
+                <ErrorPageAfterLogin />
+                :
+                <LoaderAfterLogin />}
             </>}
           </div>
         </div>

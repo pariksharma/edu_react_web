@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import VideoPlayerDRM from '@/component/player';
 import { useRouter } from 'next/router';
+import Head from 'next/head';
 
 const PlayId = () => {
     const [windowSize, setWindowSize] = useState({
@@ -84,6 +85,10 @@ const PlayId = () => {
 
     return (
         <>
+            <Head>
+                <title>{router?.query?.title}</title>
+                <meta name={router?.query?.title} content={router?.query?.title} />
+            </Head>
             {renderPlayer()}
         </>
     );

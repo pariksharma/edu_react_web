@@ -21,14 +21,14 @@ import React, { useEffect, useState } from "react";
 const Index = ({ initialTab }) => {
   const router = useRouter();
   const [statusTab, setStatusTab] = useState(initialTab);
-
+  const [title, settitle] = useState('');
   useEffect(() => {
     // Update statusTab whenever the router.query.tab changes
-    const { tab } = router.query;
-    // console.log('tab', tab)
+    const { tab,title } = router.query;
     if (tab) {
       setStatusTab(tab);
     }
+    settitle(title)
   }, [router.query]); // Dependency array with router.query.tab
 
   useEffect(() => {
@@ -50,19 +50,19 @@ const Index = ({ initialTab }) => {
         return <LiveTest />;
       case "live_Classes":
       case "8":
-        return <LiveTest />;
+        return <LiveTest title={title} />;
       case "9":
-        return <LiveClass />;
+        return <LiveClass title={title}/>;
       case "29":
-        return <Blogs />;
+        return <Blogs title={title} />;
       case "current_affairs":
       case "17":
-        return <CurrentAffairList />;
+        return <CurrentAffairList title={title}/>;
       case "testimonial":
         return <Testimonial />;
       case "bookstore":
       case "14":
-        return <Bookstore />;
+        return <Bookstore  title={title}/>;
       case "notification":
         return <Notification />;
       case "myCourse":
@@ -71,7 +71,7 @@ const Index = ({ initialTab }) => {
         return <PurchaseHistory />;
       case "inquiry":
       case "12":
-        return <Inquiry />;
+        return <Inquiry title={title} />;
       case "profile":
         return <Profile />;
       default:

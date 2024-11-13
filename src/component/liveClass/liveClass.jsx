@@ -10,9 +10,11 @@ import LoaderAfterLogin from "../loaderAfterLogin";
 import ErrorPageAfterLogin from "../errorPageAfterLogin";
 import { useRouter } from "next/router";
 import 'react-toastify/dist/ReactToastify.css';
+import Head from 'next/head';
+
 const LiveClassCard = lazy(() => import("../cards/liveClassCard"));
 
-const LiveClass = () => {
+const LiveClass = ({title}) => {
 
   const [key, setKey] = useState('LIVE');
   const [liveCourses, setLiveCourses] = useState([]);
@@ -84,7 +86,11 @@ const LiveClass = () => {
 
   return (
     <>
-      {/* <Toaster position="top-right" reverseOrder={false} /> */}
+      <Head>
+        <title>{title}</title>
+        <meta name={title} content={title} />
+      </Head>
+
       <ToastContainer
         position="top-right"
         autoClose={1000}

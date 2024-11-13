@@ -17,6 +17,7 @@ import { all_CategoryAction, all_CourseAction, all_CurrentAffair } from '@/store
 // import Achievement from '@/component/achievement/achievement';
 import { useRouter } from 'next/router'
 
+const DownloadSlide = lazy(() => import("@/component/downloadSlide/downloadSlide"))
 const Header = lazy(() => import("@/component/header/header"));
 const Banner = lazy(() => import("@/component/banner/banner"));
 const TrendingCourses = lazy(() => import("@/component/trendingCourses/trendingCourses"));
@@ -137,7 +138,10 @@ const index = () => {
   return (
     <>
       <Suspense fallback={<Loader />}>
-      <Header />
+      <div className="nav_container fixed-top">
+        <DownloadSlide />
+        <Header />
+      </div>
         <Banner />
         <TrendingCourses />
         <Free_Test_Course />

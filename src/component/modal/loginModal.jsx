@@ -1410,6 +1410,7 @@ const LoginModal = (props) => {
                               </div>
                               <div className="col-md-12 margin_bottom">
                                 <Select
+                                className="select_state"
                                   name="state"
                                   value={
                                     stateOption.find(
@@ -1425,6 +1426,7 @@ const LoginModal = (props) => {
                               </div>
                               <div className="col-md-12 margin_bottom">
                                 <Select
+                                className="select_city"
                                   name="district"
                                   value={
                                     districtOption.find(

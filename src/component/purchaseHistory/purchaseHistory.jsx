@@ -19,6 +19,9 @@ import ThankyouModal from "../modal/thankyouModal";
 import LoaderAfterLogin from "../loaderAfterLogin";
 import Button2 from "../buttons/button2/button2";
 import ExtendValiditymodal from "../modal/extendValiditymodal";
+import Head from 'next/head';
+
+
 const PurchaseHistory = () => {
   const [myOrder, setMyOrder] = useState([]);
   // const [addedDate, setAddedDate] = useState('');
@@ -586,6 +589,10 @@ const PurchaseHistory = () => {
   return (
     <>
       {/* <Toaster position="top-right" reverseOrder={false} /> */}
+      <Head>
+        <title>{'Purchase History'}</title>
+        <meta name={'Purchase History'} content={'Purchase History'} />
+      </Head>
 
       <ToastContainer
         position="top-right"

@@ -1,138 +1,86 @@
-import React, { useEffect, useState, useRef,useCallback, Suspense, lazy } from "react";
-import { useQuery } from "react-query";
+import React, { useState, useRef, lazy, Suspense } from "react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+
 import { decrypt, encrypt, get_token } from "@/utils/helpers";
 import { getLiveTestService } from "@/services";
 import Tab from "react-bootstrap/Tab";
 import Tabs from "react-bootstrap/Tabs";
-// import LiveTestCard from "../cards/liveTestCard";
 import { useRouter } from "next/router";
-import ErrorPageAfterLogin from "../errorPageAfterLogin";
-import LoaderAfterLogin from "../loaderAfterLogin";
-// import toast, { Toaster } from "react-hot-toast";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-const LiveTestCard = lazy(() => import("../cards/liveTestCard"));
+import Head from 'next/head';
 
-const LiveTest = () => {
+const LiveTestCard = lazy(() => import("../cards/liveTestCard"));
+const ErrorPageAfterLogin = lazy(() => import("../errorPageAfterLogin"));
+const LoaderAfterLogin = lazy(() => import("../loaderAfterLogin"));
+
+const LiveTest = ({ title }) => {
   const [key, setKey] = useState("LIVE");
   const [showError, setShowError] = useState(false);
-  const [liveTests, setLiveTests] = useState([]);
   const router = useRouter();
   const token = get_token();
   const popupRef = useRef(null);
   const intervalRef = useRef(null);
 
-  // const fetchLiveTest = async (type) => {
-  //   const formData = {
-  //     page: 1,
-  //     type: type,
-  //   };
-  //   const encryptedData = encrypt(JSON.stringify(formData), token);
-  //   const response = await getLiveTestService(encryptedData);
-  //   const decryptedData = decrypt(response.data, token);
+  // Initialize the query client
+  const queryClient = useQueryClient();
 
-  //   if (!decryptedData?.status) {
-  //     if (decryptedData.message === msg) {
-  //       localStorage.removeItem("jwt");
-  //       localStorage.removeItem("user_id");
-  //       router.push("/");
-  //     }
-  //     throw new Error(decryptedData.message || "Error fetching data");
-  //   }
-
-  //   return decryptedData.data;
-  // };
-
-  // const { data: liveTests, isLoading, isError } = useQuery(
-  //   ['liveTests', key],
-  //   () => fetchLiveTest(key === 'LIVE' ? 0 : key === 'UPCOMING' ? 1 : 2),
-  //   {
-  //     onError: () => {
-  //       setShowError(true);
-  //     },
-  //     retry: false,
-  //     refetchOnWindowFocus: false,
-  //   }
-  // );
-
-  useEffect(() => {
-    return () => {
-      toast.dismiss();
-    };
-  }, []);
-
-  const fetchLiveTest = useCallback(async (type) => {
+  // Fetch Data Function
+  const fetchLiveTest = async (type) => {
     try {
-      const formData = {
-        page: 1,
-        type: type,
-      };
+      const formData = { page: 1, type };
       const encryptedData = encrypt(JSON.stringify(formData), token);
       const response = await getLiveTestService(encryptedData);
       const decryptedData = decrypt(response.data, token);
-      console.log("decryptedData", decryptedData);
+      
       if (decryptedData?.status) {
-        if (decryptedData?.data?.length == 0) {
-          setShowError(true);
-        } else {
-          setLiveTests(decryptedData.data);
-        }
+        return decryptedData?.data;
       } else {
-        if (decryptedData.message == msg) {
+        if (decryptedData.message === msg) {
           localStorage.removeItem("jwt");
           localStorage.removeItem("user_id");
           router.push("/");
-          setLiveTests([]);
-          setShowError(true);
-        } else {
-          setLiveTests([]);
-          setShowError(true);
         }
-        // throw new Error(decryptedData.message || "Error fetching data");
+        throw new Error("No data found");
       }
     } catch (error) {
-      console.log("error found: ", error);
-      router.push("/");
+      console.error("API call error:", error);
+      // router.push("/");
+      setShowError(true); // Reset error on tab change
+      throw error;
     }
-  }, []);
-
-  useEffect(() => {
-    setShowError(false);
-    setLiveTests([]);
-    if (key == "LIVE") {
-      fetchLiveTest(0);
-    } else if (key == "UPCOMING") {
-      fetchLiveTest(1);
-    } else {
-      fetchLiveTest(2);
-    }
-  }, [key]);
-  const handleTabChange = (k) => {
-    setKey(k);
-    setShowError(false); // Reset the error when changing tabs
   };
 
+  const { data: liveTests, isLoading } = useQuery({
+    queryKey: ["liveTests", key],
+    queryFn: () => fetchLiveTest(key === "LIVE" ? 0 : key === "UPCOMING" ? 1 : 2),
+    cacheTime: 1000 * 60 * 60 * 24, // Cache for 24 hours
+    staleTime: 1000 * 60 * 60, // Consider fresh for 1 hour
+    refetchOnWindowFocus: false, // No refetch on tab focus
+    onError: () => setShowError(true),
+    onSuccess: (data) => setShowError(!data || data.length === 0),
+  });
+
+  const handleTabChange = (k) => {
+    console.log("k",k)
+    setKey(k);
+    setShowError(false); // Reset error on tab change
+  };
+
+  // Define the handleCallFunction to refetch data
   const handleCallFunction = () => {
-    // console.log("test");
-    fetchLiveTest(key === "LIVE" ? 0 : key === "UPCOMING" ? 1 : 2);
+    queryClient.invalidateQueries(["liveTests", key]);
   };
 
   return (
     <>
-      <ToastContainer
-        position="top-right"
-        autoClose={1000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="light"
-      />
+      <Head>
+        <title>{title}</title>
+        <meta name={title} content={title} />
+      </Head>
 
-      {/* <Toaster position="top-right" reverseOrder={false} />  */}
+      <ToastContainer position="top-right" autoClose={1000} hideProgressBar={false} theme="light" />
+
       <section className="container-fluid">
         <div className="row">
           <div className="col-md-12">
@@ -141,108 +89,34 @@ const LiveTest = () => {
               id="uncontrolled-tab-example"
               className="CustomTab mb-3"
               activeKey={key}
-              onSelect={(k) => handleTabChange(k)}
+              onSelect={handleTabChange}
             >
-              {/* {["LIVE", "UPCOMING", "COMPLETED"].map((tabKey) => (
-                <Tab eventKey={tabKey} title={tabKey} key={tabKey}>
+              {["LIVE", "UPCOMING", "COMPLETED"].map((tabKey, index) => (
+                <Tab eventKey={tabKey} title={tabKey} key={index}>
                   <div className="row">
                     {isLoading ? (
                       <LoaderAfterLogin />
-                    ) : isError || !liveTests?.length ? (
-                      <ErrorPageAfterLogin />
+                    ) : showError ? (
+                      <Suspense fallback={<LoaderAfterLogin />}>
+                        <ErrorPageAfterLogin />
+                      </Suspense>
                     ) : (
-                      liveTests.map((item, index) => (
-                        <LiveTestCard testData={item} value={key} key={index} />
-                      ))
+                      <Suspense fallback={<LoaderAfterLogin />}>
+                        {liveTests?.map((item, index) => (
+                          <LiveTestCard
+                            key={index}
+                            testData={item}
+                            value={key}
+                            popupRef={popupRef}
+                            intervalRef={intervalRef}
+                            handleCallFunction={handleCallFunction} // Pass the function as a prop
+                          />
+                        ))}
+                      </Suspense>
                     )}
                   </div>
                 </Tab>
-              ))} */}
-
-              <Tab eventKey="LIVE" title="LIVE">
-                <div className="row">
-                  {liveTests?.length > 0 ? (
-                    <Suspense fallback={<LoaderAfterLogin />}>
-                      {liveTests.map((item, index) => {
-                        return (
-                          <LiveTestCard
-                            testData={item}
-                            value={key}
-                            key={index}
-                            popupRef={popupRef}
-                            intervalRef={intervalRef}
-                            handleCallFunction={handleCallFunction}
-                          />
-                        );
-                      })}
-                    </Suspense>
-                  ) : (
-                    <>
-                      {showError ? (
-                        <ErrorPageAfterLogin />
-                      ) : (
-                        <LoaderAfterLogin />
-                      )}
-                    </>
-                  )}
-                </div>
-              </Tab>
-              <Tab eventKey="UPCOMING" title="UPCOMING">
-                <div className="row">
-                  {liveTests?.length > 0 ? (
-                    <Suspense fallback={<LoaderAfterLogin />}>
-                      {liveTests.map((item, index) => {
-                        return (
-                          <LiveTestCard
-                            testData={item}
-                            value={key}
-                            key={index}
-                            popupRef={popupRef}
-                            intervalRef={intervalRef}
-                            handleCallFunction={handleCallFunction}
-                          />
-                        );
-                      })}
-                    </Suspense>
-                  ) : (
-                    <>
-                      {showError ? (
-                        <ErrorPageAfterLogin />
-                      ) : (
-                        <LoaderAfterLogin />
-                      )}
-                    </>
-                  )}
-                </div>
-              </Tab>
-              <Tab eventKey="COMPLETED" title="COMPLETED">
-                <div className="row">
-                  {liveTests?.length > 0 ? (
-                    <Suspense fallback={<LoaderAfterLogin />}>
-                      {liveTests.map((item, index) => {
-                        return (
-                          <LiveTestCard
-                            testData={item}
-                            value={key}
-                            key={index}
-                            popupRef={popupRef}
-                            intervalRef={intervalRef}
-                            handleCallFunction={handleCallFunction}
-                          />
-                        );
-                      })}
-                    </Suspense>
-                  ) : (
-                    <>
-                      {showError ? (
-                        <ErrorPageAfterLogin />
-                      ) : (
-                        <LoaderAfterLogin />
-                      )}
-                    </>
-                  )}
-                </div>
-              </Tab>
+              ))}
             </Tabs>
           </div>
         </div>
@@ -251,7 +125,6 @@ const LiveTest = () => {
   );
 };
 
-const msg =
-  "You are already logged in with some other devices, So you are logged out from this device. 9";
+const msg = "You are already logged in with some other devices, So you are logged out from this device.";
 
 export default LiveTest;

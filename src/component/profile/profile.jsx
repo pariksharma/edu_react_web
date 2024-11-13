@@ -4,7 +4,6 @@ import Button2 from "../buttons/button2/button2";
 import * as Icon from "react-bootstrap-icons";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import { decrypt, encrypt, get_token } from "@/utils/helpers";
-// import toast, { Toaster } from "react-hot-toast";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import {
@@ -19,7 +18,7 @@ import AWS from 'aws-sdk'
 import { useDispatch, useSelector } from "react-redux";
 import { profile_data } from "@/store/sliceContainer/masterContentSlice";
 import UpdatePasswordModal from "../modal/updatePasswordModal";
-
+import Head from 'next/head';
 
 const S3_BUCKET = process.env.NEXT_PUBLIC_S3_BUCKET;
 const REGION = process.env.NEXT_PUBLIC_S3_REGION;
@@ -361,6 +360,11 @@ const Profile = () => {
 
   return (
     <>
+
+       <Head>
+        <title>{'Profile'}</title>
+        <meta name={'Profile'} content={'Profile'} />
+      </Head>
       <ToastContainer
         position="top-right"
         autoClose={1000}

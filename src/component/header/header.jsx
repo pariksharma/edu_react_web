@@ -109,7 +109,7 @@ const Header = ({ search }) => {
     }
   }, [dispatch, token]);
 
-  const fetchSearchCourse = useCallback(async () => {
+  const fetchSearchCourse = useCallback(async (value) => {
     try {
       if (value) {
         const formData = {
@@ -217,7 +217,7 @@ const Header = ({ search }) => {
             onClick={() => setIsVisible(true)}
           >
             <span
-              className="searchIcon d-none d-md-block input-group-text border-0"
+              className="searchIcon  d-md-block input-group-text border-0"
               id="basic-addon1"
             >
               <img
@@ -229,7 +229,7 @@ const Header = ({ search }) => {
             </span>
             <input
               type="text"
-              className="d-none d-md-block searchBar"
+              className=" d-md-block searchBar"
               placeholder="What are you looking for..."
               aria-label="Username"
               aria-describedby="basic-addon1"

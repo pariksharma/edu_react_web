@@ -362,7 +362,7 @@ const LiveTestCard = ({
                         timeLeft.seconds
                       ).padStart(2, "0")}`
                 }
-                handleClick={() => handleTakeTest(testData)}
+                handleClick={() => isTimeUp && handleTakeTest(testData)}
                 data={true}
               />
             )}

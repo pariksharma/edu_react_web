@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from "react";
-import Button1 from "../buttons/button1/button1";
 import { getMasterDataService } from "@/services";
 import { IoIosArrowForward } from "react-icons/io";
 import { decrypt, encrypt, get_token } from "@/utils/helpers";
@@ -12,10 +11,8 @@ import {
 } from "@/store/sliceContainer/masterContentSlice";
 import ErrorPageAfterLogin from "../errorPageAfterLogin";
 import LoaderAfterLogin from "../loaderAfterLogin";
-// import toast, { Toaster } from "react-hot-toast";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { format } from "date-fns";
 import TileDetail from "./tileDetail";
 
 const Notes = ({
@@ -27,7 +24,6 @@ const Notes = ({
   keyValue,
   onlineCourseAry,
 }) => {
-  // console.log("keyValue",courseDetail)
 
   const [modalShow, setModalShow] = useState(false);
   const [showError, setShowError] = useState(false);
@@ -36,7 +32,6 @@ const Notes = ({
   const [showServerError, setShowServerError] = useState(false);
   const [data3, setData3] = useState('');
   const [title3, setTitle3] = useState('');
-  const [status, setStatus] = useState("");
   const [layer1Data, setLayer1Data] = useState();
   const [showLayer, setShowLayer] = useState("layer1");
   const [data3Index, setData3Index] = useState(1);
@@ -45,21 +40,19 @@ const Notes = ({
   const [layer1Index, setLayer1Index] = useState();
   const [layer2Index, setLayer2Index] = useState();
   const [layer3Data, setLayer3Data] = useState();
-  const [id, setId] = useState();
   const [breadcrumbData, setBreadcrumbData] = useState("");
   const [breadcrumbData2, setBreadcrumbData2] = useState("");
   const [BaseURL, setBaseURL] = useState("");
   const [page, setPage] = useState([]);
   const [tabLayer1index, setTabLayer1index] = useState('')
   const [tabLayer2index, setTabLayer2index] = useState('')
-  const [tabLayer3index, setTabLayer3index] = useState('')
   const [tabLayer1Item, setTabLayer1item] = useState('')
   const [tabLayer2Item, setTabLayer2item] = useState('')
-  const [tabLayer3Item, setTabLayer3item] = useState('')
   const [windowSize, setWindowSize] = useState({
     width: window.innerWidth,
     height: window.innerHeight
   });
+  const isApiCalled = useRef(false);
 
   const [checkLogin, setCheckLogin] = useState("");
   let rApi = courseDetail?.revert_api.split("#");
@@ -120,7 +113,6 @@ const Notes = ({
       window.addEventListener("resize", handleResize);
     }
 
-    // Cleanup event listener on component unmount
     return () => {
       if (typeof window !== 'undefined') {
         window.removeEventListener("resize", handleResize);
@@ -130,7 +122,6 @@ const Notes = ({
 
   useEffect(() => {
     if (showLayer != 'layer2' && tabShow && layer2List && layer2List?.length > 0) {
-      // console.log('hhhhh')
       setShowLayer("layer3")
       setData3Index(displayTabData?.page)
       setBreadcrumbData(displayTabData?.tabLayer1Item)
@@ -140,7 +131,6 @@ const Notes = ({
   }, [layer2List])
 
   useEffect(() => {
-    // console.log(displayTabData)
     setData3Index(1);
     let r_api = courseDetail?.revert_api.split("#");
     if (displayTabData?.layer) {
@@ -178,7 +168,6 @@ const Notes = ({
       } else if (
         r_api[1] == 3
       ) {
-        // console.log("hell");
         setData3(0)
         setTitle3('')
         getLayer3Data(0);
@@ -188,48 +177,36 @@ const Notes = ({
   }, [keyValue]);
 
   useEffect(() => {
-    // console.log('hhhhhhhhhhhhhhhhhhhhhhhh')
     setLayer3updateData([]);
     if (layer3Data?.list?.length > 0) {
-      // handleNextData()
       filterPage();
     }
   }, [layer3Data]);
 
-  const formatDate = (date) => {
-    const cr_date = new Date(date * 1000);
-    if (cr_date) {
-      // setDate(cr_date.toString().substring(0, cr_date.toString().indexOf('GMT')))
-      return format(cr_date, "d MMM, yyyy");
-    }
-  };
-
 
   const skipLayer1Data = () => {
-    // console.log('courseDetail', courseDetail)
-    // console.log(courseDetail?.meta?.list?.flatMap(item => item?.list))
     setShowLayer("layer2");
     setLayer2List(courseDetail?.meta?.list?.flatMap(item => item?.list))
   }
 
   const getLayer2Data = (index, title) => {
-    // window.scroll(0,0)
     setBreadcrumbData(title);
     setLayer1Index(index);
     setShowLayer("layer2");
     setLayer2List(courseDetail?.meta?.list[index]?.list);
-    // console.log(layer1Data.meta?.list[index]);
   };
 
   const getLayer3Data = async (index, title) => {
-    // window.scroll(0,200)
+    console.log("index", index)
+    console.log("title",title)
+    console.log("isApiCalled",isApiCalled)
+    if (title == undefined && isApiCalled.current) return;
+    isApiCalled.current = true;
     setBreadcrumbData2(title);
     setShowLayer("layer3");
     setLayer2Index(index);
 
     const subj_id = () => {
-      // console.log(courseDetail)
-
       let r_api = courseDetail?.revert_api.split("#");
       if (
         r_api[1] == 1 ||
@@ -249,7 +226,6 @@ const Notes = ({
 
     const topi_id = () => {
       let r_api = courseDetail?.revert_api.split("#");
-      // console.log("index", index, layer2List, displayTabData);
       if (
         r_api[1] == 2 ||
         r_api[1] == 3
@@ -268,14 +244,19 @@ const Notes = ({
       layer: 3,
       page: 1,
     };
-    // console.log('data', data)
-    const result = await getDetail(data); /// Api Call
-    setLayer3Data(result);
+    // const result = await getDetail(data); /// Api Call
+    // setLayer3Data(result);
+    try {
+      const result = await getDetail(data); // API Call
+      setLayer3Data(result);
+    } catch (error) {
+      console.error("API call failed:", error);
+      isApiCalled.current = false;
+    }
   };
 
   const getDetail = async (data) => {
     try {
-      // console.log(data)
       const token = get_token();
       const formData = {
         course_id: CourseID,
@@ -288,7 +269,6 @@ const Notes = ({
         page: data.page,
         parent_id: "",
       };
-      // console.log('formData', formData)
       const response_getMasterData_service = await getMasterDataService(
         encrypt(JSON.stringify(formData), token)
       );
@@ -296,12 +276,10 @@ const Notes = ({
         response_getMasterData_service.data,
         token
       );
-      // console.log("response_getMasterData_Data", response_getMasterData_Data);
       if (response_getMasterData_Data.status) {
         return response_getMasterData_Data.data;
       }
     } catch (error) {
-      console.log("error found: ", error);
       toast.error("Server Error");
       setShowServerError(true);
       // router.push('/')
@@ -309,17 +287,12 @@ const Notes = ({
   };
 
   const handleRead = (value) => {
-    // console.log("Read Now", value);
     const isLoggedIn = localStorage.getItem("jwt");
     if (!isLoggedIn) {
       setModalShow(true);
     } else {
-      if (onlineCourseAry.is_purchased == 1) {
-        if (typeof window !== "undefined") {
-          window.open(value.file_url, "_blank");
-        }
-      } else {
-        toast.error("Please, purchase the course");
+      if (typeof window !== "undefined") {
+        window.open(value.file_url, "_blank");
       }
     }
   };
@@ -333,15 +306,18 @@ const Notes = ({
         vdc_id: data.vdc_id,
         file_url: data.file_url,
         title: data.title,
-        video_type: data.video_type
+        video_type: data.video_type,
+        start_date: data.start_date,
+        end_date: data.end_date,
+        chat_node: data.chat_node,
+        course_id: data.payload.course_id,
+        video_id: data.id
       }
       const isLoggedIn = localStorage.getItem("jwt");
       if (!isLoggedIn) {
         setModalShow(true);
       } else {
-        // console.log('guyggjh')
         if (onlineCourseAry?.is_purchased == 1) {
-          // router.push(`/private/myProfile/view-pdf/${encodeURIComponent(value.file_url)}`)
           dispatch(
             all_tabName({
               index,
@@ -360,8 +336,6 @@ const Notes = ({
             pathname: `/private/myProfile/play/${data.id}`,
             query: playData,
           });
-          // router.push(`/private/myProfile/play/${data.file_url}&type=${data.file_type}`)
-          // console.log('watch')
         }
         else if (onlineCourseAry?.is_purchased == 0) {
           dispatch(
@@ -393,35 +367,24 @@ const Notes = ({
 
   const setLayer1 = () => {
     dispatch(reset_tab())
-    // console.log('layer1Data87687868', courseDetail)
     let r_api = courseDetail?.revert_api.split("#");
     setData3Index(1)
     if (
-      // courseDetail?.revert_api == "1#0#0#0" ||
-      // courseDetail?.revert_api == "0#0#0#0" ||
-      // courseDetail?.revert_api == "1#0#0#1"
       r_api[1] == 0
     ) {
       setShowLayer("layer1");
     } else if (
-      // courseDetail?.revert_api == "1#1#0#0" ||
-      // courseDetail?.revert_api == "0#1#0#0"
       r_api[1] == 1
     ) {
       setShowLayer("layer2");
     } else if (
-      // courseDetail?.revert_api == "1#2#0#0" ||
-      // courseDetail?.revert_api == "0#2#0#0"
       r_api[1] == 2
     ) {
-      // console.log("hel");
       setShowLayer("layer2");
     }
   };
 
   const setLayer2 = () => {
-    // dispatch(reset_tab())
-    // console.log('layer1Data', courseDetail)
     dispatch(
       all_tabName({
         ...all_tabName,
@@ -433,21 +396,14 @@ const Notes = ({
     let r_api = courseDetail?.revert_api.split("#");
     setData3Index(1)
     if (
-      // courseDetail?.revert_api == "1#0#0#0" ||
-      // courseDetail?.revert_api == "0#0#0#0" ||
-      // courseDetail?.revert_api == "1#0#0#1"
       r_api[1] == 0
     ) {
       setShowLayer("layer2");
     } else if (
-      // courseDetail?.revert_api == "1#1#0#0" ||
-      // courseDetail?.revert_api == "0#1#0#0"
       r_api[1] == 1
     ) {
       setShowLayer("layer2");
     } else if (
-      // courseDetail?.revert_api == "1#2#0#0" ||
-      // courseDetail?.revert_api == "0#2#0#0"
       r_api[1] == 2
     ) {
       setShowLayer("layer1");
@@ -455,20 +411,15 @@ const Notes = ({
   };
   const handleLayer1Click = (i, item) => {
     let r_api = layer1Data?.revert_api.split("#");
-    // console.log('layer1')
     if (
-      // layer1Data?.revert_api == "1#2#0#0" ||
-      // layer1Data?.revert_api == "0#2#0#0"
       r_api[1] == 2
     ) {
-      // console.log('layer1')
       setData3(i)
       setTitle3(item?.title)
       getLayer3Data(i, item.title);
       setTabLayer1index(i)
       setTabLayer1item(item.title)
     } else {
-      // console.log('8888')
       setTabLayer1index(i)
       setTabLayer1item(item.title)
       getLayer2Data(i, item.title)
@@ -482,23 +433,16 @@ const Notes = ({
     setTabLayer2index(i)
     setTabLayer2item(item.title)
   };
-  // console.log('layer2List', layer2List)
 
   const filterPage = () => {
-    // console.log('layer3Data', layer3Data)
     let len = layer3Data?.list?.length;
     let length = len % 15 !== 0 ? Math.floor(len / 15) + 1 : len / 15;
-    // for(let i = 0; i < length; i++) {
-    //     Arr.push(i+1)
-    // }
-    // setPage(Arr)
-
     setPage(Array.from({ length }, (_, i) => i + 1));
   };
 
   useEffect(() => {
+    console.log("data3Index",data3Index)
     if (layer3Data?.list?.length > 0 && data3Index > 0) {
-      // console.log("page", data3Index, page.length)
       if (data3Index == 1) {
         setLayer3updateData(layer3Data?.list?.slice(0, 15));
       } else if (data3Index === page.length) {
@@ -513,10 +457,7 @@ const Notes = ({
     }
   }, [data3Index, layer3Data]);
 
-  // console.log('layer3updateData', layer3updateData)
-
   const handleTakeTest = (val, index) => {
-    // console.log("val111111111", val);
     const isLoggedIn = localStorage.getItem("jwt");
     if (!isLoggedIn) {
       setModalShow(true);
@@ -526,12 +467,6 @@ const Notes = ({
       if (val.state == "") {
         firstAttempt = "1";
       }
-      // // else if (App.Server_Time.ToUnixTimeSeconds() > long.Parse(Current_Selected_Resource.end_date)){
-      // //   firstAttempt = "0";
-      // // }
-      // else if (Number(val.is_reattempt) > 0){
-      //   firstAttempt = "0";
-      // }
       const formData = {
         jwt: localStorage.getItem("jwt"),
         user_id: localStorage.getItem("user_id"),
@@ -544,10 +479,7 @@ const Notes = ({
         appid: localStorage.getItem("appId"),
       };
 
-      // console.log("formData", formData);
       const encryptData = btoa(JSON.stringify(formData));
-      // console.log("encryptData", encryptData);
-      // const encryptData = encrypt(JSON.stringify(formData));
       popupRef.current = window.open(
         `${BaseURL}/web/LiveTest/attempt_now_window?data=${encryptData}`,
         "popupWindow",
@@ -558,9 +490,7 @@ const Notes = ({
         if (popupRef.current && popupRef.current.closed) {
           clearInterval(intervalRef.current);
           popupRef.current = null;
-          // onPopupClose(); // Call the function to handle the popup close event
           getLayer3Data(data3, title3);
-          // console.log('867867687687')
         }
       }, 500); // Check every 500ms
       // } else {
@@ -592,18 +522,12 @@ const Notes = ({
         first_attempt: 1,
         appid: localStorage.getItem("appId"),
       };
-      // console.log("formData", formData);
       const encryptData = btoa(JSON.stringify(formData));
-      // console.log("encryptData", encryptData);
-
       window.open(
         `${BaseURL}/web/LiveTest/result_window?data=${encryptData}`,
         "popupWindow",
         `width=${windowSize.width},height=${windowSize.height},scrollbars=yes,resizable=no`
       );
-      // } else {
-      //   showErrorToast("Please, purchase the course");
-      // }
     }
   };
 
@@ -612,14 +536,7 @@ const Notes = ({
     if (!isLoggedIn) {
       setModalShow(true);
     } else {
-      // if (onlineCourseAry.is_purchased == 1) {
       var firstAttempt = "1";
-      // if (val.state == "") {
-      //   firstAttempt = "1";
-      // }
-      // // else if (App.Server_Time.ToUnixTimeSeconds() > long.Parse(Current_Selected_Resource.end_date)){
-      // //   firstAttempt = "0";
-      // // }
       if (Number(val.is_reattempt) > 0) {
         firstAttempt = "0";
       }
@@ -634,11 +551,7 @@ const Notes = ({
         first_attempt: firstAttempt,
         appid: localStorage.getItem("appId"),
       };
-
-      // console.log("formData", formData);
       const encryptData = btoa(JSON.stringify(formData));
-      // console.log("encryptData", encryptData);
-      // const encryptData = encrypt(JSON.stringify(formData));
       if (typeof window !== 'undefined') {
         window.open(
           `${BaseURL}/web/LiveTest/result?inshow_result=${encryptData}`,
@@ -646,9 +559,6 @@ const Notes = ({
           `width=${windowSize.width},height=${windowSize.height},scrollbars=yes,resizable=no`
         );
       }
-      // } else {
-      //   showErrorToast("Please, purchase the course");
-      // }
     }
   };
 
@@ -660,14 +570,13 @@ const Notes = ({
       // if (onlineCourseAry.is_purchased == 1) {
       const givenStartTime = new Date(item?.start_date * 1000);
       localStorage.setItem("testClicked", "true");
-        setTimeout(() => {
-          localStorage.removeItem("testClicked");
-        }, 1000);
-        const testClicked = localStorage.getItem("testClicked");
-        if(testClicked){
-          toast.error(`Test will start at ${givenStartTime.toLocaleTimeString()}`);
-        }
-        console.log("testClicked",testClicked)
+      setTimeout(() => {
+        localStorage.removeItem("testClicked");
+      }, 1000);
+      const testClicked = localStorage.getItem("testClicked");
+      if (testClicked) {
+        toast.error(`Test will start at ${givenStartTime.toLocaleTimeString()}`);
+      }
       // alert(`Test will start at ${givenStartTime.toLocaleTimeString()}`)
       // } else {
       //   showErrorToast("Please, purchase the course");
@@ -675,7 +584,6 @@ const Notes = ({
     }
   };
 
-  // console.log('courseDetail',   courseDetail)
   return (
     <>
       <LoginModal
@@ -684,21 +592,6 @@ const Notes = ({
           setModalShow(false);
         }}
       />
-      {/* <Toaster position="top-right" reverseOrder={false} toastOptions={{duration: 1500}}/> */}
-      
-      {/* <ToastContainer
-        position="top-right"
-        autoClose={1000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="light"
-      /> */}
-
       <div className="container-fluid p-4 pt-0">
         <div className={` ${checkLogin ? "row" : "row"}`}>
           <div
@@ -709,20 +602,6 @@ const Notes = ({
           >
             <section className={` ${checkLogin ? "px-2 " : ""}`}>
               <div className=" custom-breadcrumb">
-                {/* <span
-            ref={resetRef}
-            className={showLayer == "layer1" ? "breadcrumb" : "breadcrumb"}
-            onClick={() => {
-              setShowLayer("layer1");
-            }}
-          >
-            {showLayer == "layer1" ||
-            showLayer == "layer2" ||
-            showLayer == "layer3"
-              ? // ? ` > ${layer2List.title}`
-                `Subjects >`
-              : ""}
-          </span> */}
                 <span
                   ref={resetRef}
                   className={
@@ -731,10 +610,8 @@ const Notes = ({
                   style={{ cursor: 'pointer' }}
                   onClick={setLayer1}
                 >
-                  {/* {(layer2List != undefined && showLayer == "layer2") || */}
                   {(showLayer == "layer2" || showLayer == "layer3") &&
                     breadcrumbData ? (
-                    // ? ` > ${layer2List.title}`
                     <>
                       {breadcrumbData} <i className="bi bi-chevron-right"></i>
                     </>
@@ -750,7 +627,6 @@ const Notes = ({
                   onClick={setLayer2}
                 >
                   {showLayer == "layer3" && breadcrumbData2 ? (
-                    // ? ` > ${layer2List.list[layer2Index].title}`
                     <>
                       {breadcrumbData2} <i className="bi bi-chevron-right"></i>
                     </>
@@ -760,82 +636,12 @@ const Notes = ({
                 </span>
               </div>
               <div className="py-2 contentHeight">
-                {/* {console.log('layer3updateData', layer3updateData)} */}
                 {showLayer == "layer3" ? (
                   layer3Data?.list?.length > 0 &&
                     layer3updateData?.length > 0 ? (
                     <div>
                       {layer3updateData?.map((item, i) => {
                         return (
-                          // <div
-                          //   className=" pg-tabs-description mt-3"
-                          //   key={i}
-                          // //   onClick={() => handleOpenVideo(item)}
-                          // >
-                          //   <div className="tabs-deschovr d-flex align-items-center rounded">
-                          //     <div className="w-100 pg-sb-topic d-flex align-items-center justify-content-between">
-                          //       <div className="d-flex justify-content-between">
-                          //         <img
-                          //           src={item.thumbnail_url ? item.thumbnail_url : "/assets/images/noImage.jfif"}
-                          //           height={"60px"}
-                          //         />
-                          //         <div className="subjectDetails">
-                          //           <p className="m-0 sub_name">{item.title}</p>
-                          //           {item.role == "PDF" && (
-                          //             <p className="m-0 sub_topics">
-                          //               {item.release_date}
-                          //             </p>
-                          //           )}
-                          //         </div>
-                          //       </div>
-                          //       <div className="pg-sb-topic pe-2">
-                          //         <div className="btnsalltbba text-center d-flex">
-                          //           {" "}
-                          //           {
-                          //           // (isLogin &&
-                          //           item.is_purchased == 0 ?
-                          //           // item.is_locked == "1" ?
-                          //           // <>
-                          //           //   <img style={{ width: "32px" }} src="/assets/images/locked.png" alt="" />
-                          //           // </>
-                          //           // :
-                          //             item.is_locked == 0 ?
-                          //             <>
-                          //             {layer1Data.type == "pdf" && <Button1 value="Read" handleClick={handleRead} /> }
-                          //             {layer1Data.type == "video" && <Button1 value="Watch Now" handleClick={handleWatch(item, i)} />}
-                          //             {layer1Data.type == "test" && <Button1 value="Test" />}
-                          //             </>
-                          //             :
-                          //             <>
-                          //               <img style={{ width: "32px" }} src="/assets/images/locked.png" alt="" />
-                          //             </>
-                          //           :
-                          //           <>
-                          //           {layer1Data?.type == "pdf" && <Button1 value="Read" handleClick={() => handleRead(item)} /> }
-                          //           {layer1Data?.type == "video" && <Button1 value="Watch Now" handleClick={() => handleWatch(item, i)} />}
-                          //           {layer1Data?.type == "test" &&
-                          //             (compareTime(item.start_date  , item.end_date) == "pending" &&
-                          //             <Button1 value="Upcoming"
-                          //               // handleClick={() => handleTakeTest(item, i)}
-                          //             />
-                          //             )}
-                          //             {layer1Data?.type == "test" && (compareTime(item.start_date  , item.end_date) == "attempt" &&
-                          //             <Button1 value="Attempt Now"
-                          //               handleClick={() => handleTakeTest(item, i)}
-                          //             />
-                          //             )}
-                          //             {layer1Data?.type == "test" && (compareTime(item.start_date  , item.end_date) == "result" &&
-                          //             <Button1 value={item?.state == 1 ? "View Result" : "LeaderBoard"}
-                          //               handleClick={() => item?.state == 1 ? handleResultTest(item, i) : handleRankTest(item, i)}
-                          //             />
-                          //             )}
-                          //           </>
-                          //           }
-                          //         </div>
-                          //       </div>
-                          //     </div>
-                          //   </div>
-                          // </div>
                           <TileDetail
                             item={item}
                             layer1Data={layer1Data}
@@ -851,7 +657,6 @@ const Notes = ({
                           />
                         );
                       })}
-                      {/* {console.log('page', data3Index)} */}
                       {page.length > 1 && (
                         <div className="pagination_button m-2">
                           <button
@@ -862,7 +667,6 @@ const Notes = ({
                           >
                             Prev
                           </button>
-                          {/* {console.log('page', val)} */}
                           {page.map((val, index) => {
                             if (val != page?.length + 1) {
                               return (
@@ -908,8 +712,6 @@ const Notes = ({
                 ) : showLayer == "layer2" ? (
                   layer2List &&
                   layer2List?.map((item, i) => {
-                    // topic_PDF_Ary &&
-                    // topic_PDF_Ary.map((item, i) => {
                     return (
                       <div
                         className=" pg-tabs-description mt-3"
@@ -932,39 +734,35 @@ const Notes = ({
                                 }
                                 height={"60px"}
                               />
-                              {/* <img src={item} height={'50px'}/> */}
-                              {/* <i className="fa fa-file-text" aria-hidden="true"></i> */}
                             </span>
-
-                            {/* <h3>{item.title}</h3> */}
                             <div className="subjectDetails">
                               <p className="sub_name">{item.title}</p>
-                              {rApi[1] == 0 && layer1Data?.type == "pdf" &&  (
+                              {rApi[1] == 0 && layer1Data?.type == "pdf" && (
                                 <p className="m-0 sub_topics">
                                   {item?.count} PDF's
                                 </p>
                               )}
-                              {rApi[1] == 0 && layer1Data?.type == "video" &&  (
+                              {rApi[1] == 0 && layer1Data?.type == "video" && (
                                 <p className="m-0 sub_topics">
                                   {item?.count} Videos
                                 </p>
                               )}
-                              {rApi[1] == 0 && layer1Data?.type == "test" &&  (
+                              {rApi[1] == 0 && layer1Data?.type == "test" && (
                                 <p className="m-0 sub_topics">
                                   {item?.count} Tests
                                 </p>
                               )}
-                              {rApi[1] == 1 && layer1Data?.type == "pdf" &&  (
+                              {rApi[1] == 1 && layer1Data?.type == "pdf" && (
                                 <p className="m-0 sub_topics">
                                   {item?.count} Pdf's
                                 </p>
                               )}
-                              {rApi[1] == 1 && layer1Data?.type == "video" &&  (
+                              {rApi[1] == 1 && layer1Data?.type == "video" && (
                                 <p className="m-0 sub_topics">
                                   {item?.count} Videos
                                 </p>
                               )}
-                              {rApi[1] == 1 && layer1Data?.type == "test" &&  (
+                              {rApi[1] == 1 && layer1Data?.type == "test" && (
                                 <p className="m-0 sub_topics">
                                   {item?.count} Tests
                                 </p>
@@ -973,10 +771,7 @@ const Notes = ({
                           </div>
                           <div className="pg-sb-topic pe-2">
                             <span className="rightChevron">
-                              {/* {item.is_locked == '0' ?   */}
-                              {/* <i className="fa fa-angle-right" aria-hidden="true"></i> */}
                               <IoIosArrowForward />
-                              {/* :  <img src={lock_icon}/>} */}
                             </span>
                           </div>
                         </div>
@@ -987,15 +782,12 @@ const Notes = ({
                   showLayer == "layer1" &&
                   layer1Data &&
                   layer1Data?.meta?.list?.map((item, i) => {
-                    // subject_PDF_Ary &&
-                    // subject_PDF_Ary.map((item, i) => {
                     return (
                       <div
                         className=" pg-tabs-description mt-3"
                         onClick={() => handleLayer1Click(i, item)}
                         key={i}
                       >
-                        {/* {console.log('item.title', item)} */}
                         <div className="tabs-deschovr d-flex align-items-center rounded">
                           <div
                             className="pg-sb-topic d-flex align-items-center"
@@ -1012,41 +804,34 @@ const Notes = ({
                                 }
                                 height={"60px"}
                               />
-                              {/* <img src={item} height={'50px'}/> */}
-                              {/* <i className="fa fa-file-text" aria-hidden="true"></i> */}
                             </span>
-
-                            {/* <h3>{item.title}</h3> */}
                             <div className="subjectDetails">
                               <p className="sub_name">{item.title}</p>
-                              {rApi[1] == 0 &&  (
+                              {rApi[1] == 0 && (
                                 <p className="m-0 sub_topics">
                                   {item?.list?.length} Topics
                                 </p>
                               )}
-                              {rApi[1] == 2 && courseDetail?.type == "video" &&  (
+                              {rApi[1] == 2 && courseDetail?.type == "video" && (
                                 <p className="m-0 sub_topics">
-                                   {item?.count} Videos
+                                  {item?.count} Videos
                                 </p>
                               )}
                               {rApi[1] == 2 && courseDetail?.type == "pdf" && (
                                 <p className="m-0 sub_topics">
-                                   {item?.count} PDF's
+                                  {item?.count} PDF's
                                 </p>
                               )}
                               {rApi[1] == 2 && courseDetail?.type == "test" && (
                                 <p className="m-0 sub_topics">
-                                   {item?.count} Tests
+                                  {item?.count} Tests
                                 </p>
                               )}
                             </div>
                           </div>
                           <div className="pg-sb-topic pe-2">
                             <span className="rightChevron text-center">
-                              {/* {item.is_locked == '0' ?   */}
-                              {/* <i className="fa fa-angle-right" aria-hidden="true"></i> */}
                               <IoIosArrowForward />
-                              {/* :  <img src={lock_icon}/>} */}
                             </span>
                           </div>
                         </div>

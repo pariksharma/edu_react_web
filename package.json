@@ -24,7 +24,10 @@
     "crypto": "^1.0.1",
     "crypto-js": "^4.2.0",
     "date-fns": "^3.6.0",
+    "firebase": "^11.0.1",
     "jwt-decode": "^4.0.0",
+    "lodash": "^4.17.21",
+    "mqtt": "^5.10.2",
     "next": "14.2.5",
     "pdfjs-dist": "^3.4.120",
     "razorpay": "^2.9.4",
@@ -45,7 +48,8 @@
     "react-toastify": "^8.0.0",
     "select2": "^4.1.0-rc.0",
     "shaka-player": "^4.11.7",
-    "slick-carousel": "^1.8.1"
+    "slick-carousel": "^1.8.1",
+    "wavesurfer.js": "^7.8.8"
   },
   "devDependencies": {
     "react-router-dom": "^6.25.1"

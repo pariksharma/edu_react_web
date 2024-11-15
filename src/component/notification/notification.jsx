@@ -425,7 +425,12 @@ const Notification = () => {
         vdc_id: data.vdc_id,
         file_url: data.file_url,
         title: data.title,
-        video_type: data.video_type
+        video_type: data.video_type,
+        start_date: data.start_date,
+        end_date: data.end_date,
+        chat_node: data.chat_node,
+        course_id: data.payload.course_id,
+        video_id: data.id
       }
       // router.push(`/private/myProfile/view-pdf/${encodeURIComponent(value.file_url)}`)
       router.push({

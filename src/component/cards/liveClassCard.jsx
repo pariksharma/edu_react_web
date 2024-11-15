@@ -15,6 +15,7 @@ const LiveClassCard = ({ courseData, value }) => {
 
   const router = useRouter();
   const versionData = useSelector((state) => state.allCategory?.versionData);
+  // console.log('course', courseData)
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -62,9 +63,9 @@ const LiveClassCard = ({ courseData, value }) => {
   };
 
   const handleWatch = (data) => {
+    console.log("data", data);
     if (data?.live_status == 2 && data?.video_type == 8) {
       showErrorToast("Live class has been ended");
-      // console.log("data", data);
     } else {
       let playData = {
         vdc_id: data.vdc_id,
@@ -73,6 +74,9 @@ const LiveClassCard = ({ courseData, value }) => {
         video_type: data.video_type,
         start_date: data.start_date,
         end_date: data.end_date,
+        chat_node: data.chat_node,
+        course_id: data.payload.course_id,
+        video_id: data.id
       };
       // let playData = {
       //   vdc_id:data.vdc_id,

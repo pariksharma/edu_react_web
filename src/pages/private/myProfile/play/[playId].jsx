@@ -2,13 +2,16 @@ import React, { useState, useEffect } from 'react';
 import VideoPlayerDRM from '@/component/player';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
+import Chat from '@/component/chat/chat';
+import { decrypt, encrypt, get_token } from '@/utils/helpers';
+import { getContentMeta } from '@/services';
 
 const PlayId = () => {
     const [windowSize, setWindowSize] = useState({
         width: 0,
         height: 0,
     });
-    const [isLoading, setIsLoading] = useState(true); // Loading state
+    const [isLoading, setIsLoading] = useState(true); 
     const router = useRouter();
     // console.log("router",router)
 
@@ -52,7 +55,6 @@ const PlayId = () => {
 
         switch (videoType) {
             case 7:
-            case 8:
                 return (
                     <VideoPlayerDRM
                         vdc_id={router?.query?.vdc_id}
@@ -63,20 +65,78 @@ const PlayId = () => {
                         start_date={router.query.start_date}
                         end_date={router.query.end_date}
                         video_type={router.query.video_type}
+                        chat_node = {router.query.chat_node}
+                        course_id={router.query.course_id}
                     />
                 );
+            case 8:
+                return (
+                    <div className="container-fluid live-main-container">
+                        <div className="row">
+                            <div className="col-md-8">
+                                <VideoPlayerDRM
+                                    vdc_id={router?.query?.vdc_id}
+                                    NonDRMVideourl={router?.query?.file_url}
+                                    item={null}
+                                    title={router?.query?.title}
+                                    videoMetaData={null}
+                                    start_date={router.query.start_date}
+                                    end_date={router.query.end_date}
+                                    video_type={router.query.video_type}
+                                    chat_node = {router.query.chat_node}
+                                    course_id={router.query.course_id}
+                                />
+                            </div>
+                            <div className="col-md-4">
+                                <Chat 
+                                    chat_node = {router.query.chat_node}
+                                    course_id={router.query.course_id}
+                                    video_id = {router.query.video_id}
+                                />
+                            </div>
+                    </div>
+                    </div>
+                );
             case 1:
+                return (
+                  <iframe
+                    id="youtubePlayer"
+                    className="youtubePlayer"
+                    width={windowSize.width}
+                    height={windowSize.height - 10}
+                    src={`https://www.youtube.com/embed/${router?.query?.file_url}`}
+                    frameBorder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                  />
+                );
             case 4:
                 return (
-                    <iframe
-                        id="youtubePlayer"
-                        width={windowSize.width}
-                        height={windowSize.height - 10}
-                        src={`https://www.youtube.com/embed/${router?.query?.file_url}`}
-                        frameBorder="0"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                        allowFullScreen
-                    />
+                  <div className="container-fluid live-main-container">
+                    <div className="row">
+                      <div className="col-md-8">
+                        <iframe
+                          id="youtubePlayer"
+                          className="youtubePlayer"
+                          width="100%"
+                          height="100%"
+                          // height={windowSize.height - 10}
+                          src={`https://www.youtube.com/embed/${router?.query?.file_url}`}
+                          frameBorder="0"
+                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                          allowFullScreen
+                        />
+                      </div>
+
+                      <div className="col-md-4">
+                        <Chat
+                          chat_node={router.query.chat_node}
+                          course_id={router.query.course_id}
+                          video_id={router.query.video_id}
+                        />
+                      </div>
+                    </div>
+                  </div>
                 );
             default:
                 return <p>No supported video format found.</p>;

@@ -3,6 +3,7 @@ import VideoJsPlayer from "./player";
 import axios from "axios";
 import { decrypt, encrypt, get_token } from "@/utils/helpers";
 import Loader from "../loader";
+import Chat from "../chat/chat";
 
 export default function VideoPlayerDRM({ vdc_id, media_id, NonDRMVideourl, item, title, videoMetaData,end_date,start_date,video_type }) {
   const [source, setSource] = useState(null);
@@ -135,6 +136,7 @@ export default function VideoPlayerDRM({ vdc_id, media_id, NonDRMVideourl, item,
               video_type={video_type}
             />
           </div>
+
         )
       )}
       {/* <ToastContainer

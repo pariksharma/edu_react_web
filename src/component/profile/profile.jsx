@@ -23,10 +23,22 @@ import Head from 'next/head';
 const S3_BUCKET = process.env.NEXT_PUBLIC_S3_BUCKET;
 const REGION = process.env.NEXT_PUBLIC_S3_REGION;
 
+// AWS.config.update({
+//   accessKeyId: process.env.NEXT_PUBLIC_S3_ACCESSKEYID,
+//   secretAccessKey: process.env.NEXT_PUBLIC_S3_SECRETKEY
+// })
+
 AWS.config.update({
-  accessKeyId: process.env.NEXT_PUBLIC_S3_ACCESSKEYID,
-  secretAccessKey: process.env.NEXT_PUBLIC_S3_SECRETKEY
-})
+  region: REGION,
+  credentials: new AWS.CognitoIdentityCredentials({
+    IdentityPoolId: 'ap-south-1:52721cc8-3b0f-47d4-a23a-50c387baee06',  // Replace with your Cognito Identity Pool ID
+  }),
+});
+
+
+// AWS.config.credentials = new AWS.CognitoIdentityCredentials({
+//   IdentityPoolId: 'ap-south-1:52721cc8-3b0f-47d4-a23a-50c387baee06',  // Replace with your Cognito Identity Pool ID
+// });
 
 const myBucket = new AWS.S3({
   params: { Bucket: S3_BUCKET },
@@ -320,7 +332,7 @@ const Profile = () => {
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
-    // console.log("file",file)
+    console.log("file",file)
     if (file) {
       setSelectedFile(file);
       uploadFile(file)

@@ -243,8 +243,8 @@ const CourseOrderID = () => {
       }, 3000);
     }
   }, [thankYouModalShow]);
-  
-  
+
+
 
   const showErrorToast = (toastMsg) => {
     if (!isToasterOpen) {
@@ -399,7 +399,7 @@ const CourseOrderID = () => {
               coupon_applied: couponData ? couponData?.coupon?.id : 0,
               course_id: id,
               // course_price: parseFloat(courseData.mrp).toFixed(2),
-              course_price : couponData ? parseFloat(couponData.mrp).toFixed(2) : parseFloat(courseData.mrp).toFixed(2),
+              course_price: couponData ? parseFloat(couponData.mrp).toFixed(2) : parseFloat(courseData.mrp).toFixed(2),
               tax: couponData ? parseFloat(couponData.tax).toFixed(2) : parseFloat(courseData.tax).toFixed(2),
               delivery_charge: courseData.delivery_charge
                 ? courseData.delivery_charge
@@ -1171,7 +1171,7 @@ const CourseOrderID = () => {
 
   return (
     <>
-        <Head>
+      <Head>
         <title>{courseData.title}</title>
         <meta name={courseData?.title} content={courseData?.title} />
       </Head>
@@ -1212,10 +1212,10 @@ const CourseOrderID = () => {
         show={thankYouModalShow}
         onHide={() => setThankYouModalShow(false)}
       />
-      <div className="container-fluid orderContainer mb-4">
+      <div className="container-fluid orderContainer mt-5 mb-4">
         {courseData ? (
           <>
-            <div className="row">
+            <div className="row mt-5">
               {!isAddressShow ? (
                 <div
                   className="col-md-12 px-0 mt-1"

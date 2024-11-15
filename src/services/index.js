@@ -95,3 +95,9 @@ export const getPostListService = async (params) => await axiosClient.post(PostU
 export const likeUnlikePostService = async (params) => await axiosClient.post(PostUrl + 'like_unlike_post', params)
 export const addCommentService = async (params) => await axiosClient.post(PostUrl + 'comment_post', params)
 export const feedCommentListService = async (params) => await axiosClient.post(PostUrl + 'get_feed_comments', params)
+
+
+// Live
+
+const PollUrl = 'poll/';
+export const getContentMeta = async (params) => await axiosClient.post(PollUrl + '/get_content_meta', params)

@@ -97,7 +97,7 @@ const TileDetail = ({item, layer1Data, handleRead, handleWatch, handleTakeTest, 
             <div className="pg-sb-topic pe-2">
             <div className="btnsalltbba text-center gap-1 d-flex">
                 {" "}
-                {/* {console.log("time", layer1Data)} */}
+                {/* {console.log("time", item)} */}
                 {
                 (isLogin ?
                 (purchased != 1) ?
@@ -130,7 +130,7 @@ const TileDetail = ({item, layer1Data, handleRead, handleWatch, handleTakeTest, 
 
                         {layer1Data?.type == "test" && (timeValue == "attempt" && ReAttemptTime(item?.is_reattempt) && item?.state == 1) &&
                             <>
-                                <Button1 value="Attempt Now" 
+                                <Button1 value="Re-Attempt" 
                                     handleClick={() => handleTakeTest(item, i)} 
                                 />
                                 <Button1 value={item?.state == 1 ? "View Result" : "LeaderBoard"}

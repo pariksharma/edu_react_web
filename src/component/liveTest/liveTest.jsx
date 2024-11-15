@@ -1,6 +1,5 @@
 import React, { useState, useRef, lazy, Suspense } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-
 import { decrypt, encrypt, get_token } from "@/utils/helpers";
 import { getLiveTestService } from "@/services";
 import Tab from "react-bootstrap/Tab";
@@ -16,23 +15,21 @@ const LoaderAfterLogin = lazy(() => import("../loaderAfterLogin"));
 
 const LiveTest = ({ title }) => {
   const [key, setKey] = useState("LIVE");
-  const [showError, setShowError] = useState(false);
+  const [showErrorMap, setShowErrorMap] = useState({ LIVE: false, UPCOMING: false, COMPLETED: false });
   const router = useRouter();
   const token = get_token();
   const popupRef = useRef(null);
   const intervalRef = useRef(null);
 
-  // Initialize the query client
   const queryClient = useQueryClient();
 
-  // Fetch Data Function
   const fetchLiveTest = async (type) => {
     try {
       const formData = { page: 1, type };
       const encryptedData = encrypt(JSON.stringify(formData), token);
       const response = await getLiveTestService(encryptedData);
       const decryptedData = decrypt(response.data, token);
-      
+
       if (decryptedData?.status) {
         return decryptedData?.data;
       } else {
@@ -45,31 +42,44 @@ const LiveTest = ({ title }) => {
       }
     } catch (error) {
       console.error("API call error:", error);
-      // router.push("/");
-      setShowError(true); // Reset error on tab change
-      throw error;
+      updateShowError(key, true); // Set error state for the current tab
+      return []; // Return an empty array
     }
   };
 
   const { data: liveTests, isLoading } = useQuery({
     queryKey: ["liveTests", key],
     queryFn: () => fetchLiveTest(key === "LIVE" ? 0 : key === "UPCOMING" ? 1 : 2),
-    cacheTime: 1000 * 60 * 60 * 24, // Cache for 24 hours
-    staleTime: 1000 * 60 * 60, // Consider fresh for 1 hour
-    refetchOnWindowFocus: false, // No refetch on tab focus
-    onError: () => setShowError(true),
-    onSuccess: (data) => setShowError(!data || data.length === 0),
+    cacheTime: 1000 * 60 * 60 * 24,
+    staleTime: 1000 * 60 * 60,
+    refetchOnWindowFocus: false,
+    enabled: true,
+    onError: () => updateShowError(key, true),
+    onSuccess: (data) => {
+      if (!data || data.length === 0) {
+        updateShowError(key, true);
+      } else {
+        updateShowError(key, false);
+      }
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries(["liveTests", key], { refetchActive: false });
+    },
   });
 
   const handleTabChange = (k) => {
-    console.log("k",k)
     setKey(k);
-    setShowError(false); // Reset error on tab change
   };
 
-  // Define the handleCallFunction to refetch data
   const handleCallFunction = () => {
     queryClient.invalidateQueries(["liveTests", key]);
+  };
+
+  const updateShowError = (tabKey, errorStatus) => {
+    setShowErrorMap(prevState => ({
+      ...prevState,
+      [tabKey]: errorStatus
+    }));
   };
 
   return (
@@ -96,7 +106,7 @@ const LiveTest = ({ title }) => {
                   <div className="row">
                     {isLoading ? (
                       <LoaderAfterLogin />
-                    ) : showError ? (
+                    ) : showErrorMap[tabKey] ? (
                       <Suspense fallback={<LoaderAfterLogin />}>
                         <ErrorPageAfterLogin />
                       </Suspense>
@@ -109,7 +119,7 @@ const LiveTest = ({ title }) => {
                             value={key}
                             popupRef={popupRef}
                             intervalRef={intervalRef}
-                            handleCallFunction={handleCallFunction} // Pass the function as a prop
+                            handleCallFunction={handleCallFunction}
                           />
                         ))}
                       </Suspense>

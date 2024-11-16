@@ -31,11 +31,8 @@ const MQTTchat = ({listenURL, port, settingNode, chatNode, course_id, isPublic})
 
   useEffect(() => {
     if (client) {
-      // console.log("client", client);
       client.on("connect", () => {
         setConnectStatus("Connected");
-        // console.log("connected");
-
         client.subscribe(chatNode, { qos: 1 }, (err) => {
           if (err) {
             console.error("Subscription error:", err);
@@ -43,38 +40,41 @@ const MQTTchat = ({listenURL, port, settingNode, chatNode, course_id, isPublic})
             console.log(`Subscribed to chatNode "${chatNode}"`);
           }
         });
-
+  
         client.subscribe(settingNode, { qos: 1 }, (err) => {
-            if (err) {
-              console.error("Subscription error:", err);
-            } else {
-              console.log(`Subscribed to settingNode "${settingNode}"`);
-            }
-          });
-
-          getChatData()
-
-        // client.on("message", (chatNode, message) => {
-        //   console.log(
-        //     `Received message on chatNode "${chatNode}": ${message.toString()}`
-        //   );
-        //   // Handle the received message here
-        // //   dispatch(ADDchat(JSON.parse(message.toString())))
-        // });
+          if (err) {
+            console.error("Subscription error:", err);
+          } else {
+            console.log(`Subscribed to settingNode "${settingNode}"`);
+          }
+        });
+  
+        getChatData();
       });
+  
       client.on("error", (err) => {
         console.error("Connection error: ", err);
         client.end();
       });
+  
       client.on("reconnect", () => {
         setConnectStatus("Reconnecting");
       });
     }
-  }, [listenURL]);
+  }, [client, chatNode, settingNode]);
 
+
+  useEffect(() => {
+    // Scroll to the bottom when chatData changes
+    if (chatContainerRef.current) {
+      chatContainerRef.current.scrollTop =
+        chatContainerRef.current.scrollHeight;
+    }
+  }, [chatData]);
+  
   const getChatData = () => {
-    // console.log('getChatData')
-    client.on("message", (topic, message) => {
+    console.log('getChatData')
+    client.on("message", (chatNode, message) => {
         // console.log(`Received message on topic "${topic}": ${message}`);
         setChatData((prevChatData) => [
             ...prevChatData,

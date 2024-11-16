@@ -8,6 +8,7 @@ import MQTTchat from './MQTTchat';
 import { decrypt, encrypt, get_token } from '@/utils/helpers';
 import { getContentMeta } from '@/services';
 import Header from '../header/header';
+import Loader from '../loader';
 
 // Firebase configuration
 const firebaseConfig = {
@@ -34,6 +35,7 @@ const Chat = ({chat_node, course_id, video_id}) => {
   const [settingNode, setSettingNode] = useState(null);
   const [port, setPort] = useState(null);
   const [listenURL, setListenURL] = useState(null);
+  const [showChat, setShowChat] = useState(false)
 
   useEffect(() => {
     fetchContentMeta()
@@ -59,6 +61,7 @@ const Chat = ({chat_node, course_id, video_id}) => {
             setSettingNode(response_contentMeta_data?.data?.live_chat?.setting_node)
             setListenURL(response_contentMeta_data?.data?.live_chat?.listenUrl)
             // console.log('data?.live_chat?.is_firebase', data?.live_chat?.is_firebase)
+            setShowChat(true)
         }
         else{
           setPublicChat(0)
@@ -81,13 +84,17 @@ const Chat = ({chat_node, course_id, video_id}) => {
               className="mb-3"
             >
               <Tab className="liveChat" eventKey="Live Chat" title="Live Chat">
-              {isFireBase != 0 ? 
-                <LiveChat
-                  chat_node = {chat_node}
-                  course_id = {course_id}
-                  isPublic = {publicChat}
-                />
-                :
+              {isFireBase == '1' ? 
+                showChat ? 
+                  <LiveChat
+                    chat_node = {chat_node}
+                    course_id = {course_id}
+                    isPublic = {publicChat}
+                  />
+                  :
+                  <Loader />
+              :
+              showChat ? 
                 <MQTTchat
                   chatNode = {chatNode}
                   settingNode = {settingNode}
@@ -97,6 +104,8 @@ const Chat = ({chat_node, course_id, video_id}) => {
                   course_id = {course_id}
                   isPublic = {publicChat}
                 />
+                :
+                <Loader />
               }
               </Tab>
               <Tab eventKey="Live Poll" title="Live Poll">

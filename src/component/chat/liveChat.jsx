@@ -66,7 +66,7 @@ const LiveChat = ({ chat_node, course_id, isPublic }) => {
     setUserId(localStorage.getItem("user_id"));
     const chatRef = ref(
       database,
-      `${app_id}/chat_master/${chat_node}/${isPublic ? "1TOM" : "1TO1"}`
+      `${app_id}/chat_master/${chat_node}/${isPublic != "0" ? "1TOM" : "1TO1"}`
     );
     // console.log(chatRef)
     const unsubscribe = onValue(chatRef, (snapshot) => {
@@ -75,6 +75,7 @@ const LiveChat = ({ chat_node, course_id, isPublic }) => {
       if (value) {
         const messagesArray = value ? Object.values(value) : [];
         setChatData(messagesArray);
+        setInput("")
         // console.log('messagesArray', messagesArray)
       }
     });
@@ -108,7 +109,7 @@ const LiveChat = ({ chat_node, course_id, isPublic }) => {
         // console.log("Uploaded URL:", uploadedUrl, type);
         const statusRef = ref(
           database,
-          `${app_id}/chat_master/${chat_node}/${isPublic ? "1TOM" : "1TO1"}`
+          `${app_id}/chat_master/${chat_node}/${isPublic != "0" ? "1TOM" : "1TO1"}`
         );
         push(statusRef, {
           date: convertToTimestamp(curr_date),

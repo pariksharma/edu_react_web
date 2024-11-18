@@ -32,6 +32,7 @@ const MQTTchat = ({listenURL, port, settingNode, chatNode, course_id, isPublic})
   useEffect(() => {
     if (client) {
       client.on("connect", () => {
+        console.log('connect')
         setConnectStatus("Connected");
         client.subscribe(chatNode, { qos: 1 }, (err) => {
           if (err) {
@@ -61,7 +62,7 @@ const MQTTchat = ({listenURL, port, settingNode, chatNode, course_id, isPublic})
         setConnectStatus("Reconnecting");
       });
     }
-  }, [client, chatNode, settingNode]);
+  }, [client]);
 
 
   useEffect(() => {
@@ -103,6 +104,7 @@ const MQTTchat = ({listenURL, port, settingNode, chatNode, course_id, isPublic})
     const user_id = localStorage.getItem("user_id");
     const userName = localStorage.getItem("userName");
     setUserId(localStorage.getItem("user_id"))
+    console.log('hi', input)
     const curr_date = new Date();
     if (input) {
       let msgObject = JSON.stringify({
@@ -118,7 +120,7 @@ const MQTTchat = ({listenURL, port, settingNode, chatNode, course_id, isPublic})
         if (err) {
           console.error("Error publishing message:", err);
         } else {
-        //   console.log(` Message published to topic "${chatNode}": ${input}`);
+          console.log(` Message published to topic "${chatNode}": ${input}`);
         //   getChatData()
         setInput('')
         }

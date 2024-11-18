@@ -84,7 +84,7 @@ const Chat = ({chat_node, course_id, video_id}) => {
               className="mb-3"
             >
               <Tab className="liveChat" eventKey="Live Chat" title="Live Chat">
-              {isFireBase != '1' ? 
+              {isFireBase == '1' ? 
                 showChat ? 
                   <LiveChat
                     chat_node = {chat_node}

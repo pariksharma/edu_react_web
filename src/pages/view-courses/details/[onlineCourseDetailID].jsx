@@ -429,7 +429,6 @@ const ViewOnlineCourseDetail = ({ initialData, onlineCourseDetailID, IsTranding 
                       </Suspense>
                     </Tab>
                   )}
-                  {console.log('tiles', tiles, versionData.same_content_view)}
                   {tiles?.map(
                     (item, index) =>
                       // item.type !== "content" &&

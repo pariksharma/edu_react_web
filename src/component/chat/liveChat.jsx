@@ -366,14 +366,7 @@ const LiveChat = ({ chat_node, course_id, isPublic }) => {
           </div>
         </div>
       </div>
-      {showPicker && <EmojiPicker 
-          onEmojiClick={onEmojiClick} 
-          // searchDisabled={true}
-          // skinTonesDisabled={true}
-          // reactions={true}
-          // suggestedEmojisMode ={false}
-          emojiStyle = {'google'}
-           />}
+
       {/* <pre>{JSON.stringify(chatData, null, 2)}</pre> */}
       <form className="chat_input pt-1 pb-0 p-0" onSubmit={handleUpdateStatus}>
         <div class="input-group">
@@ -523,6 +516,14 @@ const LiveChat = ({ chat_node, course_id, isPublic }) => {
           </svg>
         </button>
       </form>
+      {showPicker && <EmojiPicker 
+          onEmojiClick={onEmojiClick} 
+          // searchDisabled={true}
+          // skinTonesDisabled={true}
+          // reactions={true}
+          // suggestedEmojisMode ={false}
+          emojiStyle = {'google'}
+           />}
 
       {/* <div class="chat_input">
         <div class="input-group">

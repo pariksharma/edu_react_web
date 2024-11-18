@@ -9,6 +9,8 @@ import { decrypt, encrypt, get_token } from '@/utils/helpers';
 import { getContentMeta } from '@/services';
 import Header from '../header/header';
 import Loader from '../loader';
+import { toast } from 'react-toastify';
+import { useRouter } from 'next/router';
 
 // Firebase configuration
 const firebaseConfig = {
@@ -36,6 +38,8 @@ const Chat = ({chat_node, course_id, video_id}) => {
   const [port, setPort] = useState(null);
   const [listenURL, setListenURL] = useState(null);
   const [showChat, setShowChat] = useState(false)
+
+  const router = useRouter()
 
   useEffect(() => {
     fetchContentMeta()
@@ -65,6 +69,18 @@ const Chat = ({chat_node, course_id, video_id}) => {
         }
         else{
           setPublicChat(0)
+          toast.error(response_contentMeta_data.message);
+            if (
+              response_contentMeta_data.message ==
+              "You are already logged in with some other devices, So you are logged out from this device. 9"
+            ) {
+              localStorage.removeItem("jwt");
+              localStorage.removeItem("user_id");
+              localStorage.removeItem('userName')
+              router.pathname.startsWith("/private")
+                ? router.push("/")
+                : location.reload();
+            }
         }
     } catch (error) {
         console.log('error found: ', error)

@@ -186,7 +186,7 @@ const MQTTchat = ({listenURL, port, settingNode, chatNode, course_id, isPublic})
                               {chat?.type == "audio" && <AudioPlayer
                                   audioUrl={chat?.message}
                                   userName="Ankur Tiwari"
-                                  duration="15 Min"
+                                  duration={chat?.date && formatTime(chat?.date)}
                                 />
                                 }
                             </p>
@@ -198,7 +198,7 @@ const MQTTchat = ({listenURL, port, settingNode, chatNode, course_id, isPublic})
                             tabindex="0"
                           >
                             {chat?.date && formatTime(chat?.date)} |{" "}
-                            <i class="bi bi-three-dots-vertical"></i>
+                            {/* <i class="bi bi-three-dots-vertical"></i> */}
                           </small>
                         </div>
                       

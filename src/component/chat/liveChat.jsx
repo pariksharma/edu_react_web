@@ -304,7 +304,7 @@ const LiveChat = ({ chat_node, course_id, isPublic }) => {
                             tabindex="0"
                           >
                             {chat?.date && formatTime(chat?.date)} |{" "}
-                            <i class="bi bi-three-dots-vertical"></i>
+                            {/* <i class="bi bi-three-dots-vertical"></i> */}
                           </small>
                         </div>
                       </div>

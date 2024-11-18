@@ -7931,8 +7931,8 @@ p.video_bg_color.shaka-video-container {
   background: #000 !important;
 } */
 .__video_player__main___ video {
-  /* width: 100% !important; */
-  /* height: 98vh !important; */
+  width: 100% !important;
+   height: 98vh !important;
 }
 .video_bg_color {
   margin-bottom: 5px !important;
@@ -8197,7 +8197,11 @@ font-weight: 700;
   font-weight: bold;
   margin-bottom: 4px;
 }
-
+.__video_player__main___ {
+  width: 100% !important;
+  height: 100% !important;
+  background: #000 !important;
+}
 .audio-message {
   display: flex;
   align-items: center;

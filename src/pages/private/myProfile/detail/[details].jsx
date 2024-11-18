@@ -112,15 +112,16 @@ const Details = ({ value }) => {
 
   useEffect(() => {
     if (details) {
+      console.log("details",details)
       // window.scrollTo(0, 0);
+      setId(details?.slice(details.indexOf(":") + 1, details.indexOf("&")));
+      setTitleName(details?.slice(0, details.indexOf(":")));
       fetchCourseDetail(
         details?.slice(details.indexOf(":") + 1, details.indexOf("&"))
       );
-      setId(details?.slice(details.indexOf(":") + 1, details.indexOf("&")));
-      setTitleName(details?.slice(0, details.indexOf(":")));
       // setCourseCombo(details?.slice(details.indexOf("&") + 1, details.length));
     }
-  }, [details, reviewData]);
+  }, [details]);
 
   useEffect(() => {
     setShowError(false);
@@ -173,6 +174,7 @@ const Details = ({ value }) => {
   // console.log('courseCombo', courseCombo)
 
   const fetchCourseDetail = async (id) => {
+    console.log("id",id)
     try {
       const token = get_token();
       const formData = {
@@ -239,10 +241,8 @@ const Details = ({ value }) => {
   };
 
   const handleTabChange = (k) => {
-    console.log("k 83", k);
     setKey(k);
     dispatch(reset_tab())
-    // console.log('k', k)
     if (resetLayerRef.current) {
       resetLayerRef.current.click();
     }

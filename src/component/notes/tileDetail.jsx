@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import Button1 from '../buttons/button1/button1'
 import { userLoggedIn } from '@/utils/helpers'
+import { toast } from 'react-toastify'
 
 const TileDetail = ({item, layer1Data, handleRead, handleWatch, handleTakeTest, handleResultTest, handleRankTest, handleUpcomingTest, i, onlineCourseAry}) => {
 
@@ -69,6 +70,10 @@ const TileDetail = ({item, layer1Data, handleRead, handleWatch, handleTakeTest, 
         }
       }, [])
 
+      const handleNotStarted = () => {
+        toast.error('Class is not started yet')
+      }
+
 
   return (
     <>
@@ -97,14 +102,22 @@ const TileDetail = ({item, layer1Data, handleRead, handleWatch, handleTakeTest, 
             <div className="pg-sb-topic pe-2">
             <div className="btnsalltbba text-center gap-1 d-flex">
                 {" "}
-                {/* {console.log("time", item)} */}
+                {console.log("time", item)}
                 {
                 (isLogin ?
                 (purchased != 1) ?
                     item.is_locked == 0 ?
                     <>
                         {layer1Data.type == "pdf" && <Button1 value="Read" handleClick={() => handleRead(item)} /> }
-                        {(layer1Data.type == "video" || layer1Data.type == "Video") && <Button1 value="Watch Now" handleClick={() => handleWatch(item, i)} />}
+                        {(layer1Data.type == "video" || layer1Data.type == "Video") && (
+                            (item.video_type == 4 || item.video_type == 8) ?
+                                item.status == 2 ? 
+                                <Button1 value="Watch Now" handleClick={() => handleWatch(item, i)} />
+                                :
+                                <Button1 value="Watch Now" handleClick={() => handleNotStarted(item, i)} />
+                            :
+                                <Button1 value="Watch Now" handleClick={() => handleWatch(item, i)} />
+                        )}
                         {layer1Data?.type == "test" && 
                         (timeValue == "pending" &&
                         <Button1 value="Upcoming" 
@@ -148,7 +161,16 @@ const TileDetail = ({item, layer1Data, handleRead, handleWatch, handleTakeTest, 
                 <>
                 {/* {console.log('7777777777777',timeValue, item)} */}
                     {layer1Data.type == "pdf" && <Button1 value="Read" handleClick={() => handleRead(item)} /> }
-                        {(layer1Data.type == "video" || layer1Data.type == "Video") && <Button1 value="Watch Now" handleClick={() => handleWatch(item, i)} />}
+                        {(layer1Data.type == "video" || layer1Data.type == "Video") && (
+                            (item.video_type == 4 || item.video_type == 8) ?
+                                item.status == 2 ? 
+                                <Button1 value="Watch Now" handleClick={() => handleWatch(item, i)} />
+                                :
+                                <Button1 value="Watch Now" handleClick={() => handleNotStarted(item, i)} />
+                            :
+                                <Button1 value="Watch Now" handleClick={() => handleWatch(item, i)} />
+                        )}
+                        {/* {(layer1Data.type == "video" || layer1Data.type == "Video") && <Button1 value="Watch Now" handleClick={() => handleWatch(item, i)} />}   */}
                         {layer1Data?.type == "test" && 
                         (timeValue == "pending" &&
                         <Button1 value="Upcoming" 

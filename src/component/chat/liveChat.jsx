@@ -10,6 +10,8 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 import { decrypt, encrypt, get_token } from "@/utils/helpers";
 import { getContentMeta } from "@/services";
 import AudioPlayer from "./AudioPlayer";
+import EmojiPicker from "emoji-picker-react";
+
 // Firebase configuration
 const firebaseConfig = {
   apiKey: "AIzaSyB8ISZRq949XJrbNeZm0gK54d9Q3zAzBtI",
@@ -37,9 +39,10 @@ const LiveChat = ({ chat_node, course_id, isPublic }) => {
   const [imagePreviews, setImagePreviews] = useState([]);
   const [progress, setProgress] = useState("");
   const [type, setType] = useState("text");
+  const [showPicker, setShowPicker] = useState(false)
   const fileInputRef = useRef(null);
 
-  console.log('isPublic', isPublic)
+  // console.log('isPublic', isPublic)
 
   const app = initializeApp(firebaseConfig);
   const database = getDatabase(app); // Get Firebase Realtime Database instance
@@ -95,6 +98,7 @@ const LiveChat = ({ chat_node, course_id, isPublic }) => {
 
   const handleUpdateStatus = async (e) => {
     e.preventDefault();
+    setShowPicker(false)
     // console.log("file978798", file);
 
     try {
@@ -231,6 +235,11 @@ const LiveChat = ({ chat_node, course_id, isPublic }) => {
     }
   };
 
+  const onEmojiClick = (emojiObject) => {
+    console.log('Selected Emoji:', emojiObject.emoji); // Logs the emoji character
+    setInput((prevInput) => prevInput + emojiObject.emoji);
+  };
+
   return (
     <>
       <div className="chat-conversation" >
@@ -303,7 +312,8 @@ const LiveChat = ({ chat_node, course_id, isPublic }) => {
                             class="dropdown-btn text-muted mb-0 ms-2"
                             tabindex="0"
                           >
-                            {chat?.date && formatTime(chat?.date)} |{" "}
+                            {chat?.date && formatTime(chat?.date)} 
+                            {/* {" "}|{" "} */}
                             {/* <i class="bi bi-three-dots-vertical"></i> */}
                           </small>
                         </div>
@@ -356,7 +366,14 @@ const LiveChat = ({ chat_node, course_id, isPublic }) => {
           </div>
         </div>
       </div>
-
+      {showPicker && <EmojiPicker 
+          onEmojiClick={onEmojiClick} 
+          // searchDisabled={true}
+          // skinTonesDisabled={true}
+          // reactions={true}
+          // suggestedEmojisMode ={false}
+          emojiStyle = {'google'}
+           />}
       {/* <pre>{JSON.stringify(chatData, null, 2)}</pre> */}
       <form className="chat_input pt-1 pb-0 p-0" onSubmit={handleUpdateStatus}>
         <div class="input-group">
@@ -417,7 +434,7 @@ const LiveChat = ({ chat_node, course_id, isPublic }) => {
 
           {/* Delete icon over the image */}
           {/* </div> */}
-          <div class="input-group-append">
+          <div class="input-group-append" onClick={() => setShowPicker(!showPicker)}>
             <span
               class="input-group-text border-0 rounded-0 rounded-end"
               style={{ padding: "9px 5px", background: "#F5F5F5" }}

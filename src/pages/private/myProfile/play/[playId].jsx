@@ -94,7 +94,7 @@ const PlayId = () => {
                                     video_id = {router.query.video_id}
                                 />
                             </div>
-                    </div>
+                        </div>
                     </div>
                 );
             case 1:
@@ -133,8 +133,13 @@ const PlayId = () => {
                           chat_node={router.query.chat_node}
                           course_id={router.query.course_id}
                           video_id={router.query.video_id}
-                        />
+                          />
                       </div>
+                    </div>
+                    <div className='row mt-3 liveTitleHeading'>
+                        <div className='col-md-8'>
+                          <p>{router?.query?.title}</p>
+                        </div>
                     </div>
                   </div>
                 );

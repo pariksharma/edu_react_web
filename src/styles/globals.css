@@ -8229,3 +8229,8 @@ font-weight: 700;
   color: #888;
   font-size: 12px;
 }
+
+.liveTitleHeading {
+  font-size: 26px;
+  font-weight: 600;
+}

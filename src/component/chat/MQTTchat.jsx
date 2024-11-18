@@ -197,7 +197,8 @@ const MQTTchat = ({listenURL, port, settingNode, chatNode, course_id, isPublic})
                             class="dropdown-btn text-muted mb-0 ms-2"
                             tabindex="0"
                           >
-                            {chat?.date && formatTime(chat?.date)} |{" "}
+                            {chat?.date && formatTime(chat?.date)} 
+                            {/* {" "}|{" "} */}
                             {/* <i class="bi bi-three-dots-vertical"></i> */}
                           </small>
                         </div>

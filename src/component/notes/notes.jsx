@@ -14,6 +14,7 @@ import LoaderAfterLogin from "../loaderAfterLogin";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import TileDetail from "./tileDetail";
+import ErrorPage from "../errorPage";
 
 const Notes = ({
   propsValue,
@@ -586,6 +587,7 @@ const Notes = ({
 
   return (
     <>
+      {courseDetail?.meta?.list?.length > 0 ? <>
       <LoginModal
         show={modalShow}
         onHide={() => {
@@ -844,6 +846,10 @@ const Notes = ({
           </div>
         </div>
       </div>
+      </>
+      :
+       <ErrorPage />
+      }
     </>
   );
 };

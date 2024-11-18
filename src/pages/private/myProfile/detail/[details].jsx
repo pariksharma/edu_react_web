@@ -436,6 +436,7 @@ const Details = ({ value }) => {
               <div className="container-fluid p-0">
                 <div className="profileCourse_mainContainer tabs_design__">
                   <nav className="m-0 p-0">
+                    {console.log('tiles', tiles)}
                     <Tabs
                       id="controlled-tab-example2"
                       activeKey={key}
@@ -468,6 +469,7 @@ const Details = ({ value }) => {
                           (item.type !== "content" &&
                             item.type !== "faq" &&
                             item.type !== "overview" &&
+                            item.type !== "image" &&
                             item.type !== "concept") &&
                           !(
                             item.type == "content" &&

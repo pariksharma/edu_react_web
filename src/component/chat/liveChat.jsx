@@ -296,7 +296,7 @@ const LiveChat = ({ chat_node, course_id, isPublic }) => {
             // Push the updated node to another reference
             const oneToOneRef = ref(
               database,
-              `${app_id}/chat_master/${chat_node}/${isPublic !== "0" ? "1TOM" : `1TO1/${user_id}/${firebase_id}`}`
+              `${app_id}/chat_master/${chat_node}/1TOM`
             );
             return update(oneToOneRef, updatedNode);
           })
@@ -317,7 +317,7 @@ const LiveChat = ({ chat_node, course_id, isPublic }) => {
             console.error("Error updating status or pushing node:", error);
           });
 
-          if(isPublic != "0") {
+          if(isPublic != "on") {
             const statusRef = ref(
               database,
               `${app_id}/chat_master/${chat_node}/1TO1/${user_id}`
@@ -336,7 +336,7 @@ const LiveChat = ({ chat_node, course_id, isPublic }) => {
                 // Push the updated node to another reference
                 const oneToOneRef = ref(
                   database,
-                  `${app_id}/chat_master/${chat_node}/${isPublic !== "0" ? "1TOM" : `1TO1/${user_id}/${firebase_id}`}`
+                  `${app_id}/chat_master/${chat_node}/1TO1/${user_id}/${firebase_id}`
                 );
                 return update(oneToOneRef, updatedNode);
               })
@@ -606,7 +606,7 @@ const LiveChat = ({ chat_node, course_id, isPublic }) => {
             <span
               className="input-group-text border-0 rounded-0 rounded-start paperClip"
               onClick={handleFileClick}
-              style={{ background: "#F5F5F5" }}
+              style={{ background: "#F5F5F5", cursor: 'pointer' }}
             >
               <ImAttachment style={{ height: "26px", color: "#969696" }} />
             </span>
@@ -646,7 +646,7 @@ const LiveChat = ({ chat_node, course_id, isPublic }) => {
           <div className="input-group-append" onClick={() => setShowPicker(!showPicker)}>
             <span
               className="input-group-text border-0 rounded-0 rounded-end"
-              style={{ padding: "9px 5px", background: "#F5F5F5" }}
+              style={{ padding: "9px 5px", background: "#F5F5F5", cursor: 'pointer' }}
             >
               <svg
                 width="24"

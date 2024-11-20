@@ -20,7 +20,7 @@ const AudioPlayer = ({ audioUrl }) => {
     });
 
     // Load the audio file
-    waveSurferRef.current.load(audioUrl);
+    waveSurferRef?.current?.load(audioUrl);
 
     // Error handling: if the audio fails to load, display an error
     waveSurferRef.current.on("error", (e) => {

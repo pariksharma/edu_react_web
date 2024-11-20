@@ -5,6 +5,24 @@ import Head from 'next/head';
 import Chat from '@/component/chat/chat';
 import { decrypt, encrypt, get_token } from '@/utils/helpers';
 import { getContentMeta } from '@/services';
+import { getDatabase, ref, onValue, update, push } from "firebase/database";
+import { initializeApp } from "firebase/app";
+
+
+// Firebase configuration
+const firebaseConfig = {
+    apiKey: "AIzaSyB8ISZRq949XJrbNeZm0gK54d9Q3zAzBtI",
+    authDomain: "lab-elsaq-education.firebaseapp.com",
+    databaseURL: "https://lab-elsaq-education-default-rtdb.firebaseio.com",
+    projectId: "lab-elsaq-education",
+    storageBucket: "lab-elsaq-education.appspot.com",
+    messagingSenderId: "413835077933",
+    appId: "1:413835077933:web:e9ad389b4f0e203dfa0ba4",
+    measurementId: "G-1527TMN738",
+  };
+
+const app = initializeApp(firebaseConfig);
+  const database = getDatabase(app); // Get Firebase Realtime Database instance
 
 const PlayId = () => {
     const [windowSize, setWindowSize] = useState({
@@ -33,10 +51,44 @@ const PlayId = () => {
 
             // Clean up the event listener on component unmount
             return () => {
+                console.log("hello")
+                handleUserOffline()
                 window.removeEventListener('resize', handleResize);
             };
         }
     }, []);
+
+    const handleUserOffline = () => {
+        try {
+          const app_id = localStorage.getItem("appId");
+          const user_id = localStorage.getItem("user_id");
+            const chatNode = localStorage.getItem("chat_node");
+            const curr_date = new Date();
+            console.log('chatNode', chatNode)
+          const userStatusRef = ref(
+            database,
+            `${app_id}/chat_master/${chatNode}/User/${user_id}`
+          );
+      
+          // Update only the 'online' field
+          update(userStatusRef, {
+            online: convertToTimestamp(curr_date), // Set to an empty string to indicate offline
+          })
+            .then(() => {
+              console.log("User 'online' status updated to offline.");
+            })
+            .catch((error) => {
+              console.error("Error updating 'online' status:", error);
+            });
+        } catch (error) {
+          console.error("Error updating user offline status:", error);
+        }
+      };
+
+      const convertToTimestamp = (dateString) => {
+        const date = new Date(dateString);
+        return date.getTime(); // Convert milliseconds to seconds
+      };
 
     useEffect(() => {
         // Check if router is ready
@@ -136,9 +188,11 @@ const PlayId = () => {
                           />
                       </div>
                     </div>
-                    <div className='row mt-3 liveTitleHeading'>
+                    <div className='row mt-3'>
                         <div className='col-md-8'>
-                          <p>{router?.query?.title}</p>
+                        <p className="liveTitleHeading">
+                          {router?.query?.title}
+                        </p>
                         </div>
                     </div>
                   </div>

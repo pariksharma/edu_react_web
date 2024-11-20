@@ -38,11 +38,14 @@ const Chat = ({chat_node, course_id, video_id}) => {
   const [port, setPort] = useState(null);
   const [listenURL, setListenURL] = useState(null);
   const [showChat, setShowChat] = useState(false)
+  const [pdfData, setPdfData] = useState([]);
+  const [locked_room, setLocked_room] = useState('');
 
   const router = useRouter()
 
   useEffect(() => {
     fetchContentMeta()
+    localStorage.setItem('chat_node', chat_node)
   }, [video_id])
 
   const fetchContentMeta = async () => {
@@ -64,8 +67,10 @@ const Chat = ({chat_node, course_id, video_id}) => {
             setChatNode(response_contentMeta_data?.data?.live_chat?.chat_node)
             setSettingNode(response_contentMeta_data?.data?.live_chat?.setting_node)
             setListenURL(response_contentMeta_data?.data?.live_chat?.listenUrl)
+            setLocked_room(response_contentMeta_data?.data?.live_chat?.type)
             // console.log('data?.live_chat?.is_firebase', data?.live_chat?.is_firebase)
             setShowChat(true)
+            setPdfData(response_contentMeta_data?.data?.pdf)
         }
         else{
           setPublicChat(0)
@@ -85,8 +90,13 @@ const Chat = ({chat_node, course_id, video_id}) => {
     } catch (error) {
         console.log('error found: ', error)
     }
-}
+  }
 
+  const handleRead = (value) => {
+    if (typeof window !== "undefined") {
+      window.open(value.pdf_url, "_blank");
+    }
+  };
 
   return (
     <>
@@ -119,6 +129,7 @@ const Chat = ({chat_node, course_id, video_id}) => {
                   chat_node = {chat_node}
                   course_id = {course_id}
                   isPublic = {publicChat}
+                  locked_room = {locked_room}
                 />
                 :
                 <Loader />
@@ -128,7 +139,32 @@ const Chat = ({chat_node, course_id, video_id}) => {
                 Tab content for Profile
               </Tab>
               <Tab eventKey="PDF" title="PDF">
-                Tab content for Contact
+                {pdfData?.length > 0 && pdfData.map((pdf, index) => 
+                  <div className="p-2 pdf-card mb-2" 
+                    key={index} 
+                    style={{cursor :'pointer'}} 
+                    onClick={() => handleRead(pdf)}
+                  >
+                    <div className="d-flex align-items-center gap-2 flex-nowrap">
+                      <div className="pdf_img_cont">
+                        <img src={pdf?.pdf_thumbnail ? pdf?.pdf_thumbnail : "/assets/images/noImage.jfif"} alt="" />
+                      </div>
+                      <h4 className="m-0 pdf_title flex-fill">{pdf?.pdf_title}</h4>
+                      <svg
+                        stroke="currentColor"
+                        fill="currentColor"
+                        strokeWidth="0"
+                        viewBox="0 0 512 512"
+                        height="1em"
+                        width="1em"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path d="M294.1 256L167 129c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.3 34 0L345 239c9.1 9.1 9.3 23.7.7 33.1L201.1 417c-4.7 4.7-10.9 7-17 7s-12.3-2.3-17-7c-9.4-9.4-9.4-24.6 0-33.9l127-127.1z"></path>
+                      </svg>
+                    </div>
+                  </div>
+                )
+                }
               </Tab>
             </Tabs>
           </div>

@@ -8230,7 +8230,34 @@ font-weight: 700;
   font-size: 12px;
 }
 
+
 .liveTitleHeading {
-  font-size: 26px;
-  font-weight: 600;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  font-family: "Reddit Sans",sans-serif !important;
+  color: #131313 !important;
+}
+
+.pdf_img_cont img{
+  aspect-ratio: 16/9 !important;
+  object-fit: fill !important;
+  border-radius: 2px !important;
+  width: 70px !important;
+}
+
+.pdf-card {
+  width: 100% !important;
+  height: 100% !important;
+  border: 1px solid #E8E8E8 !important;
+  border-radius: 5px !important;
+}
+
+h4.pdf_title {
+  color: #2B2B2B !important;
+  font-family: "Inter", sans-serif;
+  font-size: var(--size-12) !important;
+  font-weight: 600 !important;
+  text-align: left !important;
+  text-underline-position: from-font;
+  text-decoration-skip-ink: none;
 }

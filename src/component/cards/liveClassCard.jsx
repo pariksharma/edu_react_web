@@ -208,7 +208,7 @@ const LiveClassCard = ({ courseData, value }) => {
           )}
           <hr className="dotted-divider" />
           <div className="myCourseBtn d-flex flex-wrap flex-lg-nowrap gap-2">
-            {console.log('courseData', courseData)}
+            {/* {console.log('courseData', courseData)} */}
             {(value == "LIVE" || value == "COMPLETED") && (
               <Button1
                 value="Watch"

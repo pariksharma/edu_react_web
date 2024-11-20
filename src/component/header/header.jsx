@@ -47,6 +47,7 @@ const Header = ({ search,IsHome }) => {
 
   useEffect(() => {
     localStorage.setItem('userName', userName.name)
+    localStorage.setItem('userMobile', userName.mobile)
   }, [userName])
 
   const UserLoggedIn = () => {

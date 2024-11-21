@@ -369,7 +369,7 @@ const LiveChat = ({ chat_node, course_id, isPublic }) => {
   };
 
   const formatTime = (date) => {
-    const cr_date = new Date(date * 1000);
+    const cr_date = new Date(date);
     if (cr_date) {
       return format(cr_date, "h:mm a");
     }
@@ -472,7 +472,8 @@ const LiveChat = ({ chat_node, course_id, isPublic }) => {
             >
               {chatData?.length > 0 &&
                 chatData.map((chat, index) => (
-                  chat.type != "is_chat_locked" &&
+                  chat.type != "is_chat_locked" && (
+                    chat?.id &&
                   <div
                     key={index}
                     className={`chat-list ${
@@ -517,7 +518,7 @@ const LiveChat = ({ chat_node, course_id, isPublic }) => {
                               {chat?.type == "audio" && <AudioPlayer
                                   audioUrl={chat?.message}
                                   userName={user_name}
-                                  duration="15 Min"
+                                  duration={chat?.date && formatTime(chat?.date)}
                                 />
                                 }
                             </p>
@@ -577,7 +578,7 @@ const LiveChat = ({ chat_node, course_id, isPublic }) => {
                       </div>
                     </div> */}
                   </div>
-                ))}
+                )))}
             </ul>
           </div>
         </div>

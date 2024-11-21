@@ -9,17 +9,30 @@ const MQTTchat = ({listenURL, port, settingNode, chatNode, course_id, isPublic, 
     const [input, setInput] = useState('')
     const [chatData, setChatData] = useState([])
     const [userId, setUserId] = useState('')
+    const [isLocked, setIsLocked] = useState('')
+    const [lockUserId, setLockUserId] = useState('')
     const chatContainerRef = useRef(null);
     const [roomLocked, setRoomLocked] = useState(locked_room)
 
   ////////////////// MQTT Connection ////////////////
     const mqttConnect = (host) => {
-        console.log('host', host)
-        setConnectStatus("Connecting");
-        setClient(mqtt.connect(host));
+      const jwt = localStorage.getItem("jwt");
+      const userName = localStorage.getItem("userName");
+      const user_id = localStorage.getItem("user_id");
+      const options = {
+        clientId: user_id, // Use USER_ID as the clientId
+        username: userName,   // Use Name as the username
+        password: jwt
       };
+        console.log('hoptionsost', options)
+        setConnectStatus("Connecting");
+        setClient(mqtt.connect(host, options));
+      };
+
+      console.log('isPublic', isPublic)
       
-    //   console.log('client', client)
+
+      // console.log('client', client)
       ////////////////// MQTT Connection Credential ////////////////
 
   const brokerUrl = `wss://chat-ws.videocrypt.in:8084/mqtt`;
@@ -35,23 +48,24 @@ const MQTTchat = ({listenURL, port, settingNode, chatNode, course_id, isPublic, 
       client.on("connect", () => {
         console.log('connect')
         setConnectStatus("Connected");
-        client.subscribe(chatNode, { qos: 1 }, (err) => {
+        client.subscribe(chatNode, { qos: 2 }, (err) => {
           if (err) {
             console.error("Subscription error:", err);
           } else {
             console.log(`Subscribed to chatNode "${chatNode}"`);
+            getChatData();
           }
         });
   
-        client.subscribe(settingNode, { qos: 1 }, (err) => {
+        client.subscribe(settingNode, { qos: 2 }, (err) => {
           if (err) {
             console.error("Subscription error:", err);
           } else {
             console.log(`Subscribed to settingNode "${settingNode}"`);
+            getUserData()
           }
         });
   
-        getChatData();
       });
   
       client.on("error", (err) => {
@@ -75,19 +89,42 @@ const MQTTchat = ({listenURL, port, settingNode, chatNode, course_id, isPublic, 
   }, [chatData]);
   
   const getChatData = () => {
-    console.log('getChatData')
+    // console.log('getChatData')
+    const user_id = localStorage.getItem("user_id");
     client.on("message", (chatNode, message) => {
         // console.log(`Received message on topic "${topic}": ${message}`);
-        setChatData((prevChatData) => [
-            ...prevChatData,
-            JSON.parse(message.toString()), // Parse the message if it's JSON
-        ]);
+        if(isPublic != '0'){
+          setChatData((prevChatData) => [
+              ...prevChatData,
+              JSON.parse(message.toString()), // Parse the message if it's JSON
+          ]);
+        }
+        else {
+          console.log(JSON.parse(message.toString()))
+          if(JSON.parse(message.toString())?.platform == '0' || JSON.parse(message.toString())?.id == user_id) {
+            setChatData((prevChatData) => [
+            ...prevChatData, 
+            JSON.parse(message.toString())
+          ])
+          }
+          // const chats = JSON.parse(message.toString()).filter((chat) => ())
+          
+        }
     });
-    // client.on("message", (settingNode, message) => {
-    //   console.log(`Received message on topic "${settingNode}": ${message}`);
-    //   // console.log('')
-    // });
   };
+
+  const getUserData = () => {
+    // console.log('getUserData')
+    client.on("message", (settingNode, message) => {
+      // console.log(`Received message on topic "${settingNode}": ${message}`);
+      // console.log('')
+      if(JSON.parse(message.toString())?.type == "user_unlock" || JSON.parse(message.toString())?.type == "user_lock"){
+        setIsLocked(JSON.parse(message.toString())?.type)
+        setRoomLocked(JSON.parse(message.toString())?.type)
+        setLockUserId(JSON.parse(message.toString())?.locked_user_id)
+      }
+    });
+  }
 
   const convertToTimestamp = (dateString) => {
     const date = new Date(dateString);
@@ -117,9 +154,11 @@ const MQTTchat = ({listenURL, port, settingNode, chatNode, course_id, isPublic, 
         message : input,
         name : userName,
         date : convertToTimestamp(curr_date),
-        platform : 4,
+        platform : '4',
         type : 'text',
-        course_id : course_id
+        course_id : course_id,
+        pin: '0',
+        is_active: '1'
       });
       client.publish(chatNode, msgObject, { qos: 1 }, (err) => {
         if (err) {
@@ -138,7 +177,7 @@ const MQTTchat = ({listenURL, port, settingNode, chatNode, course_id, isPublic, 
 
   return ( <>
     <div className="chat-conversation" >
-        {/* {console.log('caht', chatData)} */}
+        {console.log('caht', chatData)}
         <div className="simplebar-content-wrapper">
           <div
             className="simplebar-content live-content"
@@ -151,6 +190,7 @@ const MQTTchat = ({listenURL, port, settingNode, chatNode, course_id, isPublic, 
             >
               {chatData?.length > 0 &&
                 chatData.map((chat, index) => (
+                  (chat?.type == 'text' && chat?.message != "")  &&
                   <div
                     key={index}
                     className={`chat-list ${userId === chat.id ? "right" : "left"}`}
@@ -218,7 +258,10 @@ const MQTTchat = ({listenURL, port, settingNode, chatNode, course_id, isPublic, 
           </div>
         </div>
       </div>
-      {roomLocked == "room_unlock" &&
+      {console.log('isLocked', isLocked)}
+      {console.log('roomLocked', roomLocked)}
+      {roomLocked != "room_lock" && (
+        isLocked != "user_lock" &&
         <form className="chat_input pt-1 pb-0 p-0" onSubmit={handleMessge}>
           <div className="input-group">
             <input
@@ -279,7 +322,7 @@ const MQTTchat = ({listenURL, port, settingNode, chatNode, course_id, isPublic, 
             </svg>
           </button>
         </form>
-      }
+      )}
     </>
   )
 }

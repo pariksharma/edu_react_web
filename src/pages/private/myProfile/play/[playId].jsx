@@ -124,8 +124,8 @@ const PlayId = () => {
             case 8:
                 return (
                     <div className="container-fluid live-main-container">
-                        <div className="row">
-                            <div className="col-md-8">
+                        <div className="row" style={{height: "100%"}}>
+                            <div className="col-md-8" style={{height: "100%"}}>
                                 <VideoPlayerDRM
                                     vdc_id={router?.query?.vdc_id}
                                     NonDRMVideourl={router?.query?.file_url}
@@ -139,7 +139,7 @@ const PlayId = () => {
                                     course_id={router.query.course_id}
                                 />
                             </div>
-                            <div className="col-md-4">
+                            <div className="col-md-4" style={{height: "100%"}}>
                                 <Chat 
                                     chat_node = {router.query.chat_node}
                                     course_id={router.query.course_id}
@@ -165,8 +165,8 @@ const PlayId = () => {
             case 4:
                 return (
                   <div className="container-fluid live-main-container">
-                    <div className="row">
-                      <div className="col-md-8 mb-5 position-relative">
+                    <div className="row" style={{height: "100%"}}>
+                      <div className="col-md-8 mb-5 position-relative" style={{height: "100%"}}>
                         <iframe
                           id="youtubePlayer"
                           className="youtubePlayer"
@@ -188,7 +188,7 @@ const PlayId = () => {
                         </p>
                       </div>
 
-                      <div className="col-md-4 mb-5">
+                      <div className="col-md-4 mb-5" style={{height: "100%"}}>
                         <Chat
                           chat_node={router.query.chat_node}
                           course_id={router.query.course_id}
@@ -196,13 +196,13 @@ const PlayId = () => {
                         />
                       </div>
                     </div>
-                    <div className='row mt-3'>
+                    {/* <div className='row mt-3'>
                         <div className='col-md-8'>
                         <p className="liveTitleHeading">
                           {router?.query?.title}
                         </p>
                         </div>
-                    </div>
+                    </div> */}
                   </div>
                 );
             default:

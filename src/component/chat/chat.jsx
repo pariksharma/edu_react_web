@@ -11,6 +11,7 @@ import Header from '../header/header';
 import Loader from '../loader';
 import { toast } from 'react-toastify';
 import { useRouter } from 'next/router';
+import LivePoll from './LivePoll';
 
 // Firebase configuration
 const firebaseConfig = {
@@ -136,7 +137,7 @@ const Chat = ({chat_node, course_id, video_id}) => {
               }
               </Tab>
               <Tab eventKey="Live Poll" title="Live Poll">
-                Tab content for Profile
+                <LivePoll />
               </Tab>
               <Tab eventKey="PDF" title="PDF">
                 {pdfData?.length > 0 && pdfData.map((pdf, index) => 

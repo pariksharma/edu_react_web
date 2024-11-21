@@ -170,7 +170,7 @@ const LiveClassCard = ({ courseData, value }) => {
           </div>
           <div className="card-body pt-3 px-0 pb-0">
             <h6 className="mb-0 slideTitle">{courseData.title}</h6>
-            <h6 className="m-0 slideName py-2">{courseData.course_name}</h6>
+            <h6 className="mb-2 slideName py-2">{courseData.course_name}</h6>
           </div>
           <p className="my-2 d-flex align-items-center validity">
             <img

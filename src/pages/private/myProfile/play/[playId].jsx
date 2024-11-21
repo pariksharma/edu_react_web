@@ -166,7 +166,7 @@ const PlayId = () => {
                 return (
                   <div className="container-fluid live-main-container">
                     <div className="row">
-                      <div className="col-md-8">
+                      <div className="col-md-8 mb-5 position-relative">
                         <iframe
                           id="youtubePlayer"
                           className="youtubePlayer"
@@ -178,14 +178,22 @@ const PlayId = () => {
                           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                           allowFullScreen
                         />
+
+                        <img className="live_VideoImg" src="/assets/images/live_VideoImg.gif"
+                          alt=""
+                        />
+
+                        <p className="liveTitleHeading">
+                          {router?.query?.title}
+                        </p>
                       </div>
 
-                      <div className="col-md-4">
+                      <div className="col-md-4 mb-5">
                         <Chat
                           chat_node={router.query.chat_node}
                           course_id={router.query.course_id}
                           video_id={router.query.video_id}
-                          />
+                        />
                       </div>
                     </div>
                     <div className='row mt-3'>

@@ -3177,6 +3177,11 @@ span.quantityPrice input:nth-child(3) {
   font-size: 12px !important;
   color: #ff8b20 !important;
   font-weight: 600;
+  -webkit-line-clamp: 2 !important;
+  display: -webkit-box !important;
+  overflow: hidden !important;
+  -webkit-box-orient: vertical !important;
+  height: 35px !important;
 }
 
 .course_card h6.l_title {
@@ -4399,7 +4404,7 @@ input.coupon_field::placeholder {
   height: 100vh !important;
   position: fixed !important;
   /* top: 108px !important; */
-  z-index: 99 !important;
+  z-index: 9 !important;
   background: var(--primary-color) !important;
   box-shadow: 0px 0px 13px 0px #0000000f !important;
   overflow-y: auto !important;
@@ -5555,7 +5560,6 @@ hr.divider {
 }
 
 .chat_input .input_field {
-  background: #F5F5F5 !important;
   font-size: 12px !important;
   box-shadow: none !important;
   outline: none !important;
@@ -5612,25 +5616,80 @@ hr.divider {
 .liveChatTabs ul.nav-tabs{
   border: 0px !important;
   border-bottom: 1px solid #E8E8E8 !important;
-  padding-bottom: 10px !important;
+  /* padding-bottom: 10px !important; */
+}
+.liveChatTabs ul.nav-tabs li{
+  margin-bottom: 10px !important;
 }
 .liveChatTabs ul.nav-tabs li button {
   border: 0.7px solid #E8E8E8 !important;
   border-radius: 5px !important;
-  padding: 10px 20px !important;
+  padding: 0px !important;
   margin: 0px 7px !important;
   min-width: 107px !important;
   text-align: center !important;
   display: block !important;
+  height: 40px !important;
 }
+
+.liveChatTabs ul.nav-tabs li button.nav-link:hover {
+  border: 0.7px solid #FFA573 !important;
+  border-radius: 5px !important;
+}
+
 .liveChatTabs ul.nav-tabs li button.nav-link.active {
   border: 0.7px solid #FFA573 !important;
   border-radius: 5px !important;
-  padding: 10px 20px !important;
+  /* padding: 10px 20px !important; */
+  height: 40px !important;
+}
+
+.liveChatTabs .nav-tabs li:nth-child(1) button::before,
+.liveChatTabs .nav-tabs li:nth-child(2) button::before,
+.liveChatTabs .nav-tabs li:nth-child(3) button::before {
+  content: "";
+  position: relative !important;
+  width: 16px !important;
+  height: 16px !important;
+  left: 44px !important;
+  top: 1px !important;
+  display: block !important;
+  font-weight: 800 !important;
+  background-repeat: no-repeat !important;
+  background-size: contain !important;
+}
+.liveChatTabs .nav-tabs li:nth-child(1) button::before{
+  background-image: url("/assets/images/tabMsgIcon.svg") !important;
+}
+
+.liveChatTabs .nav-tabs li:nth-child(2) button::before {
+  background-image: url('/assets/images/pollImg.svg') !important;
+}
+
+.liveChatTabs .nav-tabs li:nth-child(3) button::before {
+  background-image: url('/assets/images/pdfIcon.svg') !important;
+}
+.liveChatTabs .nav-tabs li:nth-child(2){
+  position: relative !important;
+}
+.liveChatTabs .nav-tabs li:nth-child(2) button::after {
+  content: " " !important;
+  position: relative !important;
+  width: 10px !important;
+  height: 10px !important;
+  left: 2px !important;
+  display: block !important;
+  background-repeat: no-repeat !important;
+  background-size: contain !important;
+  top: -30px;
+}
+
+.liveChatTabs .nav-tabs li:nth-child(2) button::after {
+  background-image: url('/assets/images/live_dotImg.gif') !important;
 }
 
 .liveChatTabs .card{
-  height: 450px !important;
+  height: auto !important;
 }
 
 .youtubePlayer{
@@ -5645,7 +5704,7 @@ hr.divider {
 /* ====================== Live Chat Section Starts ================== */
 
 .simplebar-content.live-content {
-  height: 327px !important;
+  height: 100vh !important;
   border-bottom: 0px !important;
   overflow-x: hidden !important;
 }
@@ -8230,19 +8289,39 @@ font-weight: 700;
   font-size: 12px;
 }
 
+.live_VideoImg{
+  width: 60px !important;
+  position: absolute !important;
+  bottom: 50px !important;
+  right: 25px !important;
+  height: 20px !important;
+}
+
+.live_dotImg{
+  width: 5px !important;
+  position: relative !important;
+  /* bottom: 50px !important;
+  right: 25px !important;
+  height: 20px !important; */
+}
 
 .liveTitleHeading {
   font-size: 14px !important;
   font-weight: 600 !important;
   font-family: "Reddit Sans",sans-serif !important;
   color: #131313 !important;
+  -webkit-line-clamp: 2 !important;
+    display: -webkit-box !important;
+    overflow: hidden !important;
+    -webkit-box-orient: vertical !important;
+    height: 35px !important;
+    line-height: 17px !important;
 }
 
 .pdf_img_cont img{
   aspect-ratio: 16/9 !important;
   object-fit: fill !important;
   border-radius: 2px !important;
-  width: 70px !important;
 }
 
 .pdf-card {
@@ -8260,4 +8339,7 @@ h4.pdf_title {
   text-align: left !important;
   text-underline-position: from-font;
   text-decoration-skip-ink: none;
+}
+.hideDefaultIcon div{
+  display: none !important;
 }

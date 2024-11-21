@@ -198,9 +198,6 @@ const Notes = ({
   };
 
   const getLayer3Data = async (index, title) => {
-    console.log("index", index)
-    console.log("title",title)
-    console.log("isApiCalled",isApiCalled)
     if (title == undefined && isApiCalled.current) return;
     isApiCalled.current = true;
     setBreadcrumbData2(title);
@@ -251,7 +248,6 @@ const Notes = ({
       const result = await getDetail(data); // API Call
       setLayer3Data(result);
     } catch (error) {
-      console.error("API call failed:", error);
       isApiCalled.current = false;
     }
   };
@@ -442,7 +438,6 @@ const Notes = ({
   };
 
   useEffect(() => {
-    console.log("data3Index",data3Index)
     if (layer3Data?.list?.length > 0 && data3Index > 0) {
       if (data3Index == 1) {
         setLayer3updateData(layer3Data?.list?.slice(0, 15));

@@ -9,23 +9,13 @@ const TileDetail = ({item, layer1Data, handleRead, handleWatch, handleTakeTest, 
     const [isLogin, setIsLogin] = useState('')
     const [purchased, setPurchased] = useState('')
 
-    // console.log('item', item)
     let startTime = item.start_date
-
-    // item.start_date
     let endTime = item.end_date
 
     const compareTime = (startTime, endTime) => {
-        // const givenTimestamp = '2024-10-17T10:30:00Z';
         const givenStartTime = new Date(startTime * 1000);
         const givenEndTime = new Date(endTime * 1000);
-      
-          // Get current time
           const currentTime = new Date();
-      
-
-        //   console.log("compare", givenStartTime, currentTime)
-          // Compare times
           if (currentTime < givenStartTime) {
             setTimeValue("pending")
           } else if(currentTime > givenStartTime && currentTime < givenEndTime) {
@@ -102,7 +92,6 @@ const TileDetail = ({item, layer1Data, handleRead, handleWatch, handleTakeTest, 
             <div className="pg-sb-topic pe-2">
             <div className="btnsalltbba text-center gap-1 d-flex">
                 {" "}
-                {console.log("time", item)}
                 {
                 (isLogin ?
                 (purchased != 1) ?

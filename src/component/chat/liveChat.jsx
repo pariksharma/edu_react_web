@@ -472,7 +472,7 @@ const LiveChat = ({ chat_node, course_id, isPublic }) => {
             >
               {chatData?.length > 0 &&
                 chatData.map((chat, index) => (
-                  chat.type != "is_chat_locked" && (
+                  chat.type != "is_chat_locked" && chat.type != "poll" && (
                     chat?.id &&
                   <div
                     key={index}

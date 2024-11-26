@@ -74,7 +74,7 @@ const LivePollOptions = ({poll, renderCountdown, index, handleSubmitAnswer, data
 
 
   return (
-    <div className="card" style={{width: "100%"}} key={index}>
+    <div className="card mb-2" style={{width: "100%"}} key={index}>
       <div className="d-flex justify-content-between align-items-center card-header bg-white">
         <div className="m-0">
           <h5 className="m-0 l_title">{poll?.question}</h5>
@@ -129,7 +129,7 @@ const LivePollOptions = ({poll, renderCountdown, index, handleSubmitAnswer, data
                     </label>
                     <div className="progress">
                         <div 
-                          className={((alreadySubmitted || selectAnswer) && (parseInt(poll?.answer) == idx+1)) ? `progress-bar-1` : `progress-bar-2`} 
+                          className={((alreadySubmitted || selectAnswer) && (parseInt(poll?.answer) == idx+1)) ? `progress-bar-1` : ``} 
                           style={{ width: `${(alreadySubmitted || selectAnswer) && percentage}%` }}></div>
                     </div>
                     <div style={{ float: "right" }} className={`progress-percent-1`}>

@@ -223,7 +223,7 @@ const LivePoll = ({
   }
 
   return (
-    <div className="holder justify-content-center">
+    <div className="holder">
       {combinedPollData?.length > 0 &&
         combinedPollData.map((poll, index) => (
           <LivePollOptions

@@ -210,9 +210,9 @@ const PlayId = () => {
                           allowFullScreen
                         />
 
-                        <img className="live_VideoImg" src="/assets/images/live_VideoImg.gif"
+                        {/* <img className="live_VideoImg" src="/assets/images/live_VideoImg.gif"
                           alt=""
-                        />
+                        /> */}
 
                         <p className="liveTitleHeading">
                           {router?.query?.title}

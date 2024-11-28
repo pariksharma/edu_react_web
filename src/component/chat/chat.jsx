@@ -7,7 +7,7 @@ import LiveChat from './liveChat';
 import MQTTchat from './MQTTchat';
 import { decrypt, encrypt, get_token } from '@/utils/helpers';
 import { getContentMeta } from '@/services';
-import Header from '../header/header';
+// import Header from '../header/header';
 import Loader from '../loader';
 import { toast } from 'react-toastify';
 import { useRouter } from 'next/router';
@@ -110,7 +110,7 @@ const Chat = ({chat_node, course_id, video_id}) => {
 
   return (
     <>
-      <Header />
+  
       <div className="container-fluid">
         <div className="row liveChatTabs">
           <div className="card p-2 col-md-12">
@@ -121,7 +121,8 @@ const Chat = ({chat_node, course_id, video_id}) => {
               className="mb-3"
             >
               <Tab className="liveChat" eventKey="Live Chat" title="Live Chat">
-                {key == "Live Chat" && (
+                {
+                  key == "Live Chat" && (
                   isFireBase == '1' ? 
                     showChat ? 
                       <LiveChat
@@ -147,7 +148,8 @@ const Chat = ({chat_node, course_id, video_id}) => {
                     />
                     :
                     <Loader />
-                )}
+                )
+                }
               </Tab>
               <Tab eventKey="Live Poll" title="Live Poll">
                 {key === "Live Poll"  && (

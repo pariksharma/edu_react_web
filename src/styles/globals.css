@@ -8702,8 +8702,8 @@ h4.pdf_title {
 .add-bookmark-btn {
   border: 1px solid #FF7426;
   outline: none;
-  width: 100%;
-  background-color: transparent;
+  width: 88% !important;
+  background-color: #fff;
   padding: 8px;
   border-radius: 8px;
   font-size: 16px;
@@ -8711,5 +8711,7 @@ h4.pdf_title {
   font-family: "Reddit Sans", sans-serif !important;
   color: #FF7426;
   margin-top: auto; 
+  position: absolute !important;
+  bottom: 10px !important;
 }
 

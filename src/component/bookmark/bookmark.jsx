@@ -8,7 +8,7 @@ import { toast } from 'react-toastify';
 import { useRouter } from 'next/router';
 
 
-const Bookmark = ({chat_node, course_id, video_id, handleBookMark}) => {
+const Bookmark = ({chat_node, course_id, video_id, handleBookMark, bookMarkData, handleCurrentTime, deleteBookMark}) => {
 
   const [publicChat, setPublicChat] = useState(null);
   const [isFireBase, setIsFireBase] = useState(null);
@@ -21,12 +21,19 @@ const Bookmark = ({chat_node, course_id, video_id, handleBookMark}) => {
   const [locked_room, setLocked_room] = useState('');
   const [pollData, setPollData] = useState('')
   const [key, setKey] = useState("Bookmark");
+  const [bookmarkArry, setBookMarkArry] = useState([]);
 
   const router = useRouter()
 
   useEffect(() => {
     fetchContentMeta()
   }, [video_id])
+
+  useEffect(() => {
+    if(bookMarkData?.length > 0) {
+      setBookMarkArry(bookMarkData)
+    }
+  }, [bookMarkData])
 
   const fetchContentMeta = async () => {
     try {
@@ -43,6 +50,7 @@ const Bookmark = ({chat_node, course_id, video_id, handleBookMark}) => {
             const data = response_contentMeta_data?.data?.video;
             setShowChat(true)
             setPdfData(response_contentMeta_data?.data?.pdf)
+            setBookMarkArry(response_contentMeta_data?.data?.bookmark)
         }
         else{
           setPublicChat(0)
@@ -89,7 +97,33 @@ const Bookmark = ({chat_node, course_id, video_id, handleBookMark}) => {
                   key == "Bookmark" && (
                     showChat ? 
                         <>
-                            <button onClick={()=>handleBookMark()}>Add Bookmark</button>
+                        <div className="cardx p-2 col-md-12 d-flex flex-column" style={{ height: '100%' }}>
+                          <div className="bookmark-container mt-2">
+                          {bookmarkArry?.length > 0 && bookmarkArry?.map((bookmark, index) => {
+                            return <div className='bookmark-box mb-2' key={index}>
+                            <div className="d-flex justify-content-between">
+                              <div className="d-flex gap-2">
+                                <div style={{width:'40px;', cursor: 'pointer'}} onClick={() => handleCurrentTime(bookmark)} >
+                                  <img src="/assets/images/playBookmark.svg" alt="" />
+                                </div>
+                                <div>
+                                  <p className='org-text mb-0 mt-1'>{bookmark?.time}</p>
+                                </div>
+                                <div>
+                                  <p className='black-txt mb-0 mt-1'>{bookmark?.info}</p>
+                                </div>
+                                </div>
+                                <div style={{cursor: 'pointer'}} onClick={() => deleteBookMark(bookmark?.id)}>
+                                  <img src="/assets/images/removeBookMark.svg" alt="" />
+                                </div>
+                              </div>
+                            </div>
+                          })}
+                          </div>
+                          <div>
+                            <button className="add-bookmark-btn text-center mt-3" onClick={()=>handleBookMark()}>Add Bookmark</button>
+                          </div>
+                          </div>
                         </>
                       :
                         <Loader />
@@ -99,7 +133,27 @@ const Bookmark = ({chat_node, course_id, video_id, handleBookMark}) => {
               <Tab eventKey="Index" title="Index">
                 {key === "Index"  && (
                     showChat ?
-                    <></>
+                    <>
+                      <div className="bookmark-container mt-2">
+                          {bookmarkArry?.length > 0 && bookmarkArry?.map((bookmark, index) => {
+                            return <div className='bookmark-box mb-2' key={index}>
+                            <div className="d-flex justify-content-between">
+                              <div className="d-flex gap-2">
+                                <div style={{width:'40px;', cursor: 'pointer'}} onClick={() => handleCurrentTime(bookmark)} >
+                                  <img src="/assets/images/playBookmark.svg" alt="" />
+                                </div>
+                                <div>
+                                  <p className='org-text mb-0 mt-1'>{bookmark?.time}</p>
+                                </div>
+                                <div>
+                                  <p className='black-txt mb-0 mt-1'>{bookmark?.info}</p>
+                                </div>
+                                </div>
+                              </div>
+                            </div>
+                          })}
+                        </div>
+                    </>
                     :
                     <Loader />
               )}

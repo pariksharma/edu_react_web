@@ -1234,7 +1234,7 @@ h1 {
   z-index: 9999;
   position: absolute;
   margin-top: 3px !important;
-  width: 5.5% !important;
+  width: 6.5% !important;
   height: auto !important;
   /* aspect-ratio: 17 / 9 !important; */
 }
@@ -1272,6 +1272,7 @@ h1 {
   padding: 4px 12px !important;
   font-size: 10px !important;
   width: 100% !important;
+  white-space: nowrap !important;
 }
 
 .trendBtnCont .exploreBtn {
@@ -1287,12 +1288,13 @@ h1 {
 .trendBtnCont .buyBtn {
   background: var(--btnDeafult) !important;
   color: #fff !important;
-
+white-space: nowrap !important;
   font-weight: 600 !important;
 }
 
 .trendBtnCont .buyBtn:hover {
   background: #fff !important;
+  white-space: nowrap !important;
   color: var(--btnDeafult) !important;
 }
 
@@ -5352,18 +5354,27 @@ h4.userRateTitle {
 
 .simplebar-content-wrapper .simplebar-content {
   margin-top: auto !important;
-  overflow-y: scroll !important;
+  overflow-y: scroll !important; 
   height: 492px !important;
   border-bottom: 1px solid #efefef !important;
 }
+
+.simplebar-content-wrapper .simplebar-content::-webkit-scrollbar {
+  width: 0; 
+  height: 0; 
+}
+
+.simplebar-content-wrapper .simplebar-content {
+  -ms-overflow-style: none; 
+  scrollbar-width: none;     
+}
+
 
 .simplebar-content {
   padding: 5px 30px !important;
 }
 
-/* #uncontrolled-tab-example-tabpane-Live #Poll{
-  height: 100vh !important;
-} */
+
 
 .simplebar-content:after,
 .simplebar-content:before {
@@ -5392,7 +5403,7 @@ h4.userRateTitle {
   align-items: flex-start !important;
   display: inline-flex !important;
   margin-bottom: 24px !important;
-  max-width: 58% !important;
+  max-width: 180px !important;
   position: relative !important;
 }
 
@@ -5464,6 +5475,7 @@ hr.p_divider {
 
 .chat-conversation .conversation-list .ctext-wrap-content {
   padding: 12px 12px !important;
+
   position: relative !important;
   border-radius: 10px !important;
   background: #FFF8F3 !important;
@@ -5539,9 +5551,7 @@ hr.divider {
   display: flex !important;
 }
 
-.chat-conversation .right .conversation-list {
-  text-align: right !important;
-}
+
 
 .chat-conversation .right .chat-avatar {
   margin-left: 8px !important;
@@ -5550,7 +5560,7 @@ hr.divider {
 }
 
 .chat-conversation .right .conversation-list .conversation-name {
-  justify-content: flex-end !important;
+  /* justify-content: flex-end !important; */
 }
 
 .chat-conversation .conversation-list h5.conversation-name {
@@ -5573,7 +5583,7 @@ hr.divider {
   background: #F4F4F4 !important;
   box-shadow: none !important;
   order: 2 !important;
-  text-align: right !important;
+ 
   border-bottom-right-radius: 0px !important;
 }
 
@@ -8636,3 +8646,70 @@ h4.pdf_title {
 }
 
 /* ======================== Media Query Section Ends ===================== */
+
+
+
+/* ======================== BookMark Section ===================== */
+
+.bookmark-box{
+  background-color: #F8F8F8;
+  padding: 12px;
+  width: 100%;
+  border-radius: 8px;
+  
+}
+.org-text{
+  font-size: 14px;
+  font-weight: 600;
+  font-family: "Inter", sans-serif;
+  color: #FF7426;
+}
+.black-txt{
+  font-size: 14px;
+  font-weight: 600;
+  font-family: "Inter", sans-serif;
+  color: black;
+}
+
+.bookmark-container {
+  max-height: 100%; 
+  overflow-y: auto; 
+  padding-right: 10px; 
+}
+
+
+.bookmark-container::-webkit-scrollbar {
+  width: 0; 
+  height: 0; 
+}
+
+.bookmark-container {
+  -ms-overflow-style: none; 
+  scrollbar-width: none;     
+}
+
+.cardx {
+  display: flex;
+  flex-direction: column;
+  height: 100%; 
+}
+
+.bookmark-container {
+  flex-grow: 1;
+  overflow-y: auto; 
+}
+
+.add-bookmark-btn {
+  border: 1px solid #FF7426;
+  outline: none;
+  width: 100%;
+  background-color: transparent;
+  padding: 8px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 700;
+  font-family: "Reddit Sans", sans-serif !important;
+  color: #FF7426;
+  margin-top: auto; 
+}
+

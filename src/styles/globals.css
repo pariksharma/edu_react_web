@@ -8715,3 +8715,74 @@ h4.pdf_title {
   bottom: 10px !important;
 }
 
+
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5); 
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000; 
+}
+
+/* Modal Content */
+.BookmarkModal {
+  background-color: white !important;
+  border-radius: 8px !important;
+  padding: 20px !important;
+  max-width: 400px; 
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 10px !important;
+}
+
+/* Modal Elements */
+.modal-time {
+  font-size: 16px !important;
+  margin-bottom: 10px !important;
+}
+
+.modal-input {
+  width: 100% !important;
+  padding: 8px 0 !important; 
+  border: none !important;
+  border-bottom: 2px solid #ccc !important; 
+  outline: none !important; 
+  font-size: 16px !important;
+  font-family: "Arial", sans-serif !important;
+}
+
+.modal-input:focus {
+  border-bottom: 2px solid #ff7426 !important;
+}
+.modal-actions {
+  display: flex !important;
+  justify-content: space-between !important;
+  gap: 10px !important;
+}
+
+.cancelAddBookmark,
+.modal-submit {
+  flex: 1 !important;
+  padding: 8px 12px !important;
+  font-size: 14px !important;
+  font-weight: bold !important;
+  border-radius: 4px !important;
+  cursor: pointer !important;
+}
+
+.cancelAddBookmark {
+  background-color: #f5f5f5 !important;
+  color: #555 !important;
+  border: none !important;
+}
+
+.modal-submit {
+  background-color: #ff7426 !important;
+  color: #fff !important;
+  border: none !important;
+}

@@ -39,6 +39,7 @@ const PlayId = () => {
     const [togglePlayPause, setTogglePlayPause] = useState({});
     const [addBookmark, setAddBookmark] = useState(false)
     const [bookMarkData, setBookMarkData] = useState([])
+    const [indexData, setIndexData] = useState([])
     const [bookmarkTime, setBookmarkTime] = useState('')
     // const [getCurrTime, setGetCurrTime] = useState({ action: null, state: "0:00" })
 
@@ -158,6 +159,7 @@ const PlayId = () => {
           console.log('response_contentMeta_data', response_contentMeta_data)
           if(response_contentMeta_data.status){
             setBookMarkData(response_contentMeta_data?.data?.bookmark)
+            setIndexData(response_contentMeta_data?.data?.index)
           }
           else{
             setPublicChat(0)
@@ -319,6 +321,7 @@ const PlayId = () => {
                             video_id={router.query.video_id}
                             handleBookMark = {handleBookMark}
                             bookMarkData = {bookMarkData}
+                            indexData = {indexData}
                             deleteBookMark = {deleteBookMark}
                             handleCurrentTime = {handleCurrentTime}
                           />

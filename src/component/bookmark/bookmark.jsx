@@ -8,7 +8,7 @@ import { toast } from 'react-toastify';
 import { useRouter } from 'next/router';
 
 
-const Bookmark = ({chat_node, course_id, video_id, handleBookMark, bookMarkData, handleCurrentTime, deleteBookMark}) => {
+const Bookmark = ({chat_node, course_id, video_id, handleBookMark, bookMarkData, indexData, handleCurrentTime, deleteBookMark}) => {
 
   const [publicChat, setPublicChat] = useState(null);
   const [isFireBase, setIsFireBase] = useState(null);
@@ -22,6 +22,7 @@ const Bookmark = ({chat_node, course_id, video_id, handleBookMark, bookMarkData,
   const [pollData, setPollData] = useState('')
   const [key, setKey] = useState("Bookmark");
   const [bookmarkArry, setBookMarkArry] = useState([]);
+  const [indexArry, setIndexArry] = useState([])
 
   const router = useRouter()
 
@@ -30,10 +31,14 @@ const Bookmark = ({chat_node, course_id, video_id, handleBookMark, bookMarkData,
   }, [video_id])
 
   useEffect(() => {
-    if(bookMarkData?.length > 0) {
+    // if(bookMarkData?.length > 0) {
       setBookMarkArry(bookMarkData)
-    }
+    // }
   }, [bookMarkData])
+
+  useEffect(() => {
+    setIndexArry(indexData)
+  }, [indexData])
 
   const fetchContentMeta = async () => {
     try {
@@ -51,6 +56,7 @@ const Bookmark = ({chat_node, course_id, video_id, handleBookMark, bookMarkData,
             setShowChat(true)
             setPdfData(response_contentMeta_data?.data?.pdf)
             setBookMarkArry(response_contentMeta_data?.data?.bookmark)
+            setIndexArry(response_contentMeta_data?.data?.index)   
         }
         else{
           setPublicChat(0)
@@ -110,7 +116,11 @@ const Bookmark = ({chat_node, course_id, video_id, handleBookMark, bookMarkData,
                                   <p className='org-text mb-0 mt-1'>{bookmark?.time}</p>
                                 </div>
                                 <div>
-                                  <p className='black-txt mb-0 mt-1'>{bookmark?.info}</p>
+                                  {bookmark?.info?.length > 30 ? 
+                                    <marquee className='black-txt mb-0 mt-1'>{bookmark?.info}</marquee>
+                                    :
+                                    <p className='black-txt mb-0 mt-1'>{bookmark?.info}</p>
+                                  }
                                 </div>
                                 </div>
                                 <div style={{cursor: 'pointer'}} onClick={() => deleteBookMark(bookmark?.id)}>
@@ -135,7 +145,7 @@ const Bookmark = ({chat_node, course_id, video_id, handleBookMark, bookMarkData,
                     showChat ?
                     <>
                       <div className="bookmark-container mt-2">
-                          {bookmarkArry?.length > 0 && bookmarkArry?.map((bookmark, index) => {
+                          {indexArry?.length > 0 && indexArry?.map((bookmark, index) => {
                             return <div className='bookmark-box mb-2' key={index}>
                             <div className="d-flex justify-content-between">
                               <div className="d-flex gap-2">

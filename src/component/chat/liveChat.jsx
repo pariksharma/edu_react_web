@@ -15,6 +15,7 @@ import { MdAudioFile } from "react-icons/md";
 import { MdOutlinePictureAsPdf } from "react-icons/md";
 import * as pdfjs from "pdfjs-dist";
 
+
 // Firebase configuration
 const firebaseConfig = {
   apiKey: "AIzaSyB8ISZRq949XJrbNeZm0gK54d9Q3zAzBtI",
@@ -511,6 +512,8 @@ const LiveChat = ({ chat_node, course_id, isPublic }) => {
     }
   };
 
+  // Toggle the dropdown visibility
+
   // const onEmojiClick = (emojiObject) => {
   //   console.log('Selected Emoji:', emojiObject.emoji); // Logs the emoji character
   //   setInput((prevInput) => prevInput + emojiObject.emoji);
@@ -605,6 +608,12 @@ const LiveChat = ({ chat_node, course_id, isPublic }) => {
                                 {/* {" "}|{" "} */}
                                 {/* <i class="bi bi-three-dots-vertical"></i> */}
                               </small>
+                                
+                              {/* <div class="dropdown-content">
+                                <a href="#"><i class="bi bi-pin-angle"></i> Pin Chat</a>
+                                  <hr class="divider" />
+                                <a href="#"><i class="bi bi-trash3"></i> Delete</a>
+                              </div> */}
                             </div>
                           </div>
                         </div>

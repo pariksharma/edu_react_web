@@ -5,7 +5,7 @@ import dynamic from 'next/dynamic';
 import 'shaka-player/dist/controls.css';
 
 
-const VideoJsPlayer = ({ source, dType, poster, keySystem, NonDRMVideourl, videoMetaData, title, start_date, video_type, setTogglePlayPause, bookmarkTime }) => {
+const VideoJsPlayer = ({ source, dType, poster, keySystem, NonDRMVideourl, videoMetaData, title, start_date, video_type, setTogglePlayPause, bookmarkTime, getValue, trigger }) => {
 
   // console.log("NonDRMVideourl", NonDRMVideourl)
   // console.log("start_date", start_date)
@@ -74,6 +74,7 @@ const VideoJsPlayer = ({ source, dType, poster, keySystem, NonDRMVideourl, video
 
   
   useEffect(() => {
+    console.log('click')
     if (bookmarkTime && videoRef.current) {
       const timeInSeconds = parseTime(bookmarkTime);
   
@@ -85,7 +86,7 @@ const VideoJsPlayer = ({ source, dType, poster, keySystem, NonDRMVideourl, video
         console.error('Invalid bookmarkTime:', bookmarkTime);
       }
     }
-  }, [bookmarkTime]);
+  }, [bookmarkTime, trigger]);
 
   useEffect(() => {
     currentTimeRef.current = currentTime; // Update the ref with the latest currentTime
@@ -419,6 +420,11 @@ const VideoJsPlayer = ({ source, dType, poster, keySystem, NonDRMVideourl, video
       state: formatTime(videoRef.current.currentTime),
     }));
   }, [setTogglePlayPause, videoState]);
+
+
+  useEffect(() => {
+    getValue(videoRef.current.currentTime)
+  }, [currentTime])
 
   // console.log('currentTime', formatTime(currentTime))
   

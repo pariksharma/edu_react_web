@@ -4,22 +4,15 @@ import Tabs from 'react-bootstrap/Tabs';
 import { decrypt, encrypt, get_token } from '@/utils/helpers';
 import { getContentMeta } from '@/services';
 import Loader from '../loader';
-import { toast } from 'react-toastify';
+import { toast, ToastContainer } from 'react-toastify';
 import { useRouter } from 'next/router';
 
 
-const Bookmark = ({chat_node, course_id, video_id, handleBookMark, bookMarkData, indexData, handleCurrentTime, deleteBookMark}) => {
+const Bookmark = ({video_id, handleBookMark, bookMarkData, indexData, handleCurrentTime, deleteBookMark, succesToastMsg, errorToastMsg, toastTrigger}) => {
 
   const [publicChat, setPublicChat] = useState(null);
-  const [isFireBase, setIsFireBase] = useState(null);
-  const [chatNode, setChatNode] = useState(null);
-  const [settingNode, setSettingNode] = useState(null);
-  const [port, setPort] = useState(null);
-  const [listenURL, setListenURL] = useState(null);
   const [showChat, setShowChat] = useState(false)
   const [pdfData, setPdfData] = useState([]);
-  const [locked_room, setLocked_room] = useState('');
-  const [pollData, setPollData] = useState('')
   const [key, setKey] = useState("Bookmark");
   const [bookmarkArry, setBookMarkArry] = useState([]);
   const [indexArry, setIndexArry] = useState([])
@@ -31,6 +24,15 @@ const Bookmark = ({chat_node, course_id, video_id, handleBookMark, bookMarkData,
   }, [video_id])
 
   useEffect(() => {
+    if(succesToastMsg != "") {
+      toast.success(succesToastMsg)
+    }
+    else if (errorToastMsg != "") {
+      toast.error(errorToastMsg)
+    }
+  }, [succesToastMsg, errorToastMsg, toastTrigger])
+
+  useEffect(() => {
     // if(bookMarkData?.length > 0) {
       setBookMarkArry(bookMarkData)
     // }
@@ -39,6 +41,37 @@ const Bookmark = ({chat_node, course_id, video_id, handleBookMark, bookMarkData,
   useEffect(() => {
     setIndexArry(indexData)
   }, [indexData])
+
+  useEffect(() => {
+    // Function to apply overflow style based on viewport size
+    const updateOverflowStyle = () => {
+      const currentPath = window.location.pathname; // Get only the pathname, no query strings
+      const viewportWidth = window.innerWidth;
+
+      // Check if the URL matches the desired page
+      if (currentPath.includes("/private/myProfile/play/")) {
+        // Apply overflow: hidden for smaller devices (<= 1024px)
+        if (viewportWidth >= 1024) {
+          document.documentElement.style.overflow = "hidden";
+        } else {
+          document.documentElement.style.overflow = "auto"; // Remove overflow: hidden for larger devices
+        }
+      } else {
+        document.documentElement.style.overflow = "auto"; // Reset for other pages
+      }
+    };
+
+    // Apply the overflow style on mount
+    updateOverflowStyle();
+
+    // Listen for window resize events to update the overflow style dynamically
+    window.addEventListener("resize", updateOverflowStyle);
+
+    // Cleanup: remove the event listener when the component unmounts
+    return () => {
+      window.removeEventListener("resize", updateOverflowStyle);
+    };
+  }, []);
 
   const fetchContentMeta = async () => {
     try {
@@ -84,11 +117,28 @@ const Bookmark = ({chat_node, course_id, video_id, handleBookMark, bookMarkData,
     }
   };
 
+  const formatOfTime = (timeString) => {
+    const timeParts = timeString.split(':');
+      const formattedParts = timeParts.map(part => part.padStart(2, '0'));
+      return formattedParts.join(':');
+  }
+
 //   console.log('key222', key)
 
   return (
     <>
-  
+      <ToastContainer
+        position="top-right"
+        autoClose={1000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
       <div className="container-fluid">
         <div className="row liveChatTabs">
           <div className="card p-2 col-md-12">
@@ -102,7 +152,7 @@ const Bookmark = ({chat_node, course_id, video_id, handleBookMark, bookMarkData,
                 {
                   key == "Bookmark" && (
                     showChat ? 
-                        <>
+                      <>
                         <div className="cardx p-2 col-md-12 d-flex flex-column" style={{ height: '100%' }}>
                           <div className="bookmark-container mt-2">
                           {bookmarkArry?.length > 0 && bookmarkArry?.map((bookmark, index) => {
@@ -113,7 +163,7 @@ const Bookmark = ({chat_node, course_id, video_id, handleBookMark, bookMarkData,
                                   <img src="/assets/images/playBookmark.svg" alt="" />
                                 </div>
                                 <div>
-                                  <p className='org-text mb-0 mt-1'>{bookmark?.time}</p>
+                                  <p className='org-text mb-0 mt-1'>{formatOfTime(bookmark?.time)}</p>
                                 </div>
                                 <div>
                                   {bookmark?.info?.length > 30 ? 

@@ -561,11 +561,11 @@ const LiveChat = ({ chat_node, course_id, isPublic }) => {
                                   {/* {console.log('chat', chat?.message)} */}
                                   {chat?.type == "text" && chat?.message}
                                   {chat?.type == "image" && (
-                                    <img
-                                      src={chat?.message}
-                                      className="w-100"
-                                      alt=""
-                                    />
+                                  <img
+                                  src={chat?.message}
+                                  className="chat-image"
+                                  alt="Uploaded"
+                                />
                                   )}
                                   {chat?.type == "pdf" && (
                                     <div

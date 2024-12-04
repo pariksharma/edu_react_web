@@ -41,6 +41,11 @@ const PlayId = () => {
     const [bookMarkData, setBookMarkData] = useState([])
     const [indexData, setIndexData] = useState([])
     const [bookmarkTime, setBookmarkTime] = useState('')
+    const [getVideoTime, setGetVideoTime] = useState('')
+    const [trigger, setTrigger] = useState(0)
+    const [toastTrigger, setToastTrigger] = useState(0)
+    const [succesToastMsg, setSuccessToastMsg] = useState('')
+    const [errorToastMsg, setErrorToastMsg] = useState('')
     // const [getCurrTime, setGetCurrTime] = useState({ action: null, state: "0:00" })
 
     // console.log("router",router)
@@ -132,10 +137,16 @@ const PlayId = () => {
       };
 
       const handleBookMark = () => {
-        console.log('toggle')
-        setAddBookmark(!addBookmark)
-        if (togglePlayPause.action) {
-          togglePlayPause.action(); // Call the child's function
+        // console.log('getVideoTime', getVideoTime)
+        if(getVideoTime > 3){ 
+          console.log('toggle')
+          setAddBookmark(!addBookmark)
+          if (togglePlayPause.action) {
+            togglePlayPause.action(); // Call the child's function
+          }
+        } else {
+          setErrorToastMsg("Video is not started yet!")
+          setToastTrigger(() => toastTrigger + 1)
         }
       }
 
@@ -163,6 +174,8 @@ const PlayId = () => {
           }
           else{
             setPublicChat(0)
+            setErrorToastMsg(response_contentMeta_data.message)
+            setToastTrigger(() => toastTrigger + 1)
             // toast.error(response_contentMeta_data.message);
             if (
               response_contentMeta_data.message ==
@@ -182,7 +195,8 @@ const PlayId = () => {
       }
 
 
-      const submitBookmark = async (title) => {
+      const submitBookmark = async (e, title) => {
+        e.preventDefault()
         try {
           const token = get_token()
           const formData = {
@@ -197,11 +211,15 @@ const PlayId = () => {
           console.log('response_addBookmark_data', response_addBookmark_service)
           if(response_addBookmark_data.status) {
             // toast.success("Added Successfully");
+            setSuccessToastMsg("Added Successfully");
+            setToastTrigger(() => toastTrigger + 1)
             fetchContentMeta()
             handleBookMark()
           }
           else {
             // toast.error(response_addBookmark_data.message);
+            setErrorToastMsg(response_addBookmark_data.message)
+            setToastTrigger(() => toastTrigger + 1)
             if (
               response_addBookmark_data.message ==
               "You are already logged in with some other devices, So you are logged out from this device. 9"
@@ -230,11 +248,15 @@ const PlayId = () => {
           const response_deleteBookmark_data = decrypt(response_deleteBookmark_service.data, token)
           console.log('response_deleteBookmark_data', response_deleteBookmark_data)
           if(response_deleteBookmark_data.status) {
+            setSuccessToastMsg(response_deleteBookmark_data.message)
+            setToastTrigger(() => toastTrigger + 1)
             // toast.success(response_deleteBookmark_data.message)
             fetchContentMeta()
           }
           else {
             // toast.error(response_deleteBookmark_data.message);
+            setErrorToastMsg(response_deleteBookmark_data.message)
+            setToastTrigger(() => toastTrigger + 1)
             if (
               response_deleteBookmark_data.message ==
               "You are already logged in with some other devices, So you are logged out from this device. 9"
@@ -255,6 +277,7 @@ const PlayId = () => {
       const handleCurrentTime = (bookmark) => {
         console.log('bookmark', bookmark)
         setBookmarkTime(bookmark?.time)
+        setTrigger(() => trigger + 1)
       }
 
 
@@ -306,6 +329,8 @@ const PlayId = () => {
                             executeFunction={setTriggerChildFunction}
                             setTogglePlayPause={setTogglePlayPause}
                             bookmarkTime = {bookmarkTime} 
+                            trigger = {trigger}
+                            getValue = {(value) => setGetVideoTime(value)}
                         />
                         <p className="liveTitleHeading">
                             {router?.query?.title}
@@ -324,6 +349,9 @@ const PlayId = () => {
                             indexData = {indexData}
                             deleteBookMark = {deleteBookMark}
                             handleCurrentTime = {handleCurrentTime}
+                            succesToastMsg = {succesToastMsg}
+                            errorToastMsg = {errorToastMsg}
+                            toastTrigger = {toastTrigger}
                           />
                         </div>
                     </div>
@@ -353,6 +381,8 @@ const PlayId = () => {
                             course_id={router.query.course_id}
                             setTogglePlayPause={setTogglePlayPause} 
                             bookmarkTime = {bookmarkTime}
+                            trigger = {trigger}
+                            getValue = {(value) => setGetVideoTime(value)}
                           />
                           <p className="liveTitleHeading">
                             {router?.query?.title}

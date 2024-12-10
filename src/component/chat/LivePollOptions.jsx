@@ -9,7 +9,7 @@ const LivePollOptions = ({poll, renderCountdown, index, handleSubmitAnswer, data
     const [alreadySubmitted, setAlreadySubmitted] = useState(false);
     const [selectAnswer, setSelectAnswer] = useState(false)
     const [myAnswer, setMyAnswer] = useState('')
-    const [answerSelect, setAnswerSelect] = useState({pollid: '', ans: 0})
+    const [answerSelect, setAnswerSelect] = useState(false)
 
     useEffect(() => {
       const fetchAlreadySubmit = async () => {
@@ -19,6 +19,8 @@ const LivePollOptions = ({poll, renderCountdown, index, handleSubmitAnswer, data
   
       fetchAlreadySubmit();
     }, [poll]);
+
+ 
 
     const formatTime = (date) => {
         // console.log('data', date);
@@ -33,19 +35,19 @@ const LivePollOptions = ({poll, renderCountdown, index, handleSubmitAnswer, data
             let selectedAnswer = "";
             if(option == "option_1") {
                 selectedAnswer = '1'
-                setAnswerSelect({pollid: pollId, ans: 1})
+                setAnswerSelect(true)
             }
             else if(option == "option_2") {
                 selectedAnswer = '2'
-                setAnswerSelect({pollid: pollId, ans: 2})
+                setAnswerSelect(true)
             }
             else if(option == "option_3") {
                 selectedAnswer = '3'
-                setAnswerSelect({pollid: pollId, ans: 3})
+                setAnswerSelect(true)
             }
             else if(option == "option_4") {
                 selectedAnswer = '4'
-                setAnswerSelect({pollid: pollId, ans: 4})
+                setAnswerSelect(true)
             }
             setSelectAnswer(true)
             handleSubmitAnswer(poll, selectedAnswer)
@@ -62,14 +64,14 @@ const LivePollOptions = ({poll, renderCountdown, index, handleSubmitAnswer, data
               const userId = localStorage.getItem("user_id"); 
               const userName = localStorage.getItem("userName");
               const firebaseId = getFireBaseKey(poll.id)
-              // console.log('firebaseId', firebaseId)
+              console.log('database', chat_node)
               const alreadySubmitRef = ref(
                 database,
                 `${appId}/chat_master/${chat_node}/Poll/${firebaseId}/users/${userId}`
               );
               const snapshot = await get(alreadySubmitRef); // 
               const alreadySubmitValue = snapshot.val();
-                // console.log('alreadySubmitValue', alreadySubmitValue)
+                console.log('alreadySubmitValue', alreadySubmitValue)
               setMyAnswer(alreadySubmitValue)
               return !!alreadySubmitValue;
             } catch (error) {
@@ -110,6 +112,8 @@ const LivePollOptions = ({poll, renderCountdown, index, handleSubmitAnswer, data
             // Calculate percentage for the current attempt
             const percentage = totalAttempts > 0 ? ((attemptValue / totalAttempts) * 100).toFixed(2) : 0;
             // {console.log('alreadySubmitted', answerSelect, poll.id, poll.question)}
+
+            const isSelected = selectedOptions[poll?.id] === optionKey;
             return (
               <div className={`radio-1`} key={idx}>
                 {renderCountdown(poll?.valid_till) != "Expired" ? 
@@ -242,26 +246,26 @@ const LivePollOptions = ({poll, renderCountdown, index, handleSubmitAnswer, data
                   {optionValue}
                 </label>
                 <div className="progress">
-                  {console.log('alreadySubmitted', answerSelect, poll, poll.question)}
+                  {/* {console.log('alreadySubmitted', alreadySubmitted, poll, poll.question)} */}
                   <div
                     className={
                       renderCountdown(poll?.valid_till) != "Expired" ?
                         ( alreadySubmitted ?
                             parseInt(poll?.answer) == idx + 1 && 'progress-bar-1'
                           :
-                            (answerSelect.pollid == poll?.id && answerSelect.ans == idx + 1) && 'progress-bar-1'
+                            (isSelected) && 'progress-bar-1'
                         )
                       :
                         ( alreadySubmitted ? (
                               parseInt(poll?.answer) == idx + 1
                                 ? `progress-bar-correct`
-                                : (answerSelect.pollid == poll?.id && answerSelect.ans == idx + 1) ? `progress-bar-fail` : ''
+                                : (answerSelect) ? `progress-bar-fail` : ''
                             )
                           :
                           (selectAnswer &&
                             parseInt(poll?.answer) == idx + 1
                                 ? `progress-bar-correct`
-                                : (answerSelect.pollid == poll?.id && answerSelect.ans == idx + 1) ? `progress-bar-fail` : ''  
+                                : (answerSelect) ? `progress-bar-fail` : ''  
                           )  
                         )              
                     }

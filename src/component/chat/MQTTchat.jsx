@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import mqtt from 'mqtt';
 import { format } from "date-fns";
+import { useRouter } from 'next/router';
 
 const MQTTchat = ({listenURL, port, settingNode, chatNode, course_id, isPublic, locked_room, key}) => {
   
@@ -15,6 +16,8 @@ const MQTTchat = ({listenURL, port, settingNode, chatNode, course_id, isPublic, 
     const chatContainerRef = useRef(null);
     const [roomLocked, setRoomLocked] = useState(locked_room)
 
+    const router = useRouter()
+
   ////////////////// MQTT Connection ////////////////
     const mqttConnect = (host) => {
       const jwt = localStorage.getItem("jwt");
@@ -25,33 +28,23 @@ const MQTTchat = ({listenURL, port, settingNode, chatNode, course_id, isPublic, 
         username: userName,   // Use Name as the username
         password: jwt,
         clean: false,
-
-        // protocol: 'wss', // WebSocket Secure
-        // hostname: listenURL, // Keep the original casing
-        // port: port, // Port number
-        // clientId: user_id,
-        // username: userName,
-        // password: jwt,
-        // keepalive: 60,
-        // clean: true,
-        // reconnectPeriod: 1000, // Retry connection every second
-        // connectTimeout: 30 * 1000, // Connection timeout
       };
-        console.log('options', options)
+        // console.log('options', options)
         setConnectStatus("Connecting");
         const MQTTClient = mqtt.connect(host ,options)
         setClient(MQTTClient);
-        console.log('MQTTClient', MQTTClient)
+        // console.log('MQTTClient', MQTTClient)
         if (MQTTClient) {
           if(!MQTTClient.subscribed) {
             MQTTClient.on("connect", () => {
-              console.log('connect', chatNode)
+              // console.log('connect', chatNode)
               setConnectStatus("Connected");
               MQTTClient.subscribe(chatNode, { qos: 2 }, (err) => {
                 if (err) {
                   console.error("Subscription error:", err);
                 } else {
-                  console.log(`Subscribed to chatNode "${chatNode}"`);
+                  // console.log('')
+                  // console.log(`Subscribed to chatNode "${chatNode}"`);
                   // getChatData();
                 }
               });
@@ -60,7 +53,8 @@ const MQTTchat = ({listenURL, port, settingNode, chatNode, course_id, isPublic, 
                 if (err) {
                   console.error("Subscription error:", err);
                 } else {
-                  console.log(`Subscribed to settingNode "${settingNode}"`);
+                  // console.log('')
+                  // console.log(`Subscribed to settingNode "${settingNode}"`);
                   // getUserData()
                 }
               });
@@ -89,7 +83,11 @@ const MQTTchat = ({listenURL, port, settingNode, chatNode, course_id, isPublic, 
   // const brokerUrl = `wss://${listenURL}:${port}`
 
   useEffect(() => {
-    mqttConnect(brokerUrl);
+    console.log('play1')
+    if(router.pathname.startsWith('/private/myProfile/play')) {
+      console.log('play2')
+      mqttConnect(brokerUrl);
+    }
   }, []);
 
   ////////////////// getting data from MQTT ////////////////
@@ -114,7 +112,7 @@ const MQTTchat = ({listenURL, port, settingNode, chatNode, course_id, isPublic, 
     // console.log('getChatData')
     const user_id = localStorage.getItem("user_id");
     client.on("message", (chatNode, message) => {
-        // console.log(`Received message on topic "${topic}": ${message}`);
+        console.log(`Received message on topic "${chatNode}": ${message}`);
         if(isPublic != '0'){
           setChatData((prevChatData) => [
               ...prevChatData,

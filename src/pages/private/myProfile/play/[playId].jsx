@@ -111,7 +111,8 @@ const PlayId = () => {
 
       const handleUserOfflineMQTT = () => {
         try {
-            const brokerUrl = `wss://chat-ws.videocrypt.in:8084/mqtt`;
+            const brokerUrl = `wss://mqtt-ws.videocrypt.in:8084/mqtt`;
+            // const brokerUrl = `wss://${listenURL}:${port}`
             const jwt = localStorage.getItem("jwt");
             const chatNode = localStorage.getItem("chat_node");
             const settingNode = localStorage.getItem("setting_node");

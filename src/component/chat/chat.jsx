@@ -121,7 +121,7 @@ const Chat = ({chat_node, course_id, video_id}) => {
 
 
 
-  /////////////////////////////Live Poll /////////////////////////////////////
+  /////////////////////////////Live Poll Firebase starts /////////////////////////////////////
 
   const firebaseConfig = {
     apiKey: "AIzaSyB8ISZRq949XJrbNeZm0gK54d9Q3zAzBtI",
@@ -171,8 +171,14 @@ const Chat = ({chat_node, course_id, video_id}) => {
 
   // Fetch poll data from Firebase
   useEffect(() => {
+    console.log('1')
     if(isFireBase == '1') {
+      console.log('2')
       getPollData();
+      endClass()
+    }
+    else {
+      console.log('3')
       endClass()
     }
   }, [isFireBase]);
@@ -353,6 +359,7 @@ const Chat = ({chat_node, course_id, video_id}) => {
     const appId = localStorage.getItem("appId"); 
     const userId = localStorage.getItem("user_id"); 
     const userName = localStorage.getItem("userName");
+    const redirect = localStorage.getItem("redirectdetails")
     const endClassRef = ref(
       database,
       `${appId}/chat_master/${chat_node}/completevideo/`
@@ -362,7 +369,13 @@ const Chat = ({chat_node, course_id, video_id}) => {
       if (value) {
         // const deleteMsg = value ? Object.values(value) : [];
         if(value?.offline_status == '0'){
-          router.back()
+          if(redirect.startsWith("/private/myProfile")) {
+            router.push(redirect);
+            // router.reload()
+          }
+          else {
+            router.back()
+          }
         }
         // console.log('deleteMsg', value?.offline_status)
       }
@@ -370,10 +383,17 @@ const Chat = ({chat_node, course_id, video_id}) => {
     return () => unsubscribe();
   }
 
-  
+  /////////////////////////////Live Poll Firebase Ends ////////////////////////////////////
 
 
-  // console.log('key222', key)
+  /////////////////////////////Live Poll MQTT starts ////////////////////////////////////
+
+
+
+
+
+  /////////////////////////////Live Poll MQTT Ends ////////////////////////////////////
+
 
   return (
     <>

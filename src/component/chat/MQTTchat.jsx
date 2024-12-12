@@ -3,6 +3,7 @@ import mqtt from 'mqtt';
 import { format } from "date-fns";
 
 const MQTTchat = ({listenURL, port, settingNode, chatNode, course_id, isPublic, locked_room, key}) => {
+  
 
     const [client, setClient] = useState(null);
     const [connectStatus, setConnectStatus] = useState(null);
@@ -24,15 +25,27 @@ const MQTTchat = ({listenURL, port, settingNode, chatNode, course_id, isPublic, 
         username: userName,   // Use Name as the username
         password: jwt,
         clean: false,
+
+        // protocol: 'wss', // WebSocket Secure
+        // hostname: listenURL, // Keep the original casing
+        // port: port, // Port number
+        // clientId: user_id,
+        // username: userName,
+        // password: jwt,
+        // keepalive: 60,
+        // clean: true,
+        // reconnectPeriod: 1000, // Retry connection every second
+        // connectTimeout: 30 * 1000, // Connection timeout
       };
-        console.log('hoptionsost', options)
+        console.log('options', options)
         setConnectStatus("Connecting");
-        const MQTTClient = mqtt.connect(host, options)
+        const MQTTClient = mqtt.connect(host ,options)
         setClient(MQTTClient);
+        console.log('MQTTClient', MQTTClient)
         if (MQTTClient) {
           if(!MQTTClient.subscribed) {
             MQTTClient.on("connect", () => {
-              console.log('connect')
+              console.log('connect', chatNode)
               setConnectStatus("Connected");
               MQTTClient.subscribe(chatNode, { qos: 2 }, (err) => {
                 if (err) {
@@ -66,13 +79,14 @@ const MQTTchat = ({listenURL, port, settingNode, chatNode, course_id, isPublic, 
         }
       };
 
-      console.log('isPublic', isPublic)
+      // console.log('isPublic', isPublic)
       
 
       // console.log('client', client)
       ////////////////// MQTT Connection Credential ////////////////
 
-  const brokerUrl = `wss://chat-ws.videocrypt.in:8084/mqtt`;
+  const brokerUrl = `wss://mqtt-ws.videocrypt.in:8084/mqtt`;
+  // const brokerUrl = `wss://${listenURL}:${port}`
 
   useEffect(() => {
     mqttConnect(brokerUrl);
@@ -112,9 +126,9 @@ const MQTTchat = ({listenURL, port, settingNode, chatNode, course_id, isPublic, 
           if(JSON.parse(message.toString())?.platform == '0' || JSON.parse(message.toString())?.id == user_id) {
             console.log('chatData comes from here')
             setChatData((prevChatData) => [
-            ...prevChatData, 
-            JSON.parse(message.toString())
-          ])
+              ...prevChatData, 
+              JSON.parse(message.toString())
+            ])
           }
           else if(JSON.parse(message.toString())?.type == "user_lock" || JSON.parse(message.toString())?.type == "user_unlock") {
             setIsLocked(JSON.parse(message.toString())?.type)
@@ -191,7 +205,7 @@ const MQTTchat = ({listenURL, port, settingNode, chatNode, course_id, isPublic, 
 
   return ( <>
     <div className="chat-conversation" >
-        {console.log('caht', chatData)}
+        {/* {console.log('caht', chatData)} */}
         <div className="simplebar-content-wrapper">
           <div
             className="simplebar-content live-content"
@@ -272,8 +286,8 @@ const MQTTchat = ({listenURL, port, settingNode, chatNode, course_id, isPublic, 
           </div>
         </div>
       </div>
-      {console.log('isLocked', isLocked)}
-      {console.log('roomLocked', roomLocked)}
+      {/* {console.log('isLocked', isLocked)}
+      {console.log('roomLocked', roomLocked)} */}
       {roomLocked != "room_lock" && (
         isLocked != "user_lock" &&
         <form className="chat_input pt-1 pb-0 p-0" onSubmit={handleMessge}>

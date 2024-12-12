@@ -15,7 +15,7 @@ const LiveClassCard = ({ courseData, value }) => {
 
   const router = useRouter();
   const versionData = useSelector((state) => state.allCategory?.versionData);
-  console.log('course', courseData)
+  // console.log('course', courseData)
 
   useEffect(() => {
     const timer = setInterval(() => {

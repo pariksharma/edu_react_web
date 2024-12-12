@@ -75,6 +75,7 @@ const PlayId = () => {
                 handleUserOffline()
                 handleUserOfflineMQTT()
                 window.removeEventListener('resize', handleResize);
+                localStorage.removeItem('chatType')
             };
         }
     }, []);

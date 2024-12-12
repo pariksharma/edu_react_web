@@ -15,6 +15,7 @@ const MQTTchat = ({listenURL, port, settingNode, chatNode, course_id, isPublic, 
     const [lockUserId, setLockUserId] = useState('')
     const chatContainerRef = useRef(null);
     const [roomLocked, setRoomLocked] = useState(locked_room)
+    const [privateChat, setPrivateChat] = useState('')
 
     const router = useRouter()
 
@@ -83,9 +84,7 @@ const MQTTchat = ({listenURL, port, settingNode, chatNode, course_id, isPublic, 
   // const brokerUrl = `wss://${listenURL}:${port}`
 
   useEffect(() => {
-    console.log('play1')
     if(router.pathname.startsWith('/private/myProfile/play')) {
-      console.log('play2')
       mqttConnect(brokerUrl);
     }
   }, []);
@@ -96,6 +95,7 @@ const MQTTchat = ({listenURL, port, settingNode, chatNode, course_id, isPublic, 
     if (client) {
       getChatData()
       getUserData()
+      // setPrivateChat(isPublic)
     }
   }, [client]);
 
@@ -113,20 +113,33 @@ const MQTTchat = ({listenURL, port, settingNode, chatNode, course_id, isPublic, 
     const user_id = localStorage.getItem("user_id");
     client.on("message", (chatNode, message) => {
         console.log(`Received message on topic "${chatNode}": ${message}`);
-        if(isPublic != '0'){
-          setChatData((prevChatData) => [
-              ...prevChatData,
-              JSON.parse(message.toString()), // Parse the message if it's JSON
-          ]);
+        if(JSON.parse(message.toString())?.type == "text"){
+          console.log("rrrrrr", JSON.parse(message.toString()))
+          const chatType = localStorage.getItem('chatType')
+          console.log('chatType',chatType)
+          if(chatType == "public_chat") {
+            console.log('11111111')
+            setChatData((prevChatData) => [
+                ...prevChatData,
+                JSON.parse(message.toString()), // Parse the message if it's JSON
+            ]);
+          }
+          else {
+            console.log('22222222')
+            if(JSON.parse(message.toString())?.platform == '0' || JSON.parse(message.toString())?.id == user_id) {
+              console.log('3333333')
+              setChatData((prevChatData) => [
+                ...prevChatData, 
+                JSON.parse(message.toString())
+              ])
+            }
+          }
         }
         else {
-          console.log(JSON.parse(message.toString()))
-          if(JSON.parse(message.toString())?.platform == '0' || JSON.parse(message.toString())?.id == user_id) {
-            console.log('chatData comes from here')
-            setChatData((prevChatData) => [
-              ...prevChatData, 
-              JSON.parse(message.toString())
-            ])
+          if(JSON.parse(message.toString())?.type == "public_chat" || JSON.parse(message.toString())?.type == "private_chat"){
+            console.log('here', JSON.parse(message.toString())?.type)
+            setPrivateChat(JSON.parse(message.toString())?.type)
+            localStorage.setItem('chatType', JSON.parse(message.toString())?.type);
           }
           else if(JSON.parse(message.toString())?.type == "user_lock" || JSON.parse(message.toString())?.type == "user_unlock") {
             setIsLocked(JSON.parse(message.toString())?.type)
@@ -160,7 +173,7 @@ const MQTTchat = ({listenURL, port, settingNode, chatNode, course_id, isPublic, 
   const formatTime = (date) => {
     const cr_date = new Date(date);
     if (cr_date) {
-      return format(cr_date, "h:mm a");
+      return format(cr_date, "dd MMM yyyy h:mm a");
     }
   };
 

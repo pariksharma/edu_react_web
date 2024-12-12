@@ -89,6 +89,12 @@ const Chat = ({chat_node, course_id, video_id}) => {
             setPollData(response_contentMeta_data?.data?.poll)
             localStorage.setItem('chat_node', response_contentMeta_data?.data?.live_chat?.chat_node)
             localStorage.setItem('setting_node', response_contentMeta_data?.data?.live_chat?.setting_node)
+            if(data?.extra_params?.public_chat == '1') {
+              localStorage.setItem('chatType', 'public_chat')
+            } 
+            else {
+              localStorage.setItem('chatType', 'private_chat')
+            }
         }
         else{
           setPublicChat(0)

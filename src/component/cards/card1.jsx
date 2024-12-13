@@ -177,17 +177,29 @@ const Card1 = ({ value, titleName, handleDetail, keyValue }) => {
               </div>
             )}
             {value?.cat_type == 1 ? (
-              <div className="courseBtn gap-2 d-flex">
-                <Button2
-                  value={value?.is_purchased == 1 ? "View Content" : "Explore"}
-                  handleClick={() =>
-                    router.pathname.startsWith("/private")
-                      ? handleDetail(value, titleName, keyValue)
-                      : handleExplore()
-                  }
-                />
-                <Button1 value="Buy Now" handleClick={handleBuy} />
-              </div>
+              (value?.mrp == '0' || value?.is_purchased == '1') ? 
+                <div className="courseBtn gap-2 d-flex">
+                  <Button1
+                    value={value?.is_purchased == 1 ? "View Content" : "Explore"}
+                    handleClick={() =>
+                      router.pathname.startsWith("/private")
+                        ? handleDetail(value, titleName, keyValue)
+                        : handleExplore()
+                    }
+                  />
+                </div>
+                :
+                <div className="courseBtn gap-2 d-flex">
+                  <Button2
+                    value={value?.is_purchased == 1 ? "View Content" : "Explore"}
+                    handleClick={() =>
+                      router.pathname.startsWith("/private")
+                        ? handleDetail(value, titleName, keyValue)
+                        : handleExplore()
+                    }
+                  />
+                  { <Button1 value="Buy Now" handleClick={handleBuy} />}
+                </div>
             ) : value.mrp == 0 || value.is_purchased == 1 ? (
               <div className="courseBtn gap-2 d-flex">
                 <Button1

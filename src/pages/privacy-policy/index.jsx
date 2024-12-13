@@ -33,7 +33,7 @@ const index = () => {
         <meta name={'Privacy Policy'} content={'Privacy Policy'} />
       </Head>
       
-      <Header />
+      <Header search={"disable"} />
       <div className="container-fluid privacyPolicy">
         <div
           className=""

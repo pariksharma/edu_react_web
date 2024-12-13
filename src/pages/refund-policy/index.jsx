@@ -33,7 +33,7 @@ const index = () => {
         <title>{'Refund/Cancellation Policy'}</title>
         <meta name={'Refund/Cancellation Policy'} content={'Refund/Cancellation Policy'} />
       </Head>
-      <Header />
+      <Header search={"disable"} />
       <div className="container-fluid refund_policy">
         <div
           className=""

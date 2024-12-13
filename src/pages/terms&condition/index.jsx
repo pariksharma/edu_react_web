@@ -33,7 +33,7 @@ const index = () => {
         <title>{'Terms and Conditions'}</title>
         <meta name={'Terms and Conditions'} content={'Terms and Conditions'} />
       </Head>
-      <Header />
+      <Header search={"disable"} />
       <div className="container-fluid termsCondition">
         <div
           className=""

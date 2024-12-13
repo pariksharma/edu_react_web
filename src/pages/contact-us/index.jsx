@@ -32,7 +32,7 @@ const index = () => {
         <title>{'Contact us'}</title>
         <meta name={'Contact us'} content={'Contact us'} />
       </Head>
-    <Header />
+    <Header search={"disable"} />
     <div className="container-fluid contactCont">
       <div className="row mb-5 pt-5">
         <div className="col-md-4">
